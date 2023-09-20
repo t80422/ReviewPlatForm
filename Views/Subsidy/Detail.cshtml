@@ -1,0 +1,101 @@
+﻿@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+@model WebApplication1.Models.SubsidyEdit
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="form-wrap">
+            <form action="">
+                <div class="form-main">
+                    <div class="form-title">
+                        <h3>補助申請-詳細資料</h3>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>申請日期</label>
+                                        <div class="input date">
+                                            <p>@Model.Date</p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請書</label>
+                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Application">@Model.ApplicationName</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>勞保人員名冊</label>
+                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Labor">@Model.LaborName</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請人員清冊</label>
+                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.ApplicantsList">@Model.ApplicantsListName</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請金額</label>
+                                        <div class="input">
+                                            <p>@Model.Money</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>切結書</label>
+                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Affidavit">@Model.AffidavitName</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>領據</label>
+                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Receipt">@Model.ReceiptName</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>員工清冊</label>
+                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.EmployeeList">@Model.EmployeeList</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="file5">其他文件</label>
+                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.OtherFile">@Model.OtherFileName</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請人數</label>
+                                        <div class="input">
+                                            <p>@Model.EmpCount</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">審核狀態</label>
+                                        <div class="input">@Model.Review</div>                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-btn">
+                    <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+
+

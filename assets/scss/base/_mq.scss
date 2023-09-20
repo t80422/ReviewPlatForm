@@ -1,0 +1,92 @@
+// Media Queries
+$desktop-1920: 1920px;
+$desktop-1680: 1680px;
+$desktop-1600: 1600px;
+$desktop-1500: 1500px;
+$desktop-1440: 1440px;
+$desktop-1366: 1366px;
+$desktop-1280: 1280px;
+$desktop-1280: 1280px;
+$desktop-1024: 1024px;
+$tablet-991: 991px;
+$tablet-960: 960px;
+$tablet-768: 768px;
+$tablet-640: 640px;
+$tablet-540: 540px;
+$mobile-480: 480px;
+$mobile-414: 414px;
+$mobile-360: 360px;
+$mobile-320: 320px;
+
+@mixin MQ($canvas) {
+    @if $canvas == d1920 {
+        @media only screen and (max-width: $desktop-1920) { @content; }
+    }
+    @else if $canvas == d1680 {
+        @media only screen and (max-width: $desktop-1680) { @content; }
+    }
+    @else if $canvas == d1600 {
+        @media only screen and (max-width: $desktop-1600) { @content; }
+    }
+    @else if $canvas == d1500 {
+        @media only screen and (max-width: $desktop-1500) { @content; }
+    }
+    @else if $canvas == d1440 {
+        @media only screen and (max-width: $desktop-1440) { @content; }
+    }
+    @else if $canvas == d1366 {
+        @media only screen and (max-width: $desktop-1366) { @content; }
+    }
+    @else if $canvas == d1280 {
+        @media only screen and (max-width: $desktop-1280) { @content; }
+    }
+    @else if $canvas == d1024 {
+        @media only screen and (max-width: $desktop-1024) { @content; }
+    }
+    @else if $canvas == t991 {
+        @media only screen and (max-width: $tablet-991) { @content; }
+    }
+    @else if $canvas == t960 {
+        @media only screen and (max-width: $tablet-960) { @content; }
+    }
+    @else if $canvas == t768 {
+        @media only screen and (max-width: $tablet-768) { @content; }
+    }
+    @else if $canvas == t640 {
+        @media only screen and (max-width: $tablet-640) { @content; }
+    }
+    @else if $canvas == t540 {
+        @media only screen and (max-width: $tablet-540) { @content; }
+    }
+    @else if $canvas == m480 {
+        @media only screen and (max-width: $mobile-480) { @content; }
+    }
+    @else if $canvas == m414 {
+        @media only screen and (max-width: $mobile-414) { @content; }
+    }
+    @else if $canvas == m360 {
+        @media only screen and (max-width: $mobile-360) { @content; }
+    }
+    @else if $canvas == m320 {
+        @media only screen and (max-width: $mobile-320) { @content; }
+    }
+}
+
+// 模板
+@include MQ(d1920) {}
+@include MQ(d1680) {}
+@include MQ(d1600) {}
+@include MQ(d1500) {}
+@include MQ(d1440) {}
+@include MQ(d1366) {}
+@include MQ(d1280) {}
+@include MQ(d1024) {}
+@include MQ(t991) {}
+@include MQ(t960) {}
+@include MQ(t768) {}
+@include MQ(t640) {}
+@include MQ(t540) {}
+@include MQ(m480) {}
+@include MQ(m414) {}
+@include MQ(m360) {}
+@include MQ(m320) {}

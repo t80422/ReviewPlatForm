@@ -1,0 +1,68 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+@*@model IEnumerable<WebApplication1.Models.SubsidyIndustry>*@
+@model IEnumerable<WebApplication1.Models.subsidy>
+
+<main class="container-wrap">
+    <div class="container-main">
+        @*<div class="tool-wrap">
+            <div class="tool-search">
+                <input type="text" placeholder="請輸入關鍵字搜尋">
+            </div>
+        </div>*@
+
+        <div class="red-text">
+            <p>請在此頁檢視與確認本次申請人數和補助金額是否正確</p>
+            <p>修改後至員工資料上傳區,進入申請人員專區按操作,補登相關資料</p><br>
+        </div>
+
+        <div class="container-nav">
+            <a href="@Url.Action("Index","Subsidy")">補助申請</a>
+            <a href="@Url.Action("Index","Members")">人員資料上傳</a>
+            <a href="@Url.Action("InsurList","Subsidy")" class="is-active">各月勞保清冊</a>
+        </div>
+
+        <!-- list -->
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-1">案件編號</div>
+                        <div class="f-1">申請月份</div>
+                        <div class="f-1">勞保人員名冊(下載檔案)</div>
+                    </div>
+
+                    @foreach (var data in Model)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@data.s_id</div>
+                            <div class="f-1">@data.s_date_time.ToString("yyyy年MM月")</div>
+                            <div class="f-1">
+                                <a target="_blank" href="~/assets/upload/Subsidy/@data.s_insur_member">@data.s_insur_member_name</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <!-- pages -->
+        <div class="pages-wrap">
+            <button class="btn-prev"></button>
+            <ul>
+                <li class="is-active">1</li>
+                <li><a href="">2</a></li>
+                <li><a href="">3</a></li>
+            </ul>
+            <button class="btn-next"></button>
+        </div>
+    </div>
+</main>
+
+

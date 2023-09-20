@@ -1,0 +1,79 @@
+﻿@*@model IEnumerable<WebApplication1.Models.information>*@
+@*@using PagedList.Mvc;
+    @using PagedList;*@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+@{ string controller = "MngAccount";}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <!-- tool -->
+        <div class="tool-wrap">
+            <div class="tool-btn">
+                <button class="btn-add" onClick="window.location.href = '@Url.Action("Create",controller)'">新增</button>
+            </div>
+        </div>
+        <!-- list -->
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-5 ta-left ml-1">姓名</div>
+                        <div class="f-5 ta-left">帳號</div>
+                        <div class="f-5 ta-left">權限</div>
+                        <div class="f-1">操作</div>
+                    </div>
+                    @*@foreach (var it in Model)
+        {
+            <div class="list-row pr-2 pl-2">
+                <div class="f-1 ta-left ml-1">@it.if_date</div>
+                <div class="f-1">@it.if_title</div>
+                <div class="f-1">
+                    <button class="btn-edit" onClick="location.href = '@Url.Action("Edit","QA",new { id = it.if_id })'"></button>
+                    <button class="btn-del" onclick="location.href='@Url.Action("Delete","QA",new {id=it.if_id})' "></button>
+                </div>
+            </div>
+        }*@
+                    <div class="list-row pr-2 pl-2">
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">testName1</div>
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">testAccount1</div>
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">管理者</div>
+                        <div class="f-1">
+                            <button class="btn-edit" onClick="location.href = '@Url.Action("Edit",controller)'"></button>
+                            <button class="btn-del" onclick="location.href='@Url.Action("Delete",controller)'"></button>
+                        </div>
+                    </div>
+
+                    <div class="list-row pr-2 pl-2">
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">testName2</div>
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">testAccount2</div>
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">PM</div>
+                        <div class="f-1">
+                            <button class="btn-edit" onClick="location.href = '@Url.Action("Edit",controller)'"></button>
+                            <button class="btn-del" onclick="location.href='@Url.Action("Delete",controller)'"></button>
+                        </div>
+                    </div>
+
+                    <div class="list-row pr-2 pl-2">
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">testName3</div>
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">testAccount3</div>
+                        <div class="f-5 ta-left" onclick="location.href='@Url.Action("Detail",controller)'">工讀生</div>
+                        <div class="f-1">
+                            <button class="btn-edit" onClick="location.href = '@Url.Action("Edit",controller)'"></button>
+                            <button class="btn-del" onclick="location.href='@Url.Action("Delete",controller)'"></button>
+                        </div>
+                    </div>
+
+                    <!-- example end -->
+                </div>
+            </div>
+        </div>
+        <!-- pages -->
+        @*<div class="pages-wrap">
+                @Html.PagedListPager((IPagedList)Model , x=>Url.Action("Index",new { page = x}))
+            </div>*@
+    </div>
+</main>

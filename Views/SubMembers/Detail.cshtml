@@ -1,0 +1,93 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="form-wrap">
+            <form action="">
+                <div class="form-main">
+                    <div class="form-title">
+                        <h1>每月補助人員-詳細資料</h1>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">旅宿名稱</label>
+                                        <p>旅宿A旅宿A</p>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">符合申請(起)</label>
+                                        <p>2023-08-18</p>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">預登金額</label>
+                                        <p>5000000</p>
+                                    </div>
+
+                                    @if ((int)Session["perm"] < 3)
+                                    {
+                                        <div class="form-input">
+                                            <label for="">初審人員</label>
+                                            <div class="input">
+                                                <input type="text" value="AAA" readonly>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">人員名稱</label>
+                                        <p>人員A</p>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">符合申請(迄)</label>
+                                        <p>2023-08-18</p>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">審核狀態</label>
+                                        <p>審核通過</p>
+                                    </div>
+
+                                    @if ((int)Session["perm"] < 3)
+                                    {
+                                        <div class="form-input">
+                                            <label for="">複審人員</label>
+                                            <div class="input">
+                                                <input type="text" value="AAA" readonly>
+                                            </div>
+                                        </div>
+										<div class="form-input">
+                                            <label for="">協會審查</label>
+                                            <div class="input">
+                                                <input type="text" value="AAA" readonly>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-btn">
+                    <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                    @if ((int)Session["perm"] < 3)
+                    {
+                        <button class="btn-submit">初審</button>
+                        <button class="btn-submit">複審</button>
+                    }
+                    <button class="btn-submit">儲存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+

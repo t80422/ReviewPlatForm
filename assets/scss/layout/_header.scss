@@ -1,0 +1,262 @@
+// aside
+.aside-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 90;
+    display: block;
+    width: 250px;
+    height: 100%;
+    background-color: var(--c1);
+    box-shadow: 0px 3px 6px 0px rgba(0,0,0,0.16);
+    padding: 12px 0 120px;
+
+    @include MQ(d1024) {
+        transform: translateX(-100%);
+        transition: transform .3s;
+        &.is-active {
+            transform: translateX(0%);
+        }
+    }
+
+    @include MQ(m480) {
+        width: 100%;
+        padding-top: 60px;
+    }
+}
+
+.aside-main {
+    height: 100%;
+    overflow-y: auto;
+}
+
+.aside-close {
+    @include MQ(d1024) {
+        position: absolute;
+        top: 0;
+        right: -40px;
+        display: none;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        font-size: 18px;
+        color: var(--c1);
+        background-color: #fff;
+        border: 0;
+        border-radius: 0 5px 5px 0;
+        box-shadow: 2px 0 8px 0 rgba(#555, .2);
+        &::before {
+            content: '\f00d';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+        .is-active & {
+            display: block;
+        }
+    }
+    @include MQ(m480) {
+        right: 0;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+        color: #FFF;
+        background-color: transparent;
+        border-radius: 0;
+    }
+}
+
+// logo
+.logo-wrap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: block;
+    width: calc(100% - 64px);
+    height: 64px;
+    background-color: #F3F3F3;
+    background-image: image-url("logo.png");
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+
+    a {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    @media only screen and (min-width: 1025px) {
+        .aside-toggle & {
+            display: none;
+        }
+    }
+}
+
+// nav
+.nav-wrap {}
+
+.nav-list {}
+
+.nav-item {
+    position: relative;
+    > a,
+    > button {
+        position: relative;
+        display: flex;
+        align-items: center;
+        align-content: center;
+        width: 100%;
+        min-height: 48px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #FFF;
+        padding: 0 20px 0 55px;
+        transition: all .3s;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 16px;
+            display: block;
+            width: 8px;
+            height: calc(100% - 24px);
+            background-color: #fff;
+            transform: translateY(-50%);
+        }
+    }
+    &:hover,
+    &.is-active {
+        > a,
+        > button {
+            background-color: var(--c1-h);
+        }
+    }
+}
+
+.nav-sub {
+    display: none;
+
+    li {
+        position: relative;
+
+        a {
+            display: flex;
+            align-items: center;
+            align-content: center;
+            height: 40px;
+            font-size: 14px;
+            color: var(--text);
+            padding: 0 12px 0 64px;
+            transition: color .3s;
+
+            &:hover,
+            &.is-active {
+                color: var(--c1);
+            }
+        }
+    }
+}
+
+.nav-btn {
+    display: none;
+
+    @include MQ(d1024) {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        display: block;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        font-size: 18px;
+        color: var(--c1);
+        background-color: transparent;
+        border: 0;
+        &::before {
+            content: '\f0c9';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+
+        &.is-active {
+            &::before {}
+        }
+    }
+}
+
+
+// bottom
+.aside-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding-bottom: 30px;
+}
+
+.btn-logout {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    color: #FFF;
+    margin-bottom: 15px;
+    padding: 10px;
+    &::after {
+        content: '\f2f5';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        margin-left: 16px;
+    }
+}
+
+.aside-time {
+    text-align: center;
+    font-size: 14px;
+    color: #FFF;
+    time {
+        font-size: 10px;
+        margin-left: 16px;
+    }
+}
+
+// header
+.header-search {
+    position: relative;
+    max-width: 1200px;
+
+    input {
+        display: block;
+        width: 100%;
+        height: 40px;
+        font-size: 14px;
+        color: #FFF;
+        background-color: rgba(#F3F3F3, 0.35);
+        border: 0;
+        border-radius: 20px;
+        padding-left: 40px;
+
+        @include placeholder(#FFF);
+    }
+
+    button {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        display: block;
+        width: 40px;
+        height: 40px;
+        text-align: center;
+        font-size: 16px;
+        color: #FFF;
+
+        &::before {
+            content: '\f002';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+        }
+    }
+}

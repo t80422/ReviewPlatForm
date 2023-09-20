@@ -1,0 +1,252 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+@model WebApplication1.Models.Industry.Industry
+@using WebApplication1.Controllers;
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-btn">
+                <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPwd","Login")'">修改密碼</button>
+            </div>
+        </div>
+
+        <div class="form-wrap">
+            @using (Html.BeginForm("Edit", "Industry", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(x => x.id_id)
+
+                <div class="form-main">
+                    <div class="form-title">
+                        <h3>修改旅宿業者資料</h3>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">旅宿別</label>
+                                        <div class="input">
+                                            @Html.HiddenFor(x => x.id_it_id)
+                                            @Html.TextBox("HotelTypeDescription", Model.HotelTypeDescription, new { @readonly = "@readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">公司名稱</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_company, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">公司電話</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_tel, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">傳真</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_fax, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">縣市</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_city, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">地址</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_address, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">Email</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_email, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">銀行戶名</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_bank_acct)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">銀行代碼(含分公司)</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_bank_code)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">承辦人</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_owner)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">承辦人電話</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_tel_owner)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">承辦人分機</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_extension)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">承辦人手機</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_owner_phone)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">統編</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_tax_id, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">總房間數</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_room, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">銀行帳號</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_bank_acct)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label class="required">銀行存摺</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.id_passbook, new { @type = "file" })
+                                            <span>@Model.id_passbook_name</span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                        @*<a href="@Url.Content("~/assets/upload/Industry/"+Model.id_passbook)" download>下載</a>*@
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label class="required">營業執照或登記證</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.id_license, new { @type = "file" })
+                                            <span>@Model.id_license_name</span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>商業登記或稅籍證明</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.id_register, new { @type = "file" })
+                                            <span>@Model.id_register_name</span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (perm < 3 && perm >= 0)
+                            {
+                                <div class="form-group">
+                                    <div class="form-col">
+                                        <div class="form-input">
+                                            <label for="">初審人員</label>
+                                            <div class="input">
+                                                <input type="text" name="name" value="XXX" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-input">
+                                            <label for="">複審人員</label>
+                                            <div class="input">
+                                                <input type="text" name="name" value="999" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-col">
+                                        <div class="form-input">
+                                            <label for="">協會審查</label>
+                                            <div class="input">
+                                                <input type="text" name="name" value="999" readonly />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group btn">
+                                    <button class="btn-submit show-img" type="button">顯示存摺</button>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                if (perm < 3 && perm >= 0)
+                {
+                    <div class="form-btn">
+                        <button class="btn-submit" type="button">審核</button>
+                    </div>
+                }
+
+                <div class="form-btn">
+                    <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                    <button class="btn-submit" type="submit" onclick="">儲存</button>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+<div class="popup-wrap img">
+    <div class="popup-main">
+        <span class="popup-close">x</span>
+        <div class="popup-content">
+            <img src="https://fakeimg.pl/1000x500/ff0000,128/000,255">
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('.show-img').on('click', function () {
+            $('.popup-wrap.img').toggle();
+        })
+        $('.popup-wrap.img .popup-close').on('click', function () {
+            $(this).parents('.popup-wrap.img').toggle();
+        })
+    })
+</script>

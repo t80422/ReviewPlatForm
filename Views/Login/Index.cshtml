@@ -1,0 +1,102 @@
+﻿
+@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>@Session["title"]</title>
+    <link href="image/favico.ico" rel="shortcut icon">
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <link rel="stylesheet" href="~/assets/css/style2.css">
+    <script src="~/assets/js/jquery-2.1.4.min.js"></script>
+
+    <style>
+        .login-logo {
+            margin-bottom: 0;
+        }
+
+        .login-h3 {
+            color: var(--c1);
+            text-align: center;
+            font-size: 0.8vw;
+        }
+
+        .login-logo img {
+            max-width: 55% !important;
+        }
+    </style>
+
+    @if (Session["msg"] != null && !String.IsNullOrEmpty(Session["msg"].ToString()))
+    {
+        <script>
+            $(function () {
+                $('.popup-overlay').show();
+                $('.popup-wrap.msg').show();
+                $('.popup-wrap.msg .popup-msg').text("@Session["msg"].ToString()");
+                $('.popup-wrap.msg .popup-sumbit').on('click', function () {
+                    $('.popup-overlay').hide();
+                    $('.popup-wrap.msg').hide();
+                })
+            })
+        </script>
+
+        Session["msg"] = null;
+    }
+</head>
+
+<body>
+    <article id="wrap" class="is-login">
+        <main class="login-wrap">
+            <div class="login-main">
+                <figure class="login-logo">
+                    <img src="~/assets/image/logo.png">
+                    <h2 class="login-h2">交通部觀光局協助審查旅宿業者申請穩定接待國際旅客服務量能補助-旅宿業者登入</h2>
+                </figure>
+
+                @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="login-form">
+                        <div class="login-input is-account">
+                            <input type="text" placeholder="帳號" required name="account">
+                        </div>
+
+                        <div class="login-input is-password">
+                            <input type="password" placeholder="密碼" required name="password">
+                        </div>
+
+                        <div class="login-btn">
+                            <button class="btn-login" type="submit">登入</button>
+                            @*<button class="login-btn" type="button" onclick="location.href='@Url.Action("Create","Industry")'">新建帳號</button>*@
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="login-bg">
+                <img src="~/assets/image/bg.png" alt="">
+            </div>
+        </main>
+    </article>
+
+    <!-- popup -->
+    <div class="popup-overlay"></div>
+
+    <div class="popup-wrap msg">
+        <div class="popup-main">
+            <div class="popup-content">
+                <p class="popup-msg">登入成功</p>
+                <div class="popup-btn">
+                    <button class="btn-submit popup-sumbit">確定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
