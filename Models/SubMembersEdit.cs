@@ -5,6 +5,20 @@ namespace WebApplication1.Models
 {
     public class SubMembersEdit
     {
+        public string mb_position { get; set; }
+        //到職日期
+        public DateTime? mb_arrive_date { get; set; }
+        //是否到職轉正
+        public bool? mb_full_time_or_not { get; set; }
+        //薪資證明名稱
+        public string mb_income_certificate_name { get; set; }
+        //薪資證明
+        public HttpPostedFileBase mb_income_certificate {  get; set; }
+        public string mb_income_certificateFile { get; set; }
+        //到職轉正日期
+        public DateTime? mb_full_time_date { get; set; }
+        //勞保序號
+        public string mb_insurance_id {  get; set; }
         //案號
         public string SubsidyNo { get; set; }
         public int sm_id { get; set; }
@@ -52,9 +66,11 @@ namespace WebApplication1.Models
 
         public System.DateTime mb_last_time { get; set; }
 
-        public string mb_contract { get; set; }
+        public HttpPostedFileBase mb_contract { get; set; }
 
         public string mb_contract_name { get; set; }
+
+        public string mb_contractFile { get; set; }
 
     }
 }

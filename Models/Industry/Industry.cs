@@ -5,6 +5,8 @@ namespace WebApplication1.Models.Industry
 {
     public class Industry
     {
+        //承辦人電話區碼
+        public string id_owner_area_code { get; set; }
         //郵遞區號
         public string id_postal_code { get; set; }
 

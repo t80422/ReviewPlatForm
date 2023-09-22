@@ -10,7 +10,6 @@
 @using PagedList.Mvc;
 @using PagedList;
 
-@*@model IPagedList<WebApplication1.Models.subsidy>*@
 @model IPagedList<WebApplication1.Models.SubsidyEdit>
 
 <main class="container-wrap">
@@ -22,7 +21,7 @@
 
         <div class="container-nav">
             <a href="@Url.Action("Index","Subsidy")">補助申請</a>
-            <a href="@Url.Action("Index","Members")">人員資料上傳</a>
+            <a href="@Url.Action("Index","SubMembers")" >補助申請人員</a>
             <a href="@Url.Action("InsurList","Subsidy")" class="is-active">各月勞保清冊</a>
         </div>
 
@@ -42,7 +41,6 @@
                             <div class="f-1">@data.s_no</div>
                             <div class="f-1">@data.Date.ToString("yyyy年MM月")</div>
                             <div class="f-1">
-                                @*<a target="_blank" href="~/assets/upload/Subsidy/@data.s_insur_member">@data.s_insur_member_name</a>*@
                                 <a href=@Url.Content("~/assets/upload/Subsidy/" + data.id_name + "_" + data.id_id + "/"+data.LaborFile) target="_blank">@data.LaborName</a>
                             </div>
                         </div>

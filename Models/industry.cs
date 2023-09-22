@@ -36,6 +36,8 @@ public partial class industry
 
     public string id_owner { get; set; }
 
+    public string id_owner_area_code { get; set; }
+
     public string id_tel_owner { get; set; }
 
     public string id_extension { get; set; }

@@ -37,7 +37,7 @@
                                     <div class="form-input">
                                         <label for="">加保</label>
                                         <div class="input">
-                                            <p>加保</p>
+                                            <p>@ViewBag.mb_add_insur</p>
                                         </div>
                                     </div>
 
@@ -54,13 +54,20 @@
                                             <p>@Model.mb_insurance_id</p>
                                         </div>
                                     </div>
+                                    
+                                    <div class="form-input">
+                                        <label for="">職務</label>
+                                        <div class="input">
+                                            <p>@Model.mb_position</p>
+                                        </div>
+                                    </div>
 
                                     <div class="form-input">
                                         <label for="">勞動契約</label>
                                         <div class="input file">
                                             @*<input type="file">
-                                                <span></span>
-                                                <button type="button" class="onfile">上傳檔案</button>*@
+                <span></span>
+                <button type="button" class="onfile">上傳檔案</button>*@
                                             <a href="~/assets/upload/Members/@Model.mb_contract" target="_blank">@Model.mb_contract_name</a>
                                         </div>
                                     </div>
@@ -69,8 +76,8 @@
                                         <label for="">薪資證明</label>
                                         <div class="input file">
                                             @*<input type="file">
-                                                <span></span>
-                                                <button type="button" class="onfile">上傳檔案</button>*@
+                <span></span>
+                <button type="button" class="onfile">上傳檔案</button>*@
                                             <a href="~/assets/upload/Members/@Model.mb_income_certificate" target="_blank">@Model.mb_income_certificate_name</a>
                                         </div>
                                     </div>

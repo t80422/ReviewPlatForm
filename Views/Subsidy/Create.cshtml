@@ -27,9 +27,9 @@
                             <div class="form-group">
                                 <div class="form-col">
                                     <div class="form-input">
-                                        <label class="required">申請日期</label>
+                                        <label class="required">申請日期(起)</label>
                                         <div class="input date">
-                                            @Html.TextBoxFor(x => x.Date, new { @type = "month", @required = "required" })
+                                            @Html.TextBoxFor(x => x.Date, new { @type = "date", @required = "required" })
                                         </div>
                                     </div>
 
@@ -39,6 +39,9 @@
                                             @Html.TextBoxFor(x => x.Application, new { @type = "file", @required = "required", @accept = ".pdf" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>                                                
+                                            </div>
                                         </div>
 
                                         <label class="demo-file">
@@ -52,6 +55,9 @@
                                             @Html.TextBoxFor(x => x.Labor, new { @type = "file", @accept = ".pdf" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
 
                                         <label class="demo-file">
@@ -70,6 +76,9 @@
                                             @Html.TextBoxFor(x => x.ApplicantsList, new { @type = "file", @required = "required", @accept = ".xlsx" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:本欄位請依範例上傳EXCEL<p>
+                                            </div>
                                         </div>
 
                                         <label class="demo-file">
@@ -87,11 +96,21 @@
 
                                 <div class="form-col">
                                     <div class="form-input">
+                                        <label class="required">申請日期(迄)</label>
+                                        <div class="input date">
+                                            @Html.TextBoxFor(x => x.s_date_time_end, new { @type = "date", @required = "required" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
                                         <label class="required">切結書</label>
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.Affidavit, new { @type = "file", @required = "required", @accept = ".pdf" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
 
                                         <label class="demo-file">
@@ -105,6 +124,9 @@
                                             @Html.TextBoxFor(x => x.Receipt, new { @type = "file", @required = "required", @accept = ".pdf" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
 
                                         <label class="demo-file">
@@ -118,6 +140,9 @@
                                             @Html.TextBoxFor(x => x.EmployeeList, new { @type = "file", @required = "required", @accept = ".xlsx" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:本欄位請依範例上傳EXCEL<p>
+                                            </div>
                                         </div>
 
                                         <label class="demo-file">
@@ -130,7 +155,7 @@
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.OtherFile, new { @type = "file", @accept = "" })
                                             <span></span>
-                                            <button class="onfile" type="button">上傳檔案</button>
+                                            <button class="onfile" type="button">上傳檔案</button>                                            
                                         </div>
                                     </div>
 
@@ -149,7 +174,7 @@
 
                 <div class="form-btn">
                     <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
-                    <button class="btn-submit" type="submit">儲存</button>
+                    <button class="btn-submit" type="submit">下一步</button>
                 </div>
             }
         </div>

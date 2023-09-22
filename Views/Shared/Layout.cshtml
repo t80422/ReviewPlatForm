@@ -41,7 +41,7 @@
             <div class="banner-img">
                 <img src="~/assets/image/logo.jpg">
             </div>
-            <div class="banner-text">交通部觀光局協助審查旅宿業者申請穩定接待國際旅客服務量能補助</div>
+            <div class="banner-text">交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助</div>
         </div>
 
         @if(Session["ResetPW"] == "N") { 
@@ -67,13 +67,10 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="@Url.Action("Index","Subsidy")">補助申請</a>
-                                @*<button type="button"><span>補助申請</span></button>*@
-                                @*<ul class="nav-sub">
-                                        <li><a href="@Url.Action("Index","Subsidy")">補助申請</a></li>
-                                        <li><a href="@Url.Action("Index","Members")"><span>人員資料</span></a></li>
-                                        <li><a href="@Url.Action("Index","SubMembers")">申請補助人員</a></li>
-                                    </ul>*@
+                                <a href="@Url.Action("Index","Subsidy")">補助申請</a>                                
+                            </li>
+                            <li class="nav-item">
+                                <a href="@Url.Action("Index","Members")">人員資料</a>
                             </li>
                         }
                         else if (perm >= 0)

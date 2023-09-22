@@ -40,5 +40,7 @@ namespace WebApplication1.Models
 
         public string mb_income_certificate_name { get; set; }
         public Nullable<bool> mb_full_time_or_not { get; set; }
+
+        public string mb_position { get; set; }
     }
 }

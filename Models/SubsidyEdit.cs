@@ -5,6 +5,8 @@ namespace WebApplication1.Models
 {
     public class SubsidyEdit
     {
+        //申請日期(迄)
+        public Nullable<System.DateTime> s_date_time_end { get; set; }
         //案號
         public string s_no { get; set; }
         //旅宿名稱

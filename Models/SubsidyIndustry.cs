@@ -5,6 +5,8 @@ namespace WebApplication1.Models
 {
     public class SubsidyIndustry
     {
+        //申請月份(迄)
+        public Nullable<System.DateTime> s_date_time_end { get; set; }
         public int s_id { get; set; }
 
         public int s_id_id { get; set; }

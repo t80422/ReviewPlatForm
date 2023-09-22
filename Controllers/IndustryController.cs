@@ -117,8 +117,10 @@ namespace WebApplication1.Controllers
                 id_city = data.id_city,
                 id_it_id = data.id_it_id,
                 id_area_code = data.id_area_code,
-                id_postal_code = data.id_postal_code
-            };           
+                id_postal_code = data.id_postal_code,
+                id_name = data.id_name,
+                id_owner_area_code = data.id_owner_area_code,
+            };
 
             return View(result);
         }
@@ -149,15 +151,16 @@ namespace WebApplication1.Controllers
                     updateData.id_license_name = data.id_license != null ? data.id_license.FileName : updateData.id_license_name;
                     updateData.id_register = register ?? updateData.id_register;
                     updateData.id_register_name = data.id_register != null ? data.id_register.FileName : updateData.id_register_name;
-                    
-                    updateData.id_bank_acct_name=data.id_bank_acct_name;
-                    updateData.id_bank_code=data.id_bank_code;
+
+                    updateData.id_bank_acct_name = data.id_bank_acct_name;
+                    updateData.id_bank_code = data.id_bank_code;
                     updateData.id_owner = data.id_owner;
                     updateData.id_tel_owner = data.id_tel_owner;
                     updateData.id_extension = data.id_extension;
                     updateData.id_owner_phone = data.id_owner_phone;
                     updateData.id_tax_id = data.id_tax_id;
                     updateData.id_bank_acct = data.id_bank_acct;
+                    updateData.id_owner_area_code = data.id_owner_area_code;
 
                     db.SaveChanges();
                     Session["msg"] = "修改成功";
@@ -195,7 +198,6 @@ namespace WebApplication1.Controllers
             if (file != null && file.ContentLength > 0)
             {
                 string extension = Path.GetExtension(file.FileName).Trim();
-
 
                 if (extension != ".xlsx" && extension != ".xls") throw new Exception("請確認副檔名是否正確!");
 
@@ -264,12 +266,24 @@ namespace WebApplication1.Controllers
                                 // 這次是否為更新
                                 bool Updated = Data.id_id > 0;
 
+                                string[] citySplit = { };
+
                                 #region 加入資料
+
+                                if (Row.IndexOf("地址") >= 0)
+                                {
+                                    string[] cities = { "臺北市", "新北市", "基隆市", "新竹市", "桃園市", "新竹縣", "宜蘭縣", "臺中市", "苗栗縣", "彰化縣", "南投縣", "雲林縣", "高雄市", "臺南市", "嘉義市", "嘉義縣", "屏東縣", "澎湖縣", "花蓮縣", "臺東縣", "金門縣", "連江縣" };
+                                    citySplit = row[Row.IndexOf("地址")].Split(cities, StringSplitOptions.RemoveEmptyEntries);
+                                }
+                                Console.WriteLine(citySplit[0]);
+                                Console.WriteLine(citySplit[1]);
 
                                 Data.id_id = Data.id_id > 0 ? Data.id_id : 0;
                                 Data.id_it_id = type;
                                 Data.id_name = Row.IndexOf("中文名稱") >= 0 ? row[Row.IndexOf("中文名稱")] : Data.id_name;
-                                Data.id_address = Row.IndexOf("地址") >= 0 ? row[Row.IndexOf("地址")] : Data.id_address;
+                                Data.id_postal_code = citySplit[0] != null ? citySplit[0] : "";
+                                //Data.id_address = Row.IndexOf("地址") >= 0 ? row[Row.IndexOf("地址")] : Data.id_address;
+                                Data.id_address = citySplit[1] != null ? citySplit[1] : "";
                                 Data.id_tel = Row.IndexOf("電話或手機") >= 0 ? row[Row.IndexOf("電話或手機")] : Data.id_tel;
                                 Data.id_fax = Row.IndexOf("傳真") >= 0 ? row[Row.IndexOf("傳真")] : Data.id_fax;
                                 Data.id_company = Row.IndexOf("公司/事業名稱") >= 0 ? row[Row.IndexOf("公司/事業名稱")] : Data.id_company;
@@ -280,10 +294,9 @@ namespace WebApplication1.Controllers
                                 var ccc = row[Row.IndexOf("合計總房間數")] ?? "0";
                                 var ddd = Convert.ToInt32(ccc);
                                 Data.id_room = Row.IndexOf("合計總房間數") >= 0 ? Convert.ToInt32(row[Row.IndexOf("合計總房間數")] ?? "0") : Data.id_room;
-                                //Convert.ToInt32(Row.IndexOf("合計總房間數") >= 0 ? (row[Row.IndexOf("合計總房間數")] ?? "0") : (Data.id_room ?? 0).ToString());
                                 Data.id_last_time = DateTime.Now;
                                 Data.id_email = Row.IndexOf("E-mail") >= 0 ? row[Row.IndexOf("E-mail")] : Data.id_email;
-                                Data.id_city = Row.IndexOf("E-mail") >= 0 ? row[Row.IndexOf("E-mail")] : Data.id_city;
+                                Data.id_city = Row.IndexOf("所在縣市") >= 0 ? row[Row.IndexOf("所在縣市")] : Data.id_city;
 
                                 db.industry.AddOrUpdate(x => x.id_tax_id, Data);
                                 db.SaveChanges();

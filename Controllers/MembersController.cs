@@ -31,7 +31,23 @@ namespace WebApplication1.Controllers
             //      new SelectListItem {Text="調薪",Value="3"}
             //};
             //ViewBag.List = new SelectList(list, "Value", "Text", string.Empty);
+            var mb_add_insur = new List<SelectListItem>()
+            {
+                new SelectListItem {Text="請選擇", Value="" },
+                new SelectListItem {Text="加保", Value="1" },
+                new SelectListItem {Text="退保", Value="2" },
+                new SelectListItem {Text="調薪", Value="3" },
+                new SelectListItem {Text="在職", Value="4" },
+            };
+            ViewBag.mb_add_insur = new SelectList(mb_add_insur, "Value", "Text", string.Empty);
 
+            var mb_position = new List<SelectListItem>()
+            {
+                new SelectListItem {Text="請選擇", Value="" },
+                new SelectListItem {Text="房務", Value="房務" },
+                new SelectListItem {Text="清潔人員", Value="清潔人員" },
+            };
+            ViewBag.mb_position = new SelectList(mb_position, "Value", "Text", string.Empty);
             return View();
         }
 
@@ -114,7 +130,24 @@ namespace WebApplication1.Controllers
                 mb_surrender_date = data.mb_surrender_date,
                 mb_full_time_or_not = data.mb_full_time_or_not,
                 mb_full_time_date = data.mb_full_time_date,
+                mb_position = data.mb_position,
             };
+
+            var mb_add_insur = new List<SelectListItem>()
+            {
+                new SelectListItem {Text="加保", Value="1" },
+                new SelectListItem {Text="退保", Value="2" },
+                new SelectListItem {Text="調薪", Value="3" },
+                new SelectListItem {Text="在職", Value="4" },               
+            };
+            ViewBag.mb_add_insur = new SelectList(mb_add_insur, "Value", "Text", result.mb_add_insur);
+
+            var mb_position = new List<SelectListItem>()
+            {
+                new SelectListItem {Text="房務", Value="房務" },
+                new SelectListItem {Text="清潔人員", Value="清潔人員" },                
+            };
+            ViewBag.mb_position = new SelectList(mb_position, "Value", "Text", result.mb_position);
 
             return View(result);
         }
@@ -152,6 +185,7 @@ namespace WebApplication1.Controllers
                     updateData.mb_surrender_date = data.mb_surrender_date;
                     updateData.mb_full_time_or_not = data.mb_full_time_or_not;
                     updateData.mb_full_time_date = data.mb_full_time_date;
+                    updateData.mb_position = data.mb_position;
                     updateData.mb_id_id = (int)Session["UserID"];
 
                     db.SaveChanges();
@@ -170,7 +204,23 @@ namespace WebApplication1.Controllers
             {
                 return HttpNotFound();
             }
+            switch (int.Parse(data.mb_add_insur))
+            {
+                case 1:
+                    ViewBag.mb_add_insur = "加保";
+                    break;
+                case 2:
+                    ViewBag.mb_add_insur = "退保";
+                    break;
+                case 3:
+                    ViewBag.mb_add_insur = "調薪";
+                    break;
+                case 4:
 
+                default:
+                    ViewBag.mb_add_insur = "在職";
+                    break;
+            }
             return View(data);
         }
 

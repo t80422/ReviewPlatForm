@@ -9,6 +9,10 @@
 
 @model WebApplication1.Models.Industry.Industry
 
+@*====================
+    審核通過後要禁止修改
+    ====================*@
+
 <main class="container-wrap">
     <div class="container-main">
         <div class="tool-wrap">
@@ -24,6 +28,8 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(x => x.id_id)
 
+                var readOnlyAttribute = Model.id_review == "審核通過" ? new { @readonly = "readonly" } : null;
+
                 <div class="form-main">
                     <div class="form-title">
                         <h3>修改旅宿業者資料</h3>
@@ -33,6 +39,13 @@
                         <div class="form-flex">
                             <div class="form-group">
                                 <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">旅宿名稱</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_name, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
                                     <div class="form-input">
                                         <label for="">旅宿別</label>
                                         <div class="input">
@@ -51,7 +64,7 @@
                                     <div class="form-input">
                                         <label for="">區碼</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_area_code)
+                                            @Html.TextBoxFor(x => x.id_area_code, readOnlyAttribute)
                                         </div>
                                     </div>
 
@@ -72,7 +85,7 @@
                                     <div class="form-input">
                                         <label for="">郵遞區號</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_postal_code)
+                                            @Html.TextBoxFor(x => x.id_postal_code, readOnlyAttribute)
                                         </div>
                                     </div>
 
@@ -100,14 +113,14 @@
                                     <div class="form-input">
                                         <label for="">銀行戶名</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_bank_acct)
+                                            @Html.TextBoxFor(x => x.id_bank_acct, readOnlyAttribute)
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">銀行代碼(含分公司)</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_bank_code)
+                                            @Html.TextBoxFor(x => x.id_bank_code, readOnlyAttribute)
                                         </div>
                                     </div>
                                 </div>
@@ -116,28 +129,32 @@
                                     <div class="form-input">
                                         <label for="">承辦人</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_owner)
+                                            @Html.TextBoxFor(x => x.id_owner, readOnlyAttribute)
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">承辦人電話</label>
-                                        <div class="input">
-                                            @Html.TextBoxFor(x => x.id_tel_owner)
+                                        <div class="input" style="display:flex">
+                                            <div style="width:60px;margin-right:15px;">
+                                                @Html.TextBoxFor(x => x.id_owner_area_code, readOnlyAttribute)
+                                            </div>
+                                            @*@Html.TextBoxFor(x => x.id_owner_area_code, new { @style = "width:60px;margin-right:15px;" })*@
+                                            @Html.TextBoxFor(x => x.id_tel_owner, readOnlyAttribute)
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">承辦人分機</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_extension)
+                                            @Html.TextBoxFor(x => x.id_extension, readOnlyAttribute)
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">承辦人手機</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_owner_phone)
+                                            @Html.TextBoxFor(x => x.id_owner_phone, readOnlyAttribute)
                                         </div>
                                     </div>
 
@@ -158,7 +175,7 @@
                                     <div class="form-input">
                                         <label for="">銀行帳號</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_bank_acct)
+                                            @Html.TextBoxFor(x => x.id_bank_acct, readOnlyAttribute)
                                         </div>
                                     </div>
 
@@ -168,6 +185,9 @@
                                             @Html.TextBoxFor(x => x.id_passbook, new { @type = "file" })
                                             <span>@Model.id_passbook_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -177,6 +197,9 @@
                                             @Html.TextBoxFor(x => x.id_license, new { @type = "file" })
                                             <span>@Model.id_license_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
                                     </div>
 
@@ -186,6 +209,9 @@
                                             @Html.TextBoxFor(x => x.id_register, new { @type = "file" })
                                             <span>@Model.id_register_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

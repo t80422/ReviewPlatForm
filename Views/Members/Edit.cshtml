@@ -45,11 +45,7 @@
                                     <div class="form-input">
                                         <label for="">加保</label>
                                         <div class="input select">
-                                            <select name="" id="">
-                                                <option value="1">加保</option>
-                                                <option value="2">退保</option>
-                                                <option value="3">調薪</option>
-                                            </select>
+                                            @Html.DropDownListFor(x => x.mb_add_insur,ViewBag.mb_add_insur as IEnumerable<SelectListItem>)                                           
                                         </div>
                                     </div>
 
@@ -66,6 +62,13 @@
                                             @Html.TextBoxFor(x => x.mb_insurance_id)
                                         </div>
                                     </div>
+                                    <div class="form-input">
+                                        <label for="">職務</label>
+                                        <div class="input select">
+                                            @Html.DropDownListFor(x => x.mb_position, ViewBag.mb_position as IEnumerable<SelectListItem>)
+                                            
+                                        </div>
+                                    </div>
 
                                     <div class="form-input">
                                         <label for="">勞動契約</label>
@@ -73,6 +76,9 @@
                                             @Html.TextBoxFor(x => x.mb_contract, new { @type = "file", @accept = ".pdf" })
                                             <span>@Model.mb_contract_name</span>
                                             <button type="button" class="onfile">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
 
                                         @if (perm == 3)
@@ -89,6 +95,9 @@
                                             @Html.TextBoxFor(x => x.mb_income_certificate, new { @type = "file", @accept = ".pdf" })
                                             <span>@Model.mb_income_certificate_name</span>
                                             <button type="button" class="onfile">上傳檔案</button>
+                                            <div class="red-text">
+                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                            </div>
                                         </div>
 
                                         @if (perm == 3)
@@ -102,7 +111,7 @@
 
                                 <div class="form-col">
                                     <div class="form-input">
-                                        <label for="">出生年(民國)</label>
+                                        <label for="">出生年月日</label>
                                         <div class="input">
                                             @Html.TextBoxFor(x => x.mb_birthday)
                                         </div>
@@ -130,7 +139,7 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label for="">是否到職轉正</label>
+                                        <label for="">部分工時轉正</label>
                                         <div class="input checkbox">
                                             <input type="radio" name="pos" id="Yes">
                                             <label for="Yes">是</label>

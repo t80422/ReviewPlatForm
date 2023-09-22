@@ -190,9 +190,10 @@ namespace WebApplication1.Controllers
                     s_receipt_name = data.Receipt != null ? data.Receipt.FileName : "",
                     s_else = OtherFile,
                     s_else_name = data.OtherFile != null ? data.OtherFile.FileName : "",
-                    s_applicants = data.ApplicantsListName,
+                    s_applicants = ApplicantsList,
                     s_applicants_name = data.ApplicantsList != null ? data.ApplicantsList.FileName : "",
-                    s_review = "待補件"
+                    s_review = "待補件",
+                    s_date_time_end = data.s_date_time_end
                 };
 
                 db.subsidy.Add(insertData);
@@ -216,20 +217,20 @@ namespace WebApplication1.Controllers
                     {
                         if (String.IsNullOrEmpty(sheet.Value[i][3])) continue;
 
-                        string insur;
-                        switch (sheet.Value[i][5])
-                        {
-                            case "加保":
-                                insur = "1"; break;
-                            case "退保":
-                                insur = "2"; break;
-                            case "調薪":
-                                insur = "3"; break;
-                            default:
-                                insur = ""; break;
-                        }
+                        //string insur;
+                        //switch (sheet.Value[i][5])
+                        //{
+                        //    case "加保":
+                        //        insur = "1"; break;
+                        //    case "退保":
+                        //        insur = "2"; break;
+                        //    case "調薪":
+                        //        insur = "3"; break;
+                        //    default:
+                        //        insur = ""; break;
+                        //}
                         int hire;
-                        switch (sheet.Value[i][12])
+                        switch (sheet.Value[i][10])
                         {
                             case "新聘":
                                 hire = 1; break;
@@ -239,40 +240,44 @@ namespace WebApplication1.Controllers
                                 hire = 0; break;
                         }
                         string IDCard = sheet.Value[i][3] ?? "";
-                        member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
-                        memberData.mb_id = memberData.mb_id > 0 ? memberData.mb_id : 0;
-                        memberData.mb_id_id = data.id_id;
-                        memberData.mb_insurance_id = sheet.Value[i][0] ?? "";
-                        memberData.mb_name = sheet.Value[i][1] ?? "";
-                        memberData.mb_birthday = sheet.Value[i][2] ?? "";
-                        memberData.mb_id_card = sheet.Value[i][3] ?? "";
-                        memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
-                        memberData.mb_add_insur = insur;
-                        memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
-                        memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][7] ?? ""));
-                        memberData.mb_memo = sheet.Value[i][8] ?? "";
-                        memberData.mb_full_time_or_not = sheet.Value[i][9] == "是";
-                        memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][10] ?? ""));
-                        memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][11] ?? ""));
-                        memberData.mb_hire_type = hire;
-                        memberData.mb_position = sheet.Value[i][13] ?? "";
-                        memberData.mb_last_time = DateTime.Now;
-                        memberData.mb_s_no = "A" + pkValue.ToString("D5");
-
-                        db.member.AddOrUpdate(x => x.mb_id_card, memberData);
-                        db.SaveChanges();
-
-                        insertSMembers.Add(new subsidy_member()
+                        if (IDCard!="")
                         {
-                            sm_s_id = insertData.s_id,
-                            sm_agree_start = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][14] ?? "")),
-                            sm_agree_end = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][15] ?? "")),
+                            member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
 
-                            sm_advance_money = Convert.ToInt32(sheet.Value[i][16] ?? "0"),
-                            sm_id_id = data.id_id,
-                            sm_mb_id = memberData.mb_id,
-                            sm_review = "待補件"
-                        });
+                            memberData.mb_id = memberData.mb_id > 0 ? memberData.mb_id : 0;
+                            memberData.mb_id_id = data.id_id;
+                            memberData.mb_insurance_id = sheet.Value[i][0] ?? "";
+                            memberData.mb_name = sheet.Value[i][1] ?? "";
+                            memberData.mb_birthday = sheet.Value[i][2] ?? "";
+                            memberData.mb_id_card = sheet.Value[i][3] ?? "";
+                            memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
+                            //memberData.mb_add_insur = insur;
+                            memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][5] ?? ""));
+                            memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
+                            //memberData.mb_memo = sheet.Value[i][7] ?? "";
+                            memberData.mb_full_time_or_not = sheet.Value[i][7] == "是";
+                            memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][8] ?? ""));
+                            memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][9] ?? ""));
+                            memberData.mb_hire_type = hire;
+                            memberData.mb_position = sheet.Value[i][11] ?? "";
+                            memberData.mb_last_time = DateTime.Now;
+                            memberData.mb_s_no = "A" + pkValue.ToString("D5");
+
+                            db.member.AddOrUpdate(x => x.mb_id_card, memberData);
+                            db.SaveChanges();
+
+                            insertSMembers.Add(new subsidy_member()
+                            {
+                                sm_s_id = insertData.s_id,
+                                sm_agree_start = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][12] ?? "")),
+                                sm_agree_end = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][13] ?? "")),
+
+                                sm_advance_money = Convert.ToInt32(sheet.Value[i][14] ?? "0"),
+                                sm_id_id = data.id_id,
+                                sm_mb_id = memberData.mb_id,
+                                sm_review = "待補件"
+                            });
+                        }
                     }
                 }
 
@@ -309,20 +314,21 @@ namespace WebApplication1.Controllers
                 EmployeeListName = x.s_emp_lst_name,
                 OtherFileName = x.s_else_name,
                 id_name = y.id_name,
-                s_no = x.s_no
+                s_no = x.s_no,
+                s_date_time_end = x.s_date_time_end
             }).FirstOrDefault();
 
             if (data == null) return HttpNotFound();
 
-            ViewBag.SubMemberList = db.subsidy_member.Where(x => x.sm_s_id == data.s_id).Join(db.member,x=>x.sm_mb_id,y=>y.mb_id,(x,y)=>new SubMembersEdit
+            ViewBag.SubMemberList = db.subsidy_member.Where(x => x.sm_s_id == data.s_id).Join(db.member, x => x.sm_mb_id, y => y.mb_id, (x, y) => new SubMembersEdit
             {
-                mb_name=y.mb_name,
-                mb_id_card=y.mb_id_card,
-                mb_birthday=y.mb_birthday,
-                mb_add_insur_date=y.mb_add_insur_date,
-                mb_surrender_date=y.mb_surrender_date,
-                mb_insur_salary=(int)y.mb_insur_salary,
-                mb_memo=y.mb_memo
+                mb_name = y.mb_name,
+                mb_id_card = y.mb_id_card,
+                mb_birthday = y.mb_birthday,
+                mb_add_insur_date = y.mb_add_insur_date,
+                mb_surrender_date = y.mb_surrender_date,
+                mb_insur_salary = (int)y.mb_insur_salary,
+                mb_memo = y.mb_memo
             }).ToList();
 
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
@@ -632,7 +638,7 @@ namespace WebApplication1.Controllers
                 //OtherFileName = x.s_else_name,
                 id_name = y.id_name,
                 s_no = x.s_no
-            }).OrderByDescending(x=>x.Date).ToPagedList((int)page,10);
+            }).OrderByDescending(x => x.Date).ToPagedList((int)page, 10);
 
             return View(data);
         }

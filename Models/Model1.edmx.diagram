@@ -10,11 +10,11 @@
         <EntityTypeShape EntityType="ReviewPlatformModel.manager" Width="1.5" PointX="6.75" PointY="0.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.user_accounts" Width="1.5" PointX="8.75" PointY="0.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.information" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="ReviewPlatformModel.subsidy" Width="1.5" PointX="9.375" PointY="3.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.member" Width="1.5" PointX="0.75" PointY="8.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.subsidy_member" Width="1.5" PointX="3.375" PointY="6.75" />
-        <EntityTypeShape EntityType="ReviewPlatformModel.industry" Width="1.5" PointX="5.375" PointY="6.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.News" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="ReviewPlatformModel.subsidy" Width="1.5" PointX="7.375" PointY="3.75" />
+        <EntityTypeShape EntityType="ReviewPlatformModel.industry" Width="1.5" PointX="9.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -24,6 +24,8 @@ public partial class subsidy
 
     public System.DateTime s_date_time { get; set; }
 
+    public Nullable<System.DateTime> s_date_time_end { get; set; }
+
     public Nullable<int> s_money { get; set; }
 
     public Nullable<System.DateTime> s_grant_date { get; set; }
