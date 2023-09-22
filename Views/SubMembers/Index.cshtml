@@ -7,7 +7,11 @@
     // 3. 業者3
 }
 
-@model IEnumerable<WebApplication1.Models.SubMembersEdit>
+@*@model IEnumerable<WebApplication1.Models.SubMembersEdit>*@
+@using PagedList.Mvc;
+@using PagedList;
+
+@model IPagedList<WebApplication1.Models.SubMembersEdit>
 
 <main class="container-wrap">
     <div class="container-main">
@@ -19,9 +23,9 @@
 
         <!-- tool -->
         <div class="tool-wrap">
-            <div class="tool-search">
-                <input type="text" placeholder="請輸入關鍵字搜尋">
-            </div>
+            @*<div class="tool-search">
+                    <input type="text" placeholder="請輸入關鍵字搜尋">
+                </div>*@
 
             @if (perm == 3)
             {
@@ -94,17 +98,13 @@
     </div>
     <!-- pages -->
     <div class="pages-wrap">
-        <button class="btn-prev"></button>
-        <ul>
-            <li class="is-active">1</li>
-            <li>
-                <a href="">2</a>
-            </li>
-            <li>
-                <a href="">3</a>
-            </li>
-        </ul>
-        <button class="btn-next"></button>
+        @Html.PagedListPager(Model, page => Url.Action("Index", "Subsidy", new { page }), new PagedListRenderOptions()
+   {
+       DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+       DisplayLinkToLastPage = PagedListDisplayMode.Always,
+       DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+       DisplayLinkToNextPage = PagedListDisplayMode.Always
+   })
     </div>
 
     <script>

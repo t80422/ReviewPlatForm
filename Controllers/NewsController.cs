@@ -22,9 +22,13 @@ namespace WebApplication1.Controllers
         }
 
         // GET: News/Details/5
-        public ActionResult Detail()
+        public ActionResult Detail(int id)
         {
-            return View();
+            var data = db.News.Find(id);
+
+            if (data == null) return HttpNotFound();
+
+            return View(data);            
         }
 
         // GET: News/Create

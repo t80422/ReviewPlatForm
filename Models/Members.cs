@@ -11,6 +11,7 @@ namespace WebApplication1.Models
 
         public string mb_name { get; set; }
 
+        //身分證字號
         public string mb_id_card { get; set; }
 
         public string mb_birthday { get; set; }

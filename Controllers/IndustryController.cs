@@ -115,7 +115,9 @@ namespace WebApplication1.Controllers
                 id_passbook_name = data.id_passbook_name,
                 id_review = data.id_review,
                 id_city = data.id_city,
-                id_it_id = data.id_it_id,                
+                id_it_id = data.id_it_id,
+                id_area_code = data.id_area_code,
+                id_postal_code = data.id_postal_code
             };           
 
             return View(result);

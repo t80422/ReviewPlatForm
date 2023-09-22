@@ -12,14 +12,14 @@
 <main class="container-wrap">
     <div class="container-main">
         <div class="form-wrap">
-            @using (Html.BeginForm("Create", "Members"))
+            @using (Html.BeginForm("Create", "Members", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                 <div class="form-main">
                     <div class="form-title">
-                        <h3>人員資料上傳</h3>
+                        <h3>公司人員-手動新增</h3>
                     </div>
 
                     <div class="form-content">
@@ -27,16 +27,16 @@
                             <div class="form-group">
                                 <div class="form-col">
                                     <div class="form-input">
-                                        <label for="">姓名</label>
+                                        <label class="required">姓名</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.mb_name)
+                                            @Html.TextBoxFor(x => x.mb_name, new { @required = "required" })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
-                                        <label for="">身分證</label>
+                                        <label class="required">身分證</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.mb_id_card)
+                                            @Html.TextBoxFor(x => x.mb_id_card, new { @required = "required", @pattern = "^[A-Z][0-9]{9}$", @title = "請依照身分證字號的格式輸入" })
                                         </div>
                                     </div>
 
@@ -68,23 +68,33 @@
                                     <div class="form-input">
                                         <label for="">勞動契約</label>
                                         <div class="input file">
-                                            <input type="file">
+                                            @Html.TextBoxFor(x => x.mb_contract, new { @type = "file", @accept = ".pdf" })
                                             <span></span>
                                             <button type="button" class="onfile">上傳檔案</button>
                                         </div>
+
                                         @if (perm == 3)
-                                        {<label class="demo-file">範本檔</label>}
+                                        {
+                                            <label class="demo-file">
+                                                <a href="~/assets/sample/勞動契約(範本檔).pdf" download>範本檔</a>
+                                            </label>
+                                        }
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">薪資證明</label>
                                         <div class="input file">
-                                            <input type="file">
+                                            @Html.TextBoxFor(x => x.mb_income_certificate, new { @type = "file", @accept = ".pdf" })
                                             <span></span>
                                             <button type="button" class="onfile">上傳檔案</button>
                                         </div>
+
                                         @if (perm == 3)
-                                        {<label class="demo-file">範本檔</label>}
+                                        {
+                                            <label class="demo-file">
+                                                <a href="~/assets/sample/薪資證明(範本檔).pdf" download>範本檔</a>
+                                            </label>
+                                        }
                                     </div>
                                 </div>
 
@@ -95,50 +105,44 @@
                                             @Html.TextBoxFor(x => x.mb_birthday)
                                         </div>
                                     </div>
+
                                     <div class="form-input">
                                         <label for="">投保薪資</label>
                                         <div class="input">
                                             @Html.TextBoxFor(x => x.mb_insur_salary)
                                         </div>
                                     </div>
+
                                     <div class="form-input">
                                         <label for="">加保日期</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.mb_add_insur_date)
+                                            @Html.TextBoxFor(x => x.mb_add_insur_date, new { @type = "date" })
                                         </div>
                                     </div>
+
                                     <div class="form-input">
                                         <label for="">退保日期</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.mb_surrender_date)
+                                            @Html.TextBoxFor(x => x.mb_surrender_date, new { @type = "date" })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">是否到職轉正</label>
                                         <div class="input checkbox">
-                                            <input type="checkbox" id="Yes">
+                                            <input type="radio" name="pos" id="Yes">
                                             <label for="Yes">是</label>
-                                            <input type="checkbox" id="No">
+                                            <input type="radio" name="pos" id="No">
                                             <label for="No">否</label>
                                         </div>
                                     </div>
 
                                     <div class="form-input">
-                                        <label for="">至職轉正日期</label>
+                                        <label for="">正職轉正日期</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.mb_full_time_date)
+                                            @Html.TextBoxFor(x => x.mb_full_time_date, new { @type = "date" })
                                         </div>
                                     </div>
-
-                                    <div class="form-input">
-                                        <label for="">符合申請(起)</label>
-                                        <div class="input">
-                                            @Html.EditorFor(x => x.sm_agree_start, new { htmlAttributes = new { type = "date" } })
-                                        </div>
-                                    </div>
-
-
                                 </div>
                             </div>
                         </div>

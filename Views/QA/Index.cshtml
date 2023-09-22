@@ -57,8 +57,9 @@
                                 <div class="f-1 ta-center ml-1">@it.if_date</div>
                                 <div class="f-3">@it.if_title</div>
                                 <div class="f-3">
-									<textarea class="textarea-autoheigh" disabled>@it.if_content</textarea>
-								</div>
+                                    <!--<textarea class="textarea-autoheigh" disabled>@it.if_content</textarea>-->
+                                    <a  href = '@Url.Action("Detail","QA",new { id = it.if_id })'>詳細</a>
+                                </div>
                                 @if (perm < 3)
                                 {
                                     <div class="f-1">

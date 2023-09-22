@@ -157,6 +157,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HtmlHelpers\DateInput.cs" />
     <Compile Include="Models\InsurListEdit.cs" />
     <Compile Include="Models\Members.cs" />
     <Compile Include="Models\SubMembersEdit.cs" />
@@ -314,6 +315,18 @@
     <Content Include="assets\scss\pages\_index.scss" />
     <Content Include="assets\scss\pages\_login.scss" />
     <Content Include="assets\scss\style.scss" />
+    <Content Include="assets\sample\切結書%28範本檔%29.pdf" />
+    <Content Include="assets\sample\員工清冊%28範本檔%29.xlsx" />
+    <Content Include="assets\sample\商業登記或稅籍證明%28範本檔%29.pdf" />
+    <Content Include="assets\sample\營業執照或登記證%28範本檔%29.pdf" />
+    <Content Include="assets\sample\申請人員清冊%28範本檔%29.xlsx" />
+    <Content Include="assets\sample\申請書%28範本檔%29.pdf" />
+    <Content Include="assets\sample\範本檔案.docx" />
+    <Content Include="assets\sample\範本檔案.pdf" />
+    <Content Include="assets\sample\銀行存摺%28範本檔%29.pdf" />
+    <Content Include="assets\sample\領據%28範本檔%29.pdf" />
+    <Content Include="assets\sample\勞動契約%28範本檔%29.pdf" />
+    <Content Include="assets\sample\薪資證明%28範本檔%29.pdf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -341,7 +354,6 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\News\Create.cshtml" />
     <Content Include="Views\News\Delete.cshtml" />
-    <Content Include="Views\News\Details.cshtml" />
     <Content Include="Views\News\Edit.cshtml" />
     <Content Include="Views\News\Index.cshtml" />
     <Content Include="Views\Shared\Layout.cshtml" />
@@ -381,6 +393,7 @@
     <Content Include="Views\Subsidy\Report.cshtml" />
     <Content Include="Views\Members\Detail.cshtml" />
     <Content Include="Views\Subsidy\InsurList.cshtml" />
+    <Content Include="Views\News\Detail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

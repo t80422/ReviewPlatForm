@@ -74,6 +74,10 @@ public partial class industry
 
     public string id_city { get; set; }
 
+    public string id_postal_code { get; set; }
+
+    public string id_area_code { get; set; }
+
 }
 
 }

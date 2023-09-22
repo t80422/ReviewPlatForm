@@ -49,12 +49,13 @@
                     {
                         foreach (var item in Model)
                         {
-                            <div class="list-row pr-2 pl-2">
+                            <div class="list-row pr-2 pl-2" onclick="location.href='@Url.Action("Index", new {id=item.n_id})'">
                                 <div class="f-2 ta-center ml-1">@(item.n_date != null ? Convert.ToDateTime(item.n_date).ToString("yyyy/MM/dd") : "")</div>
                                 <div class="f-5 ta-left">@item.n_title</div>
                                 <div class="f-5 ta-left">
-									<textarea class="textarea-autoheigh" disabled>@item.n_content</textarea>
-								</div>
+                                    <!--<textarea class="textarea-autoheigh" disabled>@item.n_content</textarea>-->
+                                           <a href = '@Url.Action("Detail","News",new { id = item.n_id })'>詳細</a>
+                                </div>
                                 @if (perm >= 0 && perm < 3)
                                 {
                                     <div class="f-1">

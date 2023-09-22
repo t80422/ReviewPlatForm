@@ -34,7 +34,7 @@ namespace WebApplication1.Controllers
                     Session["acct"] = user.ua_acct;
                     Session["msg"] = "登入成功";
                     Session["logintime"] = DateTime.Now.ToString("yyyy/MM/dd");
-
+                    //test test2 test3  test4
                     //perm=3,密碼與統編相同表示第一次登入,須將畫面導向"修改密碼"
                     if ((int)Session["perm"] == 3)
                     {
@@ -47,10 +47,11 @@ namespace WebApplication1.Controllers
                         }
                         else
                         {
+                            Session["ResetPW"] = "N";
                             return RedirectToAction("Index", "Subsidy");
                         }
                     }
-
+                    Session["ResetPW"] = "N";
                     return RedirectToAction("Index", "Industry");
                 }
                 else
@@ -79,6 +80,7 @@ namespace WebApplication1.Controllers
         // 重設密碼
         public ActionResult ResetPwd()
         {
+            Session["ResetPW"] = "Y";
             return View();
         }
 
@@ -96,7 +98,6 @@ namespace WebApplication1.Controllers
                         update.ua_psw = ajax.ConvertToSHA256(newPassword);
 
                         db.SaveChanges();
-
                         return RedirectToAction("Index");
                     }
                     else
@@ -109,6 +110,7 @@ namespace WebApplication1.Controllers
             {
                 ViewBag.Message = "新密碼與確認密碼不相符";
             }
+            
             return View();
         }
     }

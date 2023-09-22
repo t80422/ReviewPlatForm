@@ -1,4 +1,5 @@
 ﻿using PagedList;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebApplication1.Models;
@@ -22,6 +23,15 @@ namespace WebApplication1.Controllers
 
         public ActionResult Create()
         {
+            //var list = new List<SelectListItem>
+            //{
+            //    new SelectListItem {Text="請選擇",Value=""},
+            //     new SelectListItem {Text="加保",Value="1"},
+            //      new SelectListItem {Text="退保",Value="2"},
+            //      new SelectListItem {Text="調薪",Value="3"}
+            //};
+            //ViewBag.List = new SelectList(list, "Value", "Text", string.Empty);
+
             return View();
         }
 
@@ -31,6 +41,14 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
+                //檢查身分證
+                var peopleID = db.member.Where(x=>x.mb_id_card== data.mb_id_card).FirstOrDefault();
+                if (peopleID != null)
+                {
+                    Session["msg"] = "此身分證已被登入";
+                    return View(data);
+                }
+
                 string path = Server.MapPath("~/assets/upload/Members");
 
                 var contract = ajax.UploadFile(data.mb_contract, path);
@@ -43,10 +61,10 @@ namespace WebApplication1.Controllers
                     mb_add_insur = data.mb_add_insur,
                     mb_memo = data.mb_memo,
                     mb_insurance_id = data.mb_insurance_id,
-                    mb_contract = contract ?? "",
-                    mb_contract_name = data.mb_contract != null ? data.mb_contract_name : "",
-                    mb_income_certificate = incom ?? "",
-                    mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate_name : "",
+                    mb_contract = contract,
+                    mb_contract_name = data.mb_contract != null ? data.mb_contract.FileName : "",
+                    mb_income_certificate = incom,
+                    mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate.FileName : "",
                     mb_birthday = data.mb_birthday,
                     mb_insur_salary = data.mb_insur_salary,
                     mb_add_insur_date = data.mb_add_insur_date,
@@ -120,9 +138,9 @@ namespace WebApplication1.Controllers
                     if (!string.IsNullOrEmpty(incom)) ajax.DeleteFile($"{path}/{updateData.mb_income_certificate}");
 
                     updateData.mb_contract = contract ?? updateData.mb_contract;
-                    updateData.mb_contract_name = data.mb_contract != null ? data.mb_contract_name : updateData.mb_contract_name;
+                    updateData.mb_contract_name = data.mb_contract != null ? data.mb_contract.FileName : updateData.mb_contract_name;
                     updateData.mb_income_certificate = incom ?? updateData.mb_income_certificate;
-                    updateData.mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate_name : updateData.mb_income_certificate_name;
+                    updateData.mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate.FileName : updateData.mb_income_certificate_name;
                     updateData.mb_name = data.mb_name;
                     updateData.mb_id_card = data.mb_id_card;
                     updateData.mb_add_insur = data.mb_add_insur;

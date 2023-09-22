@@ -7,7 +7,8 @@
     // 3. 業者3
 }
 
-@model IEnumerable<WebApplication1.Models.SubsidyIndustry>
+@*@model IPagedList<WebApplication1.Models.SubsidyIndustry>*@
+@model IPagedList<WebApplication1.Models.SubsidyIndustry>
 @using PagedList.Mvc;
 @using PagedList;
 
@@ -26,7 +27,7 @@
                 </div>
             }
 
-            <div class="tool-search">
+            @*<div class="tool-search">
                 <input type="text" placeholder="請輸入關鍵字搜尋">
                 <button></button>
             </div>
@@ -34,7 +35,7 @@
             <div class="tool-item">
                 <label>顯示月份：</label>
                 <input type="month" name="name" value="" />
-            </div>
+            </div>*@
 
             <div class="tool-btn">
                 @if (perm >= 0 && perm < 3)
@@ -50,7 +51,7 @@
         </div>
 
         <div class="red-text">
-            <p>本次各申請人數都送出後,即完成本次案件申請</p><br />
+            <p>請按案件送出,即完成本次申請</p><br />
         </div>
 
         <div class="container-nav">
@@ -141,15 +142,13 @@
 
         <!-- pages -->
         <div class="pages-wrap">
-            <button class="btn-prev"></button>
-
-            <ul>
-                <li class="is-active">1</li>
-                <li><a href="">2</a></li>
-                <li><a href="">3</a></li>
-            </ul>
-
-            <button class="btn-next"></button>
+            @Html.PagedListPager(Model, page => Url.Action("Index", "Subsidy", new { page }), new PagedListRenderOptions()
+       {
+           DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+           DisplayLinkToLastPage = PagedListDisplayMode.Always,
+           DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+           DisplayLinkToNextPage = PagedListDisplayMode.Always
+       })
         </div>
     </div>
 

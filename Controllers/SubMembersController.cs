@@ -12,7 +12,7 @@ namespace WebApplication1.Controllers
         private ReviewPlatformEntities db = new ReviewPlatformEntities();
 
         // GET: SubMembers
-        public ActionResult Index(int? id, int? page = 1)
+        public ActionResult Index(int id, int? page = 1)
         {
             var query = db.subsidy_member.Join(db.member, x => x.sm_mb_id, y => y.mb_id, (x, y) => new { SubMember = x, Member = y }).
                 Join(db.subsidy, xy => xy.SubMember.sm_s_id, z => z.s_id, (xy, z) => new SubMembersEdit
@@ -25,15 +25,10 @@ namespace WebApplication1.Controllers
                     sm_s_id = (int)xy.SubMember.sm_s_id,
                     sm_id = xy.SubMember.sm_id,
                     SubsidyNo = z.s_no
-                });
+                }).Where(z => z.sm_s_id == id).OrderBy(x => x.sm_agree_start);
 
-            if (id.HasValue && id.Value != 0)
-            {
-                query = query.Where(z => z.sm_s_id == id.Value);
-                ViewBag.SubsityID = id.Value;
-            }
+            ViewBag.SubsityID = id;
 
-            query = query.OrderBy(x => x.sm_agree_start);
             var result = query.ToPagedList((int)page, 10);
 
             ViewBag.SubNo = db.subsidy.Find(id).s_no;
@@ -66,21 +61,30 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var insertData = new subsidy_member()
+                var newdata = db.subsidy_member.Where(a => a.sm_mb_id == data.sm_mb_id & a.sm_s_id== data.sm_s_id).FirstOrDefault();
+
+                if (newdata == null)
                 {
-                    sm_s_id = data.sm_s_id,
-                    sm_agree_start = data.sm_agree_start,
-                    sm_agree_end = data.sm_agree_end,
-                    sm_advance_money = data.sm_advance_money,
-                    sm_mb_id = data.sm_mb_id,
-                    sm_review = "審核中"
-                };
 
-                db.subsidy_member.Add(insertData);
-                db.SaveChanges();
 
-                Session["msg"] = "新增成功";
+                    var insertData = new subsidy_member()
+                    {
+                        sm_s_id = data.sm_s_id,
+                        sm_agree_start = data.sm_agree_start,
+                        sm_agree_end = data.sm_agree_end,
+                        sm_advance_money = data.sm_advance_money,
+                        sm_mb_id = data.sm_mb_id,
+                        sm_review = "待補件"
+                    };
 
+                    db.subsidy_member.Add(insertData);
+                    db.SaveChanges();
+
+                    Session["msg"] = "新增成功";
+                }
+                else {
+                    Session["msg"] = "人員已存在";
+                }
                 return RedirectToAction("Index", new { id = data.sm_s_id });
             }
             return View(data);
@@ -88,7 +92,7 @@ namespace WebApplication1.Controllers
 
         public ActionResult Edit(int id)
         {
-            var data = db.subsidy_member.Join(db.member, a => a.sm_mb_id, b => b.mb_id, (a, b) => new SubMembersEdit
+            var data = db.subsidy_member.Where(a=>a.sm_id==id).Join(db.member, a => a.sm_mb_id, b => b.mb_id, (a, b) => new SubMembersEdit
             {
                 sm_agree_start = a.sm_agree_start,
                 sm_agree_end = a.sm_agree_end,
@@ -96,37 +100,13 @@ namespace WebApplication1.Controllers
                 sm_mb_id = a.sm_mb_id,
                 sm_id = id,
                 mb_name = b.mb_name,
-                sm_s_id=(int)a.sm_s_id
-            }).FirstOrDefault(z => z.sm_id == id);
-
-            //Debug.Print(data.sm_mb_id.ToString());
-            //int userID = (int)Session["UserID"];
-            //var members = db.member.Where(x => x.mb_id_id == userID).ToList();
-            //ViewBag.Members = new SelectList(members, "mb_id", "mb_name");
-
-            //return View(data);
-
-            //var query = db.subsidy_member.Find(id);
-
-            //var data = new SubMembersEdit
-            //{
-            //    sm_agree_start = query.sm_agree_start,
-            //    sm_agree_end = query.sm_agree_end,
-            //    sm_advance_money = query.sm_advance_money,
-            //    sm_mb_id = query.sm_mb_id,
-            //    sm_id = id,
-            //    mb_name=query
-            //};
+                sm_s_id = (int)a.sm_s_id
+            }).FirstOrDefault();
 
             if (data == null)
             {
                 return HttpNotFound();
             }
-
-            //// 取得所有的人員名稱
-            //int userID = (int)Session["UserID"];
-            //var members = db.member.Where(x => x.mb_id_id == userID).ToList();
-            //ViewBag.Members = new SelectList(members, "mb_id", "mb_name", string.Empty); // 設定選定的值
 
             return View(data);
         }
@@ -148,7 +128,8 @@ namespace WebApplication1.Controllers
                     db.SaveChanges();
                     Session["msg"] = "修改成功";
 
-                    return RedirectToAction("Index", new { id = data.sm_s_id });
+                    var industryID = db.subsidy.Find(data.sm_s_id).s_id;
+                    return RedirectToAction("Index", new { id = industryID });
                 }
             }
             return View(data);
@@ -159,14 +140,14 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        public ActionResult Delete(int smID)
+        public ActionResult Delete(int id)
         {
-            if (smID == 0)
+            if (id == 0)
             {
                 return HttpNotFound();
             }
 
-            var data = db.subsidy_member.Find(smID);
+            var data = db.subsidy_member.Find(id);
             var subID = data.sm_s_id;
             if (data == null)
             {

@@ -9,11 +9,14 @@
     <div class="container-main">
         <!-- tool -->
         <div class="tool-wrap">
-            <div class="tool-btn">
-                <button class="btn-export" onClick="">匯入</button>
-                <button class="btn-download" onClick="">匯出</button>
+            <div class="tool-btn">                
                 <button class="btn-add" onClick="window.location.href = '@Url.Action("Create","Members")'">新增</button>
+                <button class="btn-download" onClick="">匯出</button>
             </div>
+        </div>
+
+        <div class="red-text">
+            <p>人員資料上傳完畢,請返回補助申請</p><br />
         </div>
 
         <div class="container-nav">
@@ -43,11 +46,13 @@
                         <div class="list-row pr-2 pl-2">
                             <div class="f-1 ta-left ml-6">@data.mb_name</div>
                             <div class="f-1">@data.mb_id_card</div>
-                            <div class="f-1">@data.mb_add_insur_date</div>
-                            <div class="f-1">@data.mb_surrender_date</div>
+                            @*<div class="f-1">@data.mb_add_insur_date.Value.ToString("yyyy/MM/dd")</div>*@
+                            <div class="f-1">@(data.mb_add_insur_date.HasValue?data.mb_add_insur_date.Value.ToString("yyyy/MM/dd"):"N/A")</div>
+                            @*<div class="f-1">@data.mb_surrender_date.Value.ToString("yyyy/MM/dd")</div>*@
+                            <div class="f-1">@(data.mb_surrender_date.HasValue?data.mb_surrender_date.Value.ToString("yyyy/MM/dd"):"N/A")</div>
                             <div class="f-1 ta-right">@data.mb_insur_salary</div>
-                            <div class="f-1">@((data.mb_contract==null)?"是":"否")</div>
-                            <div class="f-1">@((data.mb_income_certificate==null)?"是":"否")</div>
+                            <div class="f-1">@((data.mb_contract!=null)?"是":"否")</div>
+                            <div class="f-1">@((data.mb_income_certificate!=null)?"是":"否")</div>
                             <div class="f-1 ta-left ml-6">@data.mb_memo</div>
                             <div class="f-1">
                                 <button class="btn-details" onClick="location.href = '@Url.Action("Detail", "Members", new {id=data.mb_id})'; event.stopPropagation()"></button>

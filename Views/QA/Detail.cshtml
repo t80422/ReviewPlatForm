@@ -1,7 +1,14 @@
-﻿
+﻿@model WebApplication1.Models.information
 @{
     ViewBag.Title = "Detail";
     Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+@{
+    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
 }
 
 <main class="container-wrap">
@@ -23,17 +30,21 @@
                                 <div class="form-col">
                                     <div class="form-input">
                                         <label for="">標題</label>
-                                        <p>testTitle</p>
+                                        <div class="f-5 ta-left">
+                                            @Model.if_title.ToString()
+                                        </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">內文</label>
-                                        <p>testContent</p>
+                                        <div class="input textarea">
+                                            @Html.TextAreaFor(x => x.if_content, new { @class = "textarea-autoheigh", @readonly = "readonly" })
+                                        </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">建立日期</label>
-                                        <p>@DateTime.Now</p>
+                                        <p> @Model.if_date.ToString() </p>
                                     </div>
                                 </div>
                             </div>

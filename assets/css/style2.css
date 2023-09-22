@@ -36,7 +36,7 @@
         align-content: center;
         width: 100%;
         min-height: 48px;
-        font-size: 14px;
+        font-size: 18px;
         font-weight: bold;
         color: #FFF;
         padding: 0 20px 0 55px;
@@ -387,7 +387,7 @@
 
 @media only screen and (max-width: 480px) {
     .banner-wrap .banner-text {
-        font-size: 16px;
+        font-size: 20px;
         line-height: 1.5;
     }
 }
@@ -585,4 +585,8 @@ label.btn-correct.correct::before {
     color: red;
     font-size:large;
     vertical-align:middle;
+}
+
+.list-main * {
+    font-size:20px !important;
 }

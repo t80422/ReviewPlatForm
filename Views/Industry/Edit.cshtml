@@ -6,8 +6,8 @@
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
 }
+
 @model WebApplication1.Models.Industry.Industry
-@using WebApplication1.Controllers;
 
 <main class="container-wrap">
     <div class="container-main">
@@ -49,6 +49,13 @@
                                     </div>
 
                                     <div class="form-input">
+                                        <label for="">區碼</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_area_code)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
                                         <label for="">公司電話</label>
                                         <div class="input">
                                             @Html.TextBoxFor(x => x.id_tel, new { @readonly = "readonly" })
@@ -59,6 +66,13 @@
                                         <label for="">傳真</label>
                                         <div class="input">
                                             @Html.TextBoxFor(x => x.id_fax, new { @readonly = "readonly" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">郵遞區號</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.id_postal_code)
                                         </div>
                                     </div>
 
@@ -155,7 +169,6 @@
                                             <span>@Model.id_passbook_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                         </div>
-                                        @*<a href="@Url.Content("~/assets/upload/Industry/"+Model.id_passbook)" download>下載</a>*@
                                     </div>
 
                                     <div class="form-input">

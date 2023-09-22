@@ -44,6 +44,7 @@
             <div class="banner-text">交通部觀光局協助審查旅宿業者申請穩定接待國際旅客服務量能補助</div>
         </div>
 
+        @if(Session["ResetPW"] == "N") { 
         <!-- aside -->
         <aside class="aside-wrap">
             <div class="aside-main">
@@ -111,7 +112,7 @@
 
             <button class="aside-close"></button>
         </aside>
-
+        }
         <button class="nav-btn"></button>
         <!-- main -->
         @RenderBody()

@@ -8,8 +8,11 @@
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
 
-    var MemberList = (List<WebApplication1.Models.member>)ViewBag.MemberList;
+    //var MemberList = (List<WebApplication1.Models.member>)ViewBag.MemberList;
+    var MemberList = (List<WebApplication1.Models.SubMembersEdit>)ViewBag.SubMemberList;
 }
+
+@using WebApplication1.HtmlHelpers
 
 <main class="container-wrap">
     <div class="container-main">
@@ -30,11 +33,12 @@
                             <div class="form-group">
                                 <div class="form-col">
                                     <div class="form-input">
-                                        <label class="required">申請日期</label>
+                                        <label>申請日期</label>
                                         <div class="input date">
-                                            @Html.TextBoxFor(x => x.Date, new { @type = "month", @required = "required" })
+                                            @Html.YearMonthInputFor(x => x.Date, new {@readonly="readonly"})
                                         </div>
                                     </div>
+
                                     <div class="form-input">
                                         <label class="required">申請書</label>
                                         <div class="input file">
@@ -198,7 +202,7 @@
 
                             <div class="form-hgroup">
                                 <div class="form-head">
-                                    <h2>人員名單</h2>
+                                    <h2>申請人員名單</h2>
                                 </div>
 
                                 <div class="form-list">
@@ -218,6 +222,7 @@
                                                     <div class="f-1 ta-right">投保薪資</div>
                                                     <div class="f-1 ta-left ml-6">備註</div>
                                                 </div>
+
                                                 @if (MemberList != null && MemberList.Count() > 0)
                                                 {
                                                     foreach (var member in MemberList)
@@ -230,6 +235,7 @@
                                                                         <label for="p1" class="btn-correct notyet"></label>
                                                                     </div>
                                                                 </div>
+
                                                                 <div class="f-1 ta-left ml-6">@member.mb_name</div>
                                                                 <div class="f-1">@member.mb_id_card</div>
                                                                 <div class="f-1">@member.mb_birthday</div>

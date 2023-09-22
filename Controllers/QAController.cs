@@ -104,9 +104,13 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult Detail()
+        public ActionResult Detail(int id)
         {
-            return View();
+            if (id == 0 || id == null) return HttpNotFound();
+            var data = db.information.Find(id);
+            if (data == null) return HttpNotFound();
+
+            return View(data);
         }
     }
 }

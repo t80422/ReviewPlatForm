@@ -1,6 +1,9 @@
 ﻿@{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/Layout.cshtml";
+
+    string filePath= Url.Content("~/assets/upload/Subsidy/" + Model.id_name + "_" + Model.id_id + "/");
+
 }
 @model WebApplication1.Models.SubsidyEdit
 
@@ -26,17 +29,18 @@
 
                                     <div class="form-input">
                                         <label>申請書</label>
-                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Application">@Model.ApplicationName</a>
+                                        @*<a target="_blank" href="~/assets/upload/Subsidy/@(Model.id_name)_@Model.id_id/@Model.Application">@Model.ApplicationName</a>*@
+                                        <a target="_blank" href=@filePath@Model.ApplicationFile>@Model.ApplicationName</a>
                                     </div>
 
                                     <div class="form-input">
                                         <label>勞保人員名冊</label>
-                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Labor">@Model.LaborName</a>
+                                        <a target="_blank" href=@filePath@Model.LaborFile>@Model.LaborName</a>
                                     </div>
 
                                     <div class="form-input">
                                         <label>申請人員清冊</label>
-                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.ApplicantsList">@Model.ApplicantsListName</a>
+                                        <a target="_blank" href=@filePath@Model.ApplicantsListFile>@Model.ApplicantsListName</a>
                                     </div>
 
                                     <div class="form-input">
@@ -50,22 +54,22 @@
                                 <div class="form-col">
                                     <div class="form-input">
                                         <label>切結書</label>
-                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Affidavit">@Model.AffidavitName</a>
+                                        <a target="_blank" href=@filePath@Model.AffidavitFile>@Model.AffidavitName</a>
                                     </div>
 
                                     <div class="form-input">
                                         <label>領據</label>
-                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.Receipt">@Model.ReceiptName</a>
+                                        <a target="_blank" href=@filePath@Model.ReceiptFile>@Model.ReceiptName</a>
                                     </div>
 
                                     <div class="form-input">
                                         <label>員工清冊</label>
-                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.EmployeeList">@Model.EmployeeList</a>
+                                        <a target="_blank" href=@filePath@Model.EmployeeListFile>@Model.EmployeeList</a>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="file5">其他文件</label>
-                                        <a target="_blank" href="~/assets/upload/Subsidy/@Model.OtherFile">@Model.OtherFileName</a>
+                                        <a target="_blank" href=@filePath@Model.OtherFileFile>@Model.OtherFileName</a>
                                     </div>
 
                                     <div class="form-input">

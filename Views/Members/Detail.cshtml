@@ -7,7 +7,7 @@
 <main class="container-wrap">
     <div class="container-main">
         <div class="form-wrap">
-            <form>            
+            <form>
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
@@ -36,25 +36,21 @@
 
                                     <div class="form-input">
                                         <label for="">加保</label>
-                                        <div class="input select">
-                                            <select name="" id="">
-                                                <option value="1">加保</option>
-                                                <option value="2">退保</option>
-                                                <option value="3">調薪</option>
-                                            </select>
+                                        <div class="input">
+                                            <p>加保</p>
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">備註</label>
                                         <div class="input">
-                                            <p>@Model.mb_memo</p>                                            
+                                            <p>@Model.mb_memo</p>
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">勞保序號</label>
-                                        <div class="input">                                            
+                                        <div class="input">
                                             <p>@Model.mb_insurance_id</p>
                                         </div>
                                     </div>
@@ -62,18 +58,20 @@
                                     <div class="form-input">
                                         <label for="">勞動契約</label>
                                         <div class="input file">
-                                            <input type="file">
-                                            <span></span>
-                                            <button type="button" class="onfile">上傳檔案</button>
+                                            @*<input type="file">
+                                                <span></span>
+                                                <button type="button" class="onfile">上傳檔案</button>*@
+                                            <a href="~/assets/upload/Members/@Model.mb_contract" target="_blank">@Model.mb_contract_name</a>
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">薪資證明</label>
                                         <div class="input file">
-                                            <input type="file">
-                                            <span></span>
-                                            <button type="button" class="onfile">上傳檔案</button>
+                                            @*<input type="file">
+                                                <span></span>
+                                                <button type="button" class="onfile">上傳檔案</button>*@
+                                            <a href="~/assets/upload/Members/@Model.mb_income_certificate" target="_blank">@Model.mb_income_certificate_name</a>
                                         </div>
                                     </div>
                                 </div>
