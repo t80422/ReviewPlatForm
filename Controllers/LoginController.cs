@@ -13,7 +13,7 @@ namespace WebApplication1.Controllers
         // GET: Login
         public ActionResult Index()
         {
-            Session["title"] = "交通部觀光局協助審查旅宿業者申請穩定接待國際旅客服務量能補助-旅宿業者"; ;
+            Session["title"] = "交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助-旅宿業者"; ;
             return View();
         }
 

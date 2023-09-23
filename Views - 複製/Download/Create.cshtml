@@ -1,0 +1,97 @@
+﻿@model WebApplication1.Models.Download.DownloadEdit
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="form-wrap">
+            @using (Html.BeginForm("Create", "Download", FormMethod.Post, new { id = "myForm" , enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(x=>x.id)
+                @Html.HiddenFor(x=>x.type)
+                @Html.HiddenFor(x=>x.visible)
+                <div class="form-main">
+                    <div class="form-title">
+                        <h1>新增下載檔案</h1>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">標題</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x=>x.title, new { @required = "required" })
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <label for="">內文</label>
+                                        <div class="input textarea">
+                                            @Html.TextAreaFor(x=>x.content)
+                                            @*<textarea name="" id="" cols="30" rows="10"></textarea>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">檔案一</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.file1, new { @type = "file" })
+                                            <span></span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <label for="">檔案二</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.file2, new { @type = "file" })
+                                            <span></span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <label for="">檔案三</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.file3, new { @type = "file" })
+                                            <span></span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <label for="">檔案四</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.file4, new { @type = "file" })
+                                            <span></span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-input">
+                                        <label for="">檔案五</label>
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.file5, new { @type = "file" })
+                                            <span></span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-btn">
+                    <button class="btn-cancel" type="button" onclick="location.href = '@Url.Action("Index","Download")'">返回</button>
+                    <button class="btn-submit" type="submit">儲存</button>
+                </div>
+
+            }
+        </div>
+    </div>
+</main>
+
+
+

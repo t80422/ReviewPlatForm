@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+@using PagedList.Mvc;
+@using PagedList;
+
+@model IPagedList<WebApplication1.Models.SubMembersEdit>
+
+<main class="container-wrap">
+    <div class="container-main">
+        <!-- tool -->
+
+        <div class="container-nav">
+            <a href="@Url.Action("Index","SubsidyQ")">申請補助列表</a>
+            <a href="@Url.Action("IndexQ","SubMembers")" class="is-active">補助申請人員</a>
+            <!--<a href="@Url.Action("InsurList","Subsidy")">各月勞保清冊</a>-->
+        </div>
+
+        <!-- list -->
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    @if (ViewBag.SubNo != null)
+                    {
+                        <p style="font-size: 30px; line-height: 50px; height: 50px; vertical-align: middle; font-weight:bold;">案號:@ViewBag.SubNo</p>
+                    }
+
+                    <br />
+
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-3">案號</div>
+                        <div class="f-3">人員名稱</div>
+                        <div class="f-3 ">申請金額</div>
+                        <div class="f-3">符合申請(起)</div>
+                        <div class="f-3">符合申請(迄)</div>
+                        <div class="f-3">審核狀態</div>
+                      
+                        @if (perm >= 0 && perm < 3)
+                        {
+                            <div class="f-1">操作</div>
+                        }
+                    </div>
+
+                    @foreach (var data in Model)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-3">@data.SubsidyNo</div>
+                            <div class="f-3">@data.mb_name</div>
+                            <div class="f-3 ">@data.sm_advance_money</div>
+                            <div class="f-3">@((data.sm_agree_start.HasValue) ? data.sm_agree_start.Value.ToString("yyyy/MM/dd") : "N/A")</div>
+                            <div class="f-3">@((data.sm_agree_end.HasValue) ? data.sm_agree_end.Value.ToString("yyyy/MM/dd") : "N/A")</div>
+                            <div class="f-3">@data.sm_review</div>
+
+                          
+                            @if (perm >= 0 && perm < 3)
+                            {
+                                <div class="f-1">
+                                    <button class="btn-details" onClick="location.href='@Url.Action("Edit", "SubMembers")'"></button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- pages -->
+    <div class="pages-wrap">
+        @Html.PagedListPager(Model, page => Url.Action("Index", "Subsidy", new { page }), new PagedListRenderOptions()
+   {
+       DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+       DisplayLinkToLastPage = PagedListDisplayMode.Always,
+       DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+       DisplayLinkToNextPage = PagedListDisplayMode.Always
+   })
+    </div>
+
+    <script>
+   let itemID;
+   // 刪除跳出視窗
+   function del(id){
+       itemID = id;
+       $(".popup-overlay, .js-del-popup").fadeIn();
+       $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+       $(".popup-overlay,.js-del-popup .popup-btn .btn-cancel").on('click', function () {
+           $(".popup-overlay, .js-del-popup").fadeOut();
+       });
+       $('.js-del-popup .popup-btn .btn-submit').on('click', function () {
+           window.location.href = '@Url.Action("Delete")'+"?id="+ id;
+       })
+   }
+   // 送件
+   function review(id){
+       itemID = id;
+       $(".popup-overlay, .js-review-popup").fadeIn();
+       $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+       $(".popup-overlay,.js-review-popup .popup-btn .btn-cancel").on('click', function () {
+           $(".popup-overlay, .js-review-popup").fadeOut();
+       });
+       $('.js-review-popup .popup-btn .btn-submit').on('click', function () {
+           window.location.href = '';
+       })
+   }
+    </script>
+</main>
+
+

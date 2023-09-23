@@ -1,10 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.Presentation;
-using DocumentFormat.OpenXml.VariantTypes;
-using DocumentFormat.OpenXml.Wordprocessing;
-using PagedList;
+﻿using PagedList;
 using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Web.Mvc;
 using WebApplication1.Models;
@@ -19,23 +14,6 @@ namespace WebApplication1.Controllers
         // GET: SubMembers
         public ActionResult Index(int? id, int? page = 1)
         {
-            //modify by v0.3==========
-
-            //var query = db.subsidy_member.Join(db.member, x => x.sm_mb_id, y => y.mb_id, (x, y) => new { SubMember = x, Member = y }).
-            //    Join(db.subsidy, xy => xy.SubMember.sm_s_id, z => z.s_id, (xy, z) => new SubMembersEdit
-            //    {
-            //        mb_name = xy.Member.mb_name,
-            //        sm_advance_money = xy.SubMember.sm_advance_money,
-            //        sm_agree_start = xy.SubMember.sm_agree_start,
-            //        sm_agree_end = xy.SubMember.sm_agree_end,
-            //        sm_review = xy.SubMember.sm_review,
-            //        sm_s_id = (int)xy.SubMember.sm_s_id,
-            //        sm_id = xy.SubMember.sm_id,
-            //        SubsidyNo = z.s_no
-            //    }).Where(z => z.sm_s_id == id).OrderBy(x => x.sm_agree_start);
-
-            //========================
-
             var userID = (int)Session["UserID"];
 
             var baseQuery = db.subsidy_member
@@ -50,6 +28,8 @@ namespace WebApplication1.Controllers
                     sm_s_id = (int)joined.SubMember.sm_s_id,
                     sm_id = joined.SubMember.sm_id,
                     SubsidyNo = s.s_no,
+                    mb_income_certificate_name = joined.Member.mb_income_certificate_name,
+                    mb_contract_name = joined.Member.mb_contract_name,
                     sm_id_id = joined.SubMember.sm_id_id
                 });
 
@@ -59,7 +39,46 @@ namespace WebApplication1.Controllers
 
             var query = filterQuery.OrderBy(x => x.sm_agree_start);
 
-            //========================
+            ViewBag.SubsityID = id;
+
+            var result = query.ToPagedList((int)page, 10);
+
+            if (id != null)
+            {
+                ViewBag.SubNo = db.subsidy.Find(id).s_no;
+                ViewBag.s_review = db.subsidy.Find(id).s_review;
+            }
+
+            return View(result);
+        }
+
+        public ActionResult IndexQ(int? id, int? page = 1)
+        {
+            var userID = (int)Session["UserID"];
+
+            var baseQuery = db.subsidy_member
+                .Join(db.member, sm => sm.sm_mb_id, m => m.mb_id, (sm, m) => new { SubMember = sm, Member = m })
+                .Join(db.subsidy, joined => joined.SubMember.sm_s_id, s => s.s_id, (joined, s) => new SubMembersEdit
+                {
+                    mb_name = joined.Member.mb_name,
+                    sm_advance_money = joined.SubMember.sm_advance_money,
+                    sm_agree_start = joined.SubMember.sm_agree_start,
+                    sm_agree_end = joined.SubMember.sm_agree_end,
+                    sm_review = joined.SubMember.sm_review,
+                    sm_s_id = (int)joined.SubMember.sm_s_id,
+                    sm_id = joined.SubMember.sm_id,
+                    SubsidyNo = s.s_no,
+                    mb_income_certificate_name = joined.Member.mb_income_certificate_name,
+                    mb_contract_name = joined.Member.mb_contract_name,
+                    sm_id_id = joined.SubMember.sm_id_id
+                });
+
+            var filterQuery = id.HasValue
+                ? baseQuery.Where(z => z.sm_s_id == id)
+                : baseQuery.Where(z => z.sm_id_id == userID);
+
+            var query = filterQuery.OrderBy(x => x.sm_agree_start);
+
 
             ViewBag.SubsityID = id;
 
@@ -147,11 +166,9 @@ namespace WebApplication1.Controllers
                 mb_surrender_date = b.mb_surrender_date,
                 mb_memo = b.mb_memo,
                 mb_last_time = (DateTime)b.mb_last_time,
-                //mb_contractFile = b.mb_contract,
                 mb_contract_name = b.mb_contract_name,
                 mb_insurance_id = b.mb_insurance_id,
                 mb_full_time_date = b.mb_full_time_date,
-                //mb_income_certificateFile = b.mb_income_certificate,
                 mb_income_certificate_name = b.mb_income_certificate_name,
                 mb_full_time_or_not = (bool)b.mb_full_time_or_not,
                 mb_arrive_date = (DateTime)b.mb_arrive_date,
@@ -162,7 +179,7 @@ namespace WebApplication1.Controllers
             {
                 return HttpNotFound();
             }
-            switch (int.Parse(data.mb_add_insur))
+            switch (int.Parse("0"+data.mb_add_insur))
             {
                 case 1:
                     ViewBag.mb_add_insur = "加保";
@@ -174,12 +191,11 @@ namespace WebApplication1.Controllers
                     ViewBag.mb_add_insur = "調薪";
                     break;
                 case 4:
-                    
-                default:
-                    ViewBag.mb_add_insur = "在職";
+
+                default :
+                    ViewBag.mb_add_insur = "加保";
                     break;
             }
-            
 
             return View(data);
         }
@@ -221,9 +237,37 @@ namespace WebApplication1.Controllers
             return View(data);
         }
 
-        public ActionResult Detail()
+        public ActionResult Detail(int id)
         {
-            return View();
+            var data = db.subsidy_member.Where(a => a.sm_id == id).Join(db.member, a => a.sm_mb_id, b => b.mb_id, (a, b) => new SubMembersEdit
+            {
+                sm_agree_start = a.sm_agree_start,
+                sm_agree_end = a.sm_agree_end,
+                sm_advance_money = a.sm_advance_money,
+                sm_mb_id = a.sm_mb_id,
+                sm_id = id,
+                sm_s_id = (int)a.sm_s_id,
+                mb_name = b.mb_name,
+                mb_id_card = b.mb_id_card,
+                mb_birthday = b.mb_birthday,
+                mb_insur_salary = (int)b.mb_insur_salary,
+                mb_add_insur = b.mb_add_insur,
+                mb_add_insur_date = b.mb_add_insur_date,
+                mb_surrender_date = b.mb_surrender_date,
+                mb_memo = b.mb_memo,
+                mb_last_time = (DateTime)b.mb_last_time,
+                mb_contract_name = b.mb_contract_name,
+                mb_insurance_id = b.mb_insurance_id,
+                mb_full_time_date = b.mb_full_time_date,
+                mb_income_certificate_name = b.mb_income_certificate_name,
+                mb_full_time_or_not = (bool)b.mb_full_time_or_not,
+                mb_arrive_date = (DateTime)b.mb_arrive_date,
+                mb_position = b.mb_position,
+                mb_contractFile=b.mb_contract,
+                mb_income_certificateFile=b.mb_income_certificate
+            }).FirstOrDefault();
+
+            return View(data);
         }
 
         public ActionResult Delete(int id)
@@ -247,10 +291,13 @@ namespace WebApplication1.Controllers
 
         public ActionResult AllCaseSubmit(int id)
         {
+            db.subsidy.Where(x => x.s_id == id).ToList().ForEach(x => x.s_review = "審核中");
+            db.SaveChanges();
             db.subsidy_member.Where(x => x.sm_s_id == id).ToList().ForEach(x => x.sm_review = "審核中");
             db.SaveChanges();
 
-            return RedirectToAction("Index", new { id });
+            Session["msg"] = "本次案件送出成功";
+            return RedirectToAction("Index", "Subsidy");
         }
     }
 }

@@ -150,6 +150,7 @@
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\QAController.cs" />
     <Compile Include="Controllers\SubMembersController.cs" />
+    <Compile Include="Controllers\SubsidyQController.cs" />
     <Compile Include="Controllers\SubsidyController.cs" />
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Filters\AdminFilter.cs" />
@@ -394,6 +395,13 @@
     <Content Include="Views\Members\Detail.cshtml" />
     <Content Include="Views\Subsidy\InsurList.cshtml" />
     <Content Include="Views\News\Detail.cshtml" />
+    <Content Include="Views\SubsidyQ\Create.cshtml" />
+    <Content Include="Views\SubsidyQ\Detail.cshtml" />
+    <Content Include="Views\SubsidyQ\Edit.cshtml" />
+    <Content Include="Views\SubsidyQ\Index.cshtml" />
+    <Content Include="Views\SubsidyQ\InsurList.cshtml" />
+    <Content Include="Views\SubsidyQ\Report.cshtml" />
+    <Content Include="Views\SubMembers\IndexQ.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

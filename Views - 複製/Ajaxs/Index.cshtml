@@ -1,0 +1,141 @@
+﻿@*@model IEnumerable<WebApplication1.Models.industry>*@
+@model IPagedList<WebApplication1.Models.industry>
+
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <!-- tool -->
+        <div class="tool-wrap">
+            <div class="tool-search">
+                <input type="text" placeholder="請輸入關鍵字搜尋">
+                <button></button>
+            </div>
+            <div class="tool-btn">
+                <button class="btn-add" onClick="export_file.click()">匯入</button>
+                <input type="file" name="export_file" style="display:none;" id="export_file" accept=".application/vnd.ms-excel ,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet " />
+            </div>
+        </div>
+        <!-- list -->
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-1 ta-left ml-6">旅宿名稱</div>
+                        <div class="f-1 ta-left">公司名稱</div>
+                        <div class="f-1">承辦人</div>
+                        <div class="f-1">承辦人電話</div>
+                        <div class="f-1">統編</div>
+                        <div class="f-1">審核狀態</div>
+                        <div class="f-1">操作</div>
+                    </div>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <div class="list-row pr-2 pl-2">
+                                <div class="f-1 ta-left ml-6">@item.id_name</div>
+                                <div class="f-1 ta-left">@item.id_company</div>
+                                <div class="f-1">@item.id_owner</div>
+                                <div class="f-1">@item.id_owner_phone</div>
+                                <div class="f-1">@item.id_tax_id</div>
+                                <div class="f-1">@item.id_review</div>
+                                <div class="f-1">
+                                    <button class="btn-members" onClick="location.href='@Url.Action("Index", "Members", new {id = item.id_id})'"></button>
+                                    <button class="btn-edit" onClick="location.href='@Url.Action("Edit","Industry", new {id = item.id_id})'"></button>
+                                    <button class="btn-del" onClick="del(@item.id_id)"></button>
+                                </div>
+                            </div>
+                        }
+                    }
+                    @*<div class="list-row pr-2 pl-2">
+                        <div class="f-1 ta-left ml-6">旅宿A旅宿A</div>
+                        <div class="f-1 ta-left">
+                            旅宿A股份有限公司
+                        </div>
+                        <div class="f-1">
+                            旅宿A承辦人
+                        </div>
+                        <div class="f-1">
+                            0000000000
+                        </div>
+                        <div class="f-1">
+                            0000000000
+                        </div>
+                        <div class="f-1">
+                            審核通過
+                        </div>
+                        <div class="f-1">
+                            <button class="btn-members" onClick="location.href='@Url.Action("Index","Members")'"></button>
+                            <button class="btn-edit" onClick="location.href='@Url.Action("Edit","Industry")'"></button>
+                        </div>
+                    </div>*@
+                    <!-- example start -->
+                    
+                    <!-- example end -->
+                </div>
+            </div>
+        </div>
+        <!-- pages -->
+        <div class="pages-wrap">
+            @*<button class="btn-prev"></button>
+            <ul>
+            <li class="is-active">1</li>
+            <li><a href="">2</a></li>
+            <li><a href="">3</a></li>
+            </ul>
+            <button class="btn-next"></button>*@
+
+            @Html.PagedListPager(Model, x => Url.Action("Index", new { page = x }))
+            <div class="totalcount">
+                <span>總共 @Model.TotalItemCount 筆</span>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<style>
+    .pages-wrap{
+        position:relative;
+    }
+    .pages-wrap .totalcount{
+        position:absolute;
+        transform:translateY(-50%);
+        left:0;
+        top:50%;
+    }
+</style>
+
+<script>
+    $('#export_file').on('change', function (e) {
+        let file = e.target.files[0];
+        if (file) {
+            var data = new FormData();
+            data.append("file", file);
+            fetch('@Url.Action("Import","Industry")', {
+                method: 'POST',
+                body: data,
+            })
+            .then(res => res.text())
+            .then(data => {
+                alert(JSON.parse(data));
+                location.reload();
+            })
+        }
+        else {
+            alert("沒有檔案");
+        }
+    })
+</script>

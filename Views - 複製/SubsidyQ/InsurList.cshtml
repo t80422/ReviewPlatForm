@@ -1,0 +1,65 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+@using PagedList.Mvc;
+@using PagedList;
+
+@model IPagedList<WebApplication1.Models.SubsidyEdit>
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="red-text">
+            <p>請在此頁檢視與確認本次申請人數和補助金額是否正確</p>
+            <p>修改後至員工資料上傳區,進入申請人員專區按操作,補登相關資料</p><br>
+        </div>
+
+        <div class="container-nav">
+            <a href="@Url.Action("Index","Subsidy")">補助申請</a>
+            <a href="@Url.Action("Index","SubMembers")" >補助申請人員</a>
+            <a href="@Url.Action("InsurList","Subsidy")" class="is-active">各月勞保清冊</a>
+        </div>
+
+        <!-- list -->
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-1">案件編號</div>
+                        <div class="f-1">申請月份</div>
+                        <div class="f-1">勞保人員名冊(下載檔案)</div>
+                    </div>
+
+                    @foreach (var data in Model)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@data.s_no</div>
+                            <div class="f-1">@data.Date.ToString("yyyy年MM月")</div>
+                            <div class="f-1">
+                                <a href=@Url.Content("~/assets/upload/Subsidy/" + data.id_name + "_" + data.id_id + "/"+data.LaborFile) target="_blank">@data.LaborName</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- pages -->
+        <div class="pages-wrap">
+            @Html.PagedListPager(Model, page => Url.Action("InsurList", "Subsidy", new { page }), new PagedListRenderOptions()
+       {
+           DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+           DisplayLinkToLastPage = PagedListDisplayMode.Always,
+           DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+           DisplayLinkToNextPage = PagedListDisplayMode.Always
+       })
+        </div>
+    </div>
+</main>
+
+

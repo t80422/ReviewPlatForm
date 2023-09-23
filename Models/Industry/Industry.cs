@@ -5,6 +5,10 @@ namespace WebApplication1.Models.Industry
 {
     public class Industry
     {
+        //承辦人Email
+        public string OwnerEmail { get; set; }
+        //銀行名稱
+        public string BankName { get; set; }
         //承辦人電話區碼
         public string id_owner_area_code { get; set; }
         //郵遞區號

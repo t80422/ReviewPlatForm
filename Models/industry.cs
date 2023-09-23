@@ -80,6 +80,10 @@ public partial class industry
 
     public string id_area_code { get; set; }
 
+    public string id_bank_name { get; set; }
+
+    public string id_owner_email { get; set; }
+
 }
 
 }

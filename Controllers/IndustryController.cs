@@ -120,6 +120,8 @@ namespace WebApplication1.Controllers
                 id_postal_code = data.id_postal_code,
                 id_name = data.id_name,
                 id_owner_area_code = data.id_owner_area_code,
+                BankName=data.id_bank_name,
+                OwnerEmail=data.id_owner_email,
             };
 
             return View(result);
@@ -161,6 +163,8 @@ namespace WebApplication1.Controllers
                     updateData.id_tax_id = data.id_tax_id;
                     updateData.id_bank_acct = data.id_bank_acct;
                     updateData.id_owner_area_code = data.id_owner_area_code;
+                    updateData.id_bank_name = data.BankName;
+                    updateData.id_owner_email = data.OwnerEmail;
 
                     db.SaveChanges();
                     Session["msg"] = "修改成功";

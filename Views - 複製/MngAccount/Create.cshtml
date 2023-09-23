@@ -1,0 +1,71 @@
+﻿
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="form-wrap">
+            <form action="">
+                <div class="form-main">
+                    <div class="form-title">
+                        <h1>新增管理者帳號</h1>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">姓名</label>
+                                        <div class="input">
+                                            <input type="text">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">手機</label>
+                                        <div class="input">
+                                            <input type="text">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">Email</label>
+                                        <div class="input">
+                                            <input type="text">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">職稱</label>
+                                        <div class="input">
+                                            <input type="text">
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">權限</label>
+                                        <select>
+                                            <option value="">請選擇</option>
+                                            <option value="0">管理者</option>
+                                            <option value="1">PM</option>
+                                            <option value="2">工讀生</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-btn">
+                    <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                    <button class="btn-submit">儲存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+

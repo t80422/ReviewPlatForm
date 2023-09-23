@@ -286,7 +286,7 @@ namespace WebApplication1.Controllers
 
                 #endregion 加入申請人員清冊
 
-                Session["msg"] = "本次案件申請案號成功,請按確定後,置下一步修改申請補助人員的資料";
+                Session["msg"] = "本次案件申請案號成功,請按確定後,至下一步上傳申請補助人員相關資料";
 
                 return RedirectToAction("Index", "SubMembers", new { id = pkValue });
 
@@ -435,6 +435,7 @@ namespace WebApplication1.Controllers
                         // 第0列為標題，從1開始
                         for (var i = 1; i < sheet.Value.Count(); i++)
                         {
+
                             if (String.IsNullOrEmpty(sheet.Value[i][3])) continue;
 
                             string insur;
@@ -450,7 +451,7 @@ namespace WebApplication1.Controllers
                                     insur = ""; break;
                             }
                             int hire;
-                            switch (sheet.Value[i][12])
+                            switch (sheet.Value[i][10])
                             {
                                 case "新聘":
                                     hire = 1; break;
@@ -460,38 +461,45 @@ namespace WebApplication1.Controllers
                                     hire = 0; break;
                             }
                             string IDCard = sheet.Value[i][3] ?? "";
-                            member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
-                            memberData.mb_id = memberData.mb_id > 0 ? memberData.mb_id : 0;
-                            memberData.mb_id_id = data.id_id;
-                            memberData.mb_insurance_id = sheet.Value[i][0] ?? "";
-                            memberData.mb_name = sheet.Value[i][1] ?? "";
-                            memberData.mb_birthday = sheet.Value[i][2] ?? "";
-                            memberData.mb_id_card = sheet.Value[i][3] ?? "";
-                            memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
-                            memberData.mb_add_insur = insur;
-                            memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
-                            memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][7] ?? ""));
-                            memberData.mb_memo = sheet.Value[i][8] ?? "";
-                            memberData.mb_full_time_or_not = sheet.Value[i][9] == "是";
-                            memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][10] ?? ""));
-                            memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][11] ?? ""));
-                            memberData.mb_hire_type = hire;
-                            memberData.mb_position = sheet.Value[i][13] ?? "";
-                            memberData.mb_last_time = DateTime.Now;
-                            memberData.mb_s_no = PK;
-
-                            db.member.AddOrUpdate(x => x.mb_id_card, memberData);
-                            db.SaveChanges();
-
-                            insertSMembers.Add(new subsidy_member()
+                            if (IDCard != "")
                             {
-                                sm_s_id = data.s_id,
-                                sm_agree_start = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][14] ?? "")),
-                                sm_agree_end = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][15] ?? "")),
-                                sm_advance_money = Convert.ToInt32(sheet.Value[i][16] ?? "0"),
-                                sm_id_id = data.id_id,
-                                sm_mb_id = memberData.mb_id,
-                            });
+                                member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
+
+                                memberData.mb_id = memberData.mb_id > 0 ? memberData.mb_id : 0;
+                                memberData.mb_id_id = data.id_id;
+                                memberData.mb_insurance_id = sheet.Value[i][0] ?? "";
+                                memberData.mb_name = sheet.Value[i][1] ?? "";
+                                memberData.mb_birthday = sheet.Value[i][2] ?? "";
+                                memberData.mb_id_card = sheet.Value[i][3] ?? "";
+                                memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
+                                memberData.mb_add_insur = insur;
+                                memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][5] ?? ""));
+                                memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
+                                //memberData.mb_memo = sheet.Value[i][7] ?? "";
+                                memberData.mb_full_time_or_not = sheet.Value[i][7] == "是";
+                                memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][8] ?? ""));
+                                memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][9] ?? ""));
+                                memberData.mb_hire_type = hire;
+                                memberData.mb_position = sheet.Value[i][11] ?? "";
+                                memberData.mb_last_time = DateTime.Now;
+                                //memberData.mb_s_no = "A" + pkValue.ToString("D5");
+
+                                db.member.AddOrUpdate(x => x.mb_id_card, memberData);
+                                db.SaveChanges();
+
+                                insertSMembers.Add(new subsidy_member()
+                                {
+                                    sm_s_id = data.s_id,
+                                    sm_agree_start = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][12] ?? "")),
+                                    sm_agree_end = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][13] ?? "")),
+
+                                    sm_advance_money = Convert.ToInt32(sheet.Value[i][14] ?? "0"),
+                                    sm_id_id = data.id_id,
+                                    sm_mb_id = memberData.mb_id,
+                                    sm_review = "待補件"
+                                });
+                            }
+
                         }
                     }
                     db.subsidy_member.AddRange(insertSMembers);

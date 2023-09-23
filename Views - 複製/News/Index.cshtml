@@ -1,0 +1,113 @@
+﻿@model IEnumerable<WebApplication1.Models.News>
+@using PagedList.Mvc;
+@using PagedList;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Layout.cshtml";
+    string controller = "News";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <!-- tool -->
+        <div class="tool-wrap">
+            @if (perm >= 0 && perm < 3)
+            {
+                <div class="tool-btn">
+                    <button class="btn-add" onClick="window.location.href = '@Url.Action("Create",controller)'">新增</button>
+                </div>
+            }
+        </div>
+
+        <div class="container-nav">
+            <a href="@Url.Action("Index","Video")">操作說明</a>
+            <a href="@Url.Action("Index","News")" class="is-active">訊息公告</a>
+            <a href="@Url.Action("Index","Download")">表單下載</a>
+            <a href="@Url.Action("Index","QA")">QA</a>
+        </div>
+
+        <!-- list -->
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-2 ta-center ml-1">建立日期</div>
+                        <div class="f-5 ta-left">標題</div>
+                        <div class="f-5 ta-left">內容</div>
+                        @if (perm >= 0 && perm < 3)
+                        {
+                            <div class="f-1">操作</div>
+                        }
+                    </div>
+
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <div class="list-row pr-2 pl-2" onclick="location.href='@Url.Action("Index", new {id=item.n_id})'">
+                                <div class="f-2 ta-center ml-1">@(item.n_date != null ? Convert.ToDateTime(item.n_date).ToString("yyyy/MM/dd") : "")</div>
+                                <div class="f-5 ta-left">@item.n_title</div>
+                                <div class="f-5 ta-left">
+                                    <!--<textarea class="textarea-autoheigh" disabled>@item.n_content</textarea>-->
+                                           <a href = '@Url.Action("Detail","News",new { id = item.n_id })'>詳細</a>
+                                </div>
+                                @if (perm >= 0 && perm < 3)
+                                {
+                                    <div class="f-1">
+                                        <button class="btn-edit" onClick="location.href = '@Url.Action("Edit","News",new { id = item.n_id })'"></button>
+                                        <button class="btn-del" onclick="del(@item.n_id)"></button>
+                                    </div>
+                                }
+                            </div>
+                        }
+                    }
+
+                    <!-- example end -->
+                </div>
+            </div>
+        </div>
+        <!-- pages -->
+        <div class="pages-wrap">
+            @Html.PagedListPager((IPagedList)Model, x => Url.Action("Index", new { page = x }))
+        </div>
+    </div>
+</main>
+
+<!-- popup -->
+<div class="popup-wrap js-del-popup">
+    <div class="popup-main">
+        <div class="popup-content">
+            <p>是否確定刪除</p>
+            <div class="popup-btn">
+                <button class="btn-cancel">取消</button>
+                <button class="btn-submit">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup-overlay"></div>
+<!-- JS -->
+<script>
+    let itemID;
+
+    function del(id){
+        itemID = id;
+        $(".popup-overlay, .js-del-popup").fadeIn();
+
+        $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+
+        $(".popup-overlay, .popup-btn .btn-cancel").on('click', function () {
+            $(".popup-overlay, .popup-wrap").fadeOut();
+        });
+
+        $('.popup-btn .btn-submit').on('click', function () {
+            window.location.href = '@Url.Action("Delete","News")'+"?id="+ id;
+        })
+    }
+
+</script>

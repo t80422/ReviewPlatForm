@@ -10582,6 +10582,7 @@ body {
 .list-row > div button.btn-add::before {
   content: '\f055';
 }
+
 .list-title > div button:hover,
 .list-row > div button:hover {
   color: #FFC107;
@@ -11652,7 +11653,7 @@ body {
   justify-content: center;
   min-height: calc(100vh - 220px);
   background-color: #FFF;
-  padding: 150px 40px;
+  padding: 20px 40px;
 }
 @media only screen and (max-width: 768px) {
   .login-wrap {

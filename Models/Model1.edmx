@@ -40,6 +40,8 @@
           <Property Name="id_city" Type="nvarchar" MaxLength="100" />
           <Property Name="id_postal_code" Type="nvarchar" MaxLength="100" />
           <Property Name="id_area_code" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_bank_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_owner_email" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="information">
           <Key>
@@ -402,6 +404,8 @@
           <Property Name="id_city" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="id_postal_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="id_area_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_bank_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_owner_email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -564,6 +568,8 @@
           <EntitySetMapping Name="industry">
             <EntityTypeMapping TypeName="ReviewPlatformModel.industry">
               <MappingFragment StoreEntitySet="industry">
+                <ScalarProperty Name="id_owner_email" ColumnName="id_owner_email" />
+                <ScalarProperty Name="id_bank_name" ColumnName="id_bank_name" />
                 <ScalarProperty Name="id_area_code" ColumnName="id_area_code" />
                 <ScalarProperty Name="id_postal_code" ColumnName="id_postal_code" />
                 <ScalarProperty Name="id_city" ColumnName="id_city" />

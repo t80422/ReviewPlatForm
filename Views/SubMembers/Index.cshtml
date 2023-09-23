@@ -14,25 +14,29 @@
 
 <main class="container-wrap">
     <div class="container-main">
-        <div class="red-text">
+        @*<div class="red-text">
             <p>請在此頁檢視與確認本次申請人數和補助金額是否正確</p>
             <p>修改後至員工資料上傳區,進入申請人員專區按操作,補登相關資料</p>
             <br>
-        </div>
+        </div>*@
 
         <!-- tool -->
         <div class="tool-wrap">
             @if (perm == 3 && ViewBag.SubsityID != null)
             {
-                <div class="tool-btn">
-                    <button class="btn-add" onClick="window.location.href = '@Url.Action("Create", "SubMembers", new {id=ViewBag.SubsityID})'">新增</button>
-                    <button class="btn-add" onClick="window.location.href = '@Url.Action("AllCaseSubmit", "SubMembers", new {id=ViewBag.SubsityID})'">案件送出</button>
-                </div>
+            <div class="tool-btn">
+                <button class="btn-add" onClick="window.location.href = '@Url.Action("Create", "SubMembers", new {id=ViewBag.SubsityID})'">新增</button>
+
+
+                @if (ViewBag.s_review == "待補件") {
+                <button class="btn-red" style="background-color: #ff0000;" onClick="window.location.href = '@Url.Action("AllCaseSubmit", "SubMembers", new {id=ViewBag.SubsityID})'">案件送出</button>
+                }
+            </div>
             }
         </div>
 
         <div class="container-nav">
-            <a href="@Url.Action("Index","Subsidy")">補助申請</a>
+            <a href="@Url.Action("Index","Subsidy")">申請補助列表</a>
             <a href="@Url.Action("Index","SubMembers")" class="is-active">補助申請人員</a>
             <!--<a href="@Url.Action("InsurList","Subsidy")">各月勞保清冊</a>-->
         </div>
@@ -55,7 +59,10 @@
                         <div class="f-3">符合申請(起)</div>
                         <div class="f-3">符合申請(迄)</div>
                         <div class="f-3">審核狀態</div>
-                        <div class="f-1">修改</div>
+                        <div class="f-1">勞動契約</div>
+                        <div class="f-1">薪資證明</div>
+                        <div class="f-1">詳細</div>
+                        <div class="f-1">編輯</div>
                         <div class="f-1">刪除</div>
                         @if (perm >= 0 && perm < 3)
                         {
@@ -65,36 +72,41 @@
 
                     @foreach (var data in Model)
                     {
-                        <div class="list-row pr-2 pl-2">
-                            <div class="f-3">@data.SubsidyNo</div>
-                            <div class="f-3">@data.mb_name</div>
-                            <div class="f-3 ">@data.sm_advance_money</div>
-                            <div class="f-3">@((data.sm_agree_start.HasValue) ? data.sm_agree_start.Value.ToString("yyyy/MM/dd") : "N/A")</div>
-                            <div class="f-3">@((data.sm_agree_end.HasValue) ? data.sm_agree_end.Value.ToString("yyyy/MM/dd") : "N/A")</div>
-                            <div class="f-3">@data.sm_review</div>
+                <div class="list-row pr-2 pl-2">
+                    <div class="f-3">@data.SubsidyNo</div>
+                    <div class="f-3">@data.mb_name</div>
+                    <div class="f-3 ">@data.sm_advance_money</div>
+                    <div class="f-3">@((data.sm_agree_start.HasValue) ? data.sm_agree_start.Value.ToString("yyyy/MM/dd") : "N/A")</div>
+                    <div class="f-3">@((data.sm_agree_end.HasValue) ? data.sm_agree_end.Value.ToString("yyyy/MM/dd") : "N/A")</div>
+                    <div class="f-3">@data.sm_review</div>
+                    <div class="f-1">@((data.mb_income_certificate_name != null)?"是":"否")</div>
+                    <div class="f-1">@((data.mb_contract_name != null)?"是":"否")</div>
+                    <div class="f-1">
+                        <button class="btn-details" onClick="location.href='@Url.Action("Detail", "SubMembers", new { id = data.sm_id })'"></button>
+                    </div>
 
-                            <div class="f-1">
-                                @if (perm == 3)
-                                {
-                                    <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "SubMembers", new { id = data.sm_id })'"></button>
-                                }
-                            </div>
+                    <div class="f-1">
+                        @if (perm == 3)
+                        {
+                            <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "SubMembers", new { id = data.sm_id })'"></button>
+                        }
+                    </div>
 
-                            <div class="f-1">
-                                @if (perm == 3)
-                                {
-                                    <button class="btn-del" onClick="del(@data.sm_id)"></button>
-                                }
-                            </div>
-                            @if (perm >= 0 && perm < 3)
-                            {
-                                <div class="f-1">
-                                    <button class="btn-details" onClick="location.href='@Url.Action("Edit", "SubMembers")'"></button>
-                                </div>
-                            }
+                    <div class="f-1">
+                        @if (perm == 3)
+                        {
+                            <button class="btn-del" onClick="del(@data.sm_id)"></button>
+                        }
+                    </div>
+                    @if (perm >= 0 && perm < 3)
+                    {
+                        <div class="f-1">
+                            <button class="btn-details" onClick="location.href='@Url.Action("Edit", "SubMembers")'"></button>
                         </div>
                     }
                 </div>
+                            }
+                        </div>
             </div>
         </div>
     </div>
