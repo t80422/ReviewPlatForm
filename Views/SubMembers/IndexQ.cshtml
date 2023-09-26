@@ -19,7 +19,6 @@
         <div class="container-nav">
             <a href="@Url.Action("Index","SubsidyQ")">申請補助列表</a>
             <a href="@Url.Action("IndexQ","SubMembers")" class="is-active">補助申請人員</a>
-            <!--<a href="@Url.Action("InsurList","Subsidy")">各月勞保清冊</a>-->
         </div>
 
         <!-- list -->
@@ -40,7 +39,7 @@
                         <div class="f-3">符合申請(起)</div>
                         <div class="f-3">符合申請(迄)</div>
                         <div class="f-3">審核狀態</div>
-                      
+
                         @if (perm >= 0 && perm < 3)
                         {
                             <div class="f-1">操作</div>
@@ -57,7 +56,7 @@
                             <div class="f-3">@((data.sm_agree_end.HasValue) ? data.sm_agree_end.Value.ToString("yyyy/MM/dd") : "N/A")</div>
                             <div class="f-3">@data.sm_review</div>
 
-                          
+
                             @if (perm >= 0 && perm < 3)
                             {
                                 <div class="f-1">

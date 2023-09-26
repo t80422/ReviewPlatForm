@@ -14,18 +14,12 @@
 
 <main class="container-wrap">
     <div class="container-main">
-        @*<div class="red-text">
-            <p>請在此頁檢視與確認本次申請人數和補助金額是否正確</p>
-            <p>修改後至員工資料上傳區,進入申請人員專區按操作,補登相關資料</p>
-            <br>
-        </div>*@
-
         <!-- tool -->
         <div class="tool-wrap">
             @if (perm == 3 && ViewBag.SubsityID != null)
             {
             <div class="tool-btn">
-                <button class="btn-add" onClick="window.location.href = '@Url.Action("Create", "SubMembers", new {id=ViewBag.SubsityID})'">新增</button>
+                @*<button class="btn-add" onClick="window.location.href = '@Url.Action("Create", "SubMembers", new {id=ViewBag.SubsityID})'">新增</button>*@
 
 
                 @if (ViewBag.s_review == "待補件") {
@@ -34,20 +28,20 @@
             </div>
             }
         </div>
-
+        
         <div class="container-nav">
             <a href="@Url.Action("Index","Subsidy")">申請補助列表</a>
             <a href="@Url.Action("Index","SubMembers")" class="is-active">補助申請人員</a>
             <!--<a href="@Url.Action("InsurList","Subsidy")">各月勞保清冊</a>-->
         </div>
-
+       
         <!-- list -->
         <div class="list-wrap">
             <div class="list-overflow">
                 <div class="list-main">
                     @if (ViewBag.SubNo != null)
                     {
-                        <p style="font-size: 30px; line-height: 50px; height: 50px; vertical-align: middle; font-weight:bold;">案號:@ViewBag.SubNo</p>
+                        <p style="font-size: 30px; line-height: 50px; height: 50px; vertical-align: middle; font-weight:bold;">案號:@ViewBag.SubNo</p>  <span style="color:red;text-align: center; display:block;">請逐一點選上傳勞動契約與薪資證明</span>
                     }
 
                     <br />

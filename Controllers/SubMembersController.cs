@@ -46,7 +46,7 @@ namespace WebApplication1.Controllers
             if (id != null)
             {
                 ViewBag.SubNo = db.subsidy.Find(id).s_no;
-                ViewBag.s_review = db.subsidy.Find(id).s_review;
+                ViewBag.s_review = db.subsidy_member.Where(x=>x.sm_s_id==id && x.sm_review=="待補件").FirstOrDefault()?.sm_review;
             }
 
             return View(result);
@@ -149,6 +149,8 @@ namespace WebApplication1.Controllers
 
         public ActionResult Edit(int id)
         {
+            string path = Server.MapPath("~/assets/upload/Members");
+
             var data = db.subsidy_member.Where(a => a.sm_id == id).Join(db.member, a => a.sm_mb_id, b => b.mb_id, (a, b) => new SubMembersEdit
             {
                 sm_agree_start = a.sm_agree_start,
@@ -166,10 +168,12 @@ namespace WebApplication1.Controllers
                 mb_surrender_date = b.mb_surrender_date,
                 mb_memo = b.mb_memo,
                 mb_last_time = (DateTime)b.mb_last_time,
+                mb_contractFile=b.mb_contract,
                 mb_contract_name = b.mb_contract_name,
+                mb_income_certificateFile=b.mb_income_certificate,
+                mb_income_certificate_name = b.mb_income_certificate_name,
                 mb_insurance_id = b.mb_insurance_id,
                 mb_full_time_date = b.mb_full_time_date,
-                mb_income_certificate_name = b.mb_income_certificate_name,
                 mb_full_time_or_not = (bool)b.mb_full_time_or_not,
                 mb_arrive_date = (DateTime)b.mb_arrive_date,
                 mb_position = b.mb_position,
@@ -179,6 +183,7 @@ namespace WebApplication1.Controllers
             {
                 return HttpNotFound();
             }
+
             switch (int.Parse("0"+data.mb_add_insur))
             {
                 case 1:
@@ -206,6 +211,70 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
+                #region 必填
+
+                var reloadMember = db.member.Find(data.sm_mb_id);
+
+                if (string.IsNullOrEmpty(reloadMember.mb_contract) && data.mb_contract==null)
+                {
+                    switch (int.Parse("0" + data.mb_add_insur))
+                    {
+                        case 1:
+                            ViewBag.mb_add_insur = "加保";
+                            break;
+                        case 2:
+                            ViewBag.mb_add_insur = "退保";
+                            break;
+                        case 3:
+                            ViewBag.mb_add_insur = "調薪";
+                            break;
+                        case 4:
+
+                        default:
+                            ViewBag.mb_add_insur = "加保";
+                            break;
+                    }
+
+                    data.mb_contract_name = reloadMember.mb_contract_name;
+                    data.mb_contractFile = reloadMember.mb_contract;
+                    data.mb_income_certificate_name = reloadMember.mb_income_certificate_name;
+                    data.mb_income_certificateFile=reloadMember.mb_income_certificate;
+                    
+                    Session["msg"] = "請上傳勞動契約";
+                    return View(data);
+                }
+
+                if (string.IsNullOrEmpty(data.mb_income_certificateFile) && data.mb_income_certificate == null )
+                {
+                    switch (int.Parse("0" + data.mb_add_insur))
+                    {
+                        case 1:
+                            ViewBag.mb_add_insur = "加保";
+                            break;
+                        case 2:
+                            ViewBag.mb_add_insur = "退保";
+                            break;
+                        case 3:
+                            ViewBag.mb_add_insur = "調薪";
+                            break;
+                        case 4:
+
+                        default:
+                            ViewBag.mb_add_insur = "加保";
+                            break;
+                    }
+
+                    data.mb_contract_name = reloadMember.mb_contract_name;
+                    data.mb_contractFile = reloadMember.mb_contract;
+                    data.mb_income_certificate_name = reloadMember.mb_income_certificate_name;
+                    data.mb_income_certificateFile = reloadMember.mb_income_certificate;
+
+                    Session["msg"] = "請上傳薪資證明";
+                    return View(data);
+                }
+
+                #endregion
+
                 var updateData = db.subsidy_member.Find(data.sm_id);
                 var updateMember = db.member.Find(data.sm_mb_id);
 
@@ -264,7 +333,7 @@ namespace WebApplication1.Controllers
                 mb_arrive_date = (DateTime)b.mb_arrive_date,
                 mb_position = b.mb_position,
                 mb_contractFile=b.mb_contract,
-                mb_income_certificateFile=b.mb_income_certificate
+                mb_income_certificateFile=b.mb_income_certificate,                
             }).FirstOrDefault();
 
             return View(data);

@@ -328,6 +328,7 @@
     <Content Include="assets\sample\領據%28範本檔%29.pdf" />
     <Content Include="assets\sample\勞動契約%28範本檔%29.pdf" />
     <Content Include="assets\sample\薪資證明%28範本檔%29.pdf" />
+    <Content Include="assets\sample\銀行分支機構代號.xls" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />

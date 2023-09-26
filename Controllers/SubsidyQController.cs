@@ -40,6 +40,7 @@ namespace WebApplication1.Controllers
             var industry = db.industry.Find(userID);
             ViewBag.Name = industry?.id_name ?? "";
             ViewBag.Maxmember = (industry?.id_room ?? 0) / 8;
+            if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.SubMemberCount = db.member.Count(x => x.mb_id_id == userID);
             ViewBag.IndustryId = userID;
 
@@ -104,6 +105,7 @@ namespace WebApplication1.Controllers
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             var industry = db.industry.Find(userID);
             ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+            if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
 
             return View(data);
@@ -334,6 +336,7 @@ namespace WebApplication1.Controllers
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             var industry = db.industry.Find(userID);
             ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+            if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
 
             return View(data);
@@ -509,31 +512,6 @@ namespace WebApplication1.Controllers
 
         public ActionResult Detail(int id)
         {
-            //var data = db.subsidy.First(x => x.s_id == id);
-
-            //if (data == null)
-            //{
-            //    return HttpNotFound();
-            //}
-
-            //var result = new SubsidyEdit()
-            //{
-            //    s_id = id,
-            //    id_id = data.s_id_id,
-            //    EmpCount = data.s_empcount,
-            //    Money = data.s_money,
-            //    //Date = data.s_date_time.ToString("yyyy-MM"),
-            //    Date = data.s_date_time,
-            //    ApplicationName = data.s_application_name,
-            //    LaborName = data.s_insur_member_name,
-            //    ApplicantsListName = data.s_applicants_name,
-            //    AffidavitName = data.s_affidavit_name,
-            //    ReceiptName = data.s_receipt_name,
-            //    EmployeeListName = data.s_emp_lst_name,
-            //    OtherFileName = data.s_else_name,
-            //    Review = data.s_review
-            //};
-
             var data = db.subsidy.Where(x => x.s_id == id).Join(db.industry, x => x.s_id_id, y => y.id_id, (x, y) => new SubsidyEdit
             {
                 s_id = id,

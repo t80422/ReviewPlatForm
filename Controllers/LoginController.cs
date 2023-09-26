@@ -34,7 +34,7 @@ namespace WebApplication1.Controllers
                     Session["acct"] = user.ua_acct;
                     Session["msg"] = "登入成功";
                     Session["logintime"] = DateTime.Now.ToString("yyyy/MM/dd");
-                    //test test2 test3  test4
+
                     //perm=3,密碼與統編相同表示第一次登入,須將畫面導向"修改密碼"
                     if ((int)Session["perm"] == 3)
                     {
@@ -43,6 +43,8 @@ namespace WebApplication1.Controllers
 
                         if (password == taxID)
                         {
+                            //Session["msg"] = "第一次登入請修改密碼,並重新登入";
+                            Session["First"] = "Y";
                             return RedirectToAction("ResetPwd");
                         }
                         else

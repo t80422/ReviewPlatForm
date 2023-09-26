@@ -28,8 +28,7 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label>申請書</label>
-                                        @*<a target="_blank" href="~/assets/upload/Subsidy/@(Model.id_name)_@Model.id_id/@Model.Application">@Model.ApplicationName</a>*@
+                                        <label>申請文件</label>
                                         <a target="_blank" href=@filePath@Model.ApplicationFile>@Model.ApplicationName</a>
                                     </div>
 
@@ -52,7 +51,7 @@
                                 </div>
 
                                 <div class="form-col">
-                                    <div class="form-input">
+                                    @*<div class="form-input">
                                         <label>切結書</label>
                                         <a target="_blank" href=@filePath@Model.AffidavitFile>@Model.AffidavitName</a>
                                     </div>
@@ -60,7 +59,7 @@
                                     <div class="form-input">
                                         <label>領據</label>
                                         <a target="_blank" href=@filePath@Model.ReceiptFile>@Model.ReceiptName</a>
-                                    </div>
+                                    </div>*@
 
                                     <div class="form-input">
                                         <label>員工清冊</label>
@@ -68,7 +67,10 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label for="file5">其他文件</label>
+                                        <!--modify by v0.5-->
+                                        @*<label for="file5">其他文件</label>*@
+                                        <label for="file5">補件資料</label>
+                                        <!--modify by v0.5-->
                                         <a target="_blank" href=@filePath@Model.OtherFileFile>@Model.OtherFileName</a>
                                     </div>
 

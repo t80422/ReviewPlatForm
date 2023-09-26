@@ -10,16 +10,11 @@
 }
 
 @model WebApplication1.Models.SubMembersEdit
-@using WebApplication1.HtmlHelpers
 
 <main class="container-wrap">
     <div class="container-main">
         <div class="form-wrap">
             <form>
-                @*@Html.HiddenFor(x => x.sm_s_id)
-                @Html.HiddenFor(x => x.sm_id)
-                @Html.HiddenFor(x => x.sm_mb_id)*@
-
                 <div class="form-main">
                     <div class="form-title">
                         <h3>申請補助人員-詳細資料</h3>
@@ -32,7 +27,7 @@
                                     <div class="form-input">
                                         <label for="">姓名</label>
                                         <div class="input">
-                                            <p>@Model.mb_name</p>                                            
+                                            <p>@Model.mb_name</p>
                                         </div>
                                     </div>
 
@@ -44,20 +39,31 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label for="">加保</label>
+                                        <!--modify by v0.5-->
+                                        @*<label>加保</label>*@
+                                        <label>勞保狀態</label>
+                                        <!--modify by v0.5-->
                                         <div class="input">
                                             @*<p>@Model.mb_add_insur</p>*@
                                             <p>加保</p>
                                         </div>
                                     </div>
 
+                                    <!--modify by v0.5-->
+                                    @*<div class="form-input">
+                                            <label for="">備註</label>
+                                            <div class="input">
+                                                <p>@Model.mb_memo</p>
+                                            </div>
+                                        </div>*@
+
                                     <div class="form-input">
-                                        <label for="">備註</label>
+                                        <label for="">職務</label>
                                         <div class="input">
-                                            <p>@Model.mb_memo</p>
+                                            <p>@Model.mb_position</p>
                                         </div>
                                     </div>
-
+                                    <!--modify by v0.5-->
                                     <div class="form-input">
                                         <label for="">勞保序號</label>
                                         <div class="input">

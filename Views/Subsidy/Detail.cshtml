@@ -2,7 +2,7 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/Layout.cshtml";
 
-    string filePath= Url.Content("~/assets/upload/Subsidy/" + Model.id_name + "_" + Model.id_id + "/");
+    string filePath = Url.Content("~/assets/upload/Subsidy/" + Model.id_name + "_" + Model.id_id + "/");
 
 }
 @model WebApplication1.Models.SubsidyEdit
@@ -28,19 +28,18 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label>申請書</label>
-                                        @*<a target="_blank" href="~/assets/upload/Subsidy/@(Model.id_name)_@Model.id_id/@Model.Application">@Model.ApplicationName</a>*@
+
+                                        <!--modify by v0.5-->
+                                        @*<label>申請書</label>*@
+                                        <label>申請文件</label>
+                                        <!--modify by v0.5-->
+
                                         <a target="_blank" href=@filePath@Model.ApplicationFile>@Model.ApplicationName</a>
                                     </div>
 
                                     <div class="form-input">
                                         <label>勞保人員名冊</label>
                                         <a target="_blank" href=@filePath@Model.LaborFile>@Model.LaborName</a>
-                                    </div>
-
-                                    <div class="form-input">
-                                        <label>申請人員清冊</label>
-                                        <a target="_blank" href=@filePath@Model.ApplicantsListFile>@Model.ApplicantsListName</a>
                                     </div>
 
                                     <div class="form-input">
@@ -52,23 +51,36 @@
                                 </div>
 
                                 <div class="form-col">
-                                    <div class="form-input">
-                                        <label>切結書</label>
-                                        <a target="_blank" href=@filePath@Model.AffidavitFile>@Model.AffidavitName</a>
-                                    </div>
+
+                                    <!--mark by v0.5-->
+                                    @*<div class="form-input">
+                                            <label>切結書</label>
+                                            <a target="_blank" href=@filePath@Model.AffidavitFile>@Model.AffidavitName</a>
+                                        </div>
+
+                                        <div class="form-input">
+                                            <label>領據</label>
+                                            <a target="_blank" href=@filePath@Model.ReceiptFile>@Model.ReceiptName</a>
+                                        </div>*@
+                                    <!--mark by v0.5-->
 
                                     <div class="form-input">
-                                        <label>領據</label>
-                                        <a target="_blank" href=@filePath@Model.ReceiptFile>@Model.ReceiptName</a>
+                                        <label>申請人員清冊</label>
+                                        <a target="_blank" href=@filePath@Model.ApplicantsListFile>@Model.ApplicantsListName</a>
                                     </div>
 
-                                    <div class="form-input">
+                                    @*<div class="form-input">
                                         <label>員工清冊</label>
                                         <a target="_blank" href=@filePath@Model.EmployeeListFile>@Model.EmployeeList</a>
-                                    </div>
+                                    </div>*@
 
                                     <div class="form-input">
-                                        <label for="file5">其他文件</label>
+
+                                        <!--modify by v0.5-->
+                                        @*<label for="file5">其他文件</label>*@
+                                        <label for="file5">補件資料</label>
+                                        <!--modify by v0.5-->
+
                                         <a target="_blank" href=@filePath@Model.OtherFileFile>@Model.OtherFileName</a>
                                     </div>
 
@@ -85,7 +97,7 @@
                                 <div class="form-col">
                                     <div class="form-input">
                                         <label for="">審核狀態</label>
-                                        <div class="input">@Model.Review</div>                                        
+                                        <div class="input">@Model.Review</div>
                                     </div>
                                 </div>
                             </div>

@@ -33,65 +33,17 @@ namespace WebApplication1.Controllers
                 id_id = b.id_id,
             });
 
-            var query = perm == 3 ? joinQuery.Where(c => c.id_id == userID) : joinQuery;
-
-            var result = query.OrderByDescending(c => c.s_date_time).ToPagedList((int)page, 10);
-
+            var query = perm == 3 ? joinQuery.Where(c => c.id_id == userID) : joinQuery;            
+            var result = query.OrderBy(c => c.s_id).ToPagedList((int)page, 10);
+            
             var industry = db.industry.Find(userID);
             ViewBag.Name = industry?.id_name ?? "";
             ViewBag.Maxmember = (industry?.id_room ?? 0) / 8;
+            if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.SubMemberCount = db.member.Count(x => x.mb_id_id == userID);
             ViewBag.IndustryId = userID;
 
             return View(result);
-
-            //List<SubsidyIndustry> query = new List<SubsidyIndustry>();
-
-            //#region 判斷是業者或是管理者
-            //// 業者
-            //if (perm == 3)
-            //{
-            //    query = db.subsidy.Join(db.industry, a => a.s_id_id, b => b.id_id, (a, b) => new SubsidyIndustry
-            //    {
-            //        id_room = b.id_room,
-            //        id_name = b.id_name,
-            //        s_date_time = a.s_date_time,
-            //        id_owner = b.id_owner,
-            //        s_id = a.s_id,
-            //        s_no = a.s_no,
-            //        s_review = a.s_review,
-            //        id_id = b.id_id,
-            //        s_submit = a.s_submit
-            //    }
-            //    ).Where(c => c.id_id == userID).OrderByDescending(c => c.s_date_time).ToList();
-            //}
-            //else
-            //{
-            //    query = db.subsidy.Join(db.industry, a => a.s_id_id, b => b.id_id, (a, b) => new SubsidyIndustry
-            //    {
-            //        id_room = b.id_room,
-            //        id_name = b.id_name,
-            //        s_date_time = a.s_date_time,
-            //        id_owner = b.id_owner,
-            //        s_id = a.s_id,
-            //        s_no = a.s_no,
-            //        s_review = a.s_review,
-            //        id_id = b.id_id,
-            //        s_submit = a.s_submit
-            //    }
-            //    ).OrderByDescending(c => c.s_date_time).ToList();
-
-            //#endregion 判斷是業者或是管理者
-
-            //var result = query.ToPagedList((int)page, 10);
-
-            //var industry = db.industry.Find(userID);
-            //ViewBag.Name = industry != null ? industry.id_name : "";
-            //ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
-            //ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
-            //ViewBag.IndustryId = userID;
-
-            //    return View(result);
         }
 
         public ActionResult Create(int? id_id)
@@ -104,6 +56,7 @@ namespace WebApplication1.Controllers
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             var industry = db.industry.Find(userID);
             ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+            if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
 
             return View(data);
@@ -120,17 +73,19 @@ namespace WebApplication1.Controllers
                 // 有無旅宿業者
                 if (IndustryData == null) return HttpNotFound();
 
-                // 同月份是否申請過
-                var Month = data.Date.ToString("yyyy-MM");
-                DateTime startDate = DateTime.ParseExact(Month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                DateTime endDate = startDate.AddMonths(1);
-                var SameMonth = db.subsidy.Where(x => x.s_date_time >= startDate && x.s_date_time < endDate && x.s_id_id == data.id_id).FirstOrDefault();
-                if (SameMonth != null)
-                {
-                    var dateArray = data.Date.ToString("yyyy-MM").Split('-');
-                    Session["msg"] = $"{dateArray[0]}年{dateArray[1]}月份已申請過";
-                    return View(data);
-                }
+                //mark by v0.5
+                //// 同月份是否申請過
+                //var Month = data.Date.ToString("yyyy-MM");
+                //DateTime startDate = DateTime.ParseExact(Month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //DateTime endDate = startDate.AddMonths(1);
+                //var SameMonth = db.subsidy.Where(x => x.s_date_time >= startDate && x.s_date_time < endDate && x.s_id_id == data.id_id).FirstOrDefault();
+                //if (SameMonth != null)
+                //{
+                //    var dateArray = data.Date.ToString("yyyy-MM").Split('-');
+                //    Session["msg"] = $"{dateArray[0]}年{dateArray[1]}月份已申請過";
+                //    return View(data);
+                //}
+                //mark by v0.5
 
                 #region 檢查人數限制
 
@@ -139,6 +94,7 @@ namespace WebApplication1.Controllers
                 int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
                 var industry = db.industry.Find(userID);
                 var max = (industry != null ? (int)industry.id_room : 0) / 8;
+                if (max == 0) { max = 1; }
                 var c = db.member.Where(x => x.mb_id_id == userID).Count();
                 if (count > (max - c))
                 {
@@ -334,6 +290,7 @@ namespace WebApplication1.Controllers
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             var industry = db.industry.Find(userID);
             ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+            if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
 
             return View(data);
@@ -345,21 +302,23 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid && data.id_id > 0)
             {
-                #region 防呆
+                //mark by v0.5
+                //#region 防呆
 
-                // 同月份是否申請過
-                var Month = data.Date.ToString("yyyy-MM");
-                DateTime startDate = DateTime.ParseExact(Month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                DateTime endDate = startDate.AddMonths(1);
-                var SameMonth = db.subsidy.Where(x => x.s_date_time >= startDate && x.s_date_time < endDate && x.s_id_id == data.id_id).FirstOrDefault();
-                if (SameMonth != null && SameMonth.s_id_id == data.id_id && SameMonth.s_id != data.s_id)
-                {
-                    var dateArray = data.Date.ToString("yyyy-MM").Split('-');
-                    Session["msg"] = $"{dateArray[0]}年{dateArray[1]}月份已申請過";
-                    return View(data);
-                }
+                //// 同月份是否申請過
+                //var Month = data.Date.ToString("yyyy-MM");
+                //DateTime startDate = DateTime.ParseExact(Month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                //DateTime endDate = startDate.AddMonths(1);
+                //var SameMonth = db.subsidy.Where(x => x.s_date_time >= startDate && x.s_date_time < endDate && x.s_id_id == data.id_id).FirstOrDefault();
+                //if (SameMonth != null && SameMonth.s_id_id == data.id_id && SameMonth.s_id != data.s_id)
+                //{
+                //    var dateArray = data.Date.ToString("yyyy-MM").Split('-');
+                //    Session["msg"] = $"{dateArray[0]}年{dateArray[1]}月份已申請過";
+                //    return View(data);
+                //}
 
-                #endregion
+                //#endregion
+                //mark by v0.5
 
                 var IndustryData = db.industry.Find(data.id_id);
                 if (IndustryData == null) return HttpNotFound();
@@ -517,31 +476,6 @@ namespace WebApplication1.Controllers
 
         public ActionResult Detail(int id)
         {
-            //var data = db.subsidy.First(x => x.s_id == id);
-
-            //if (data == null)
-            //{
-            //    return HttpNotFound();
-            //}
-
-            //var result = new SubsidyEdit()
-            //{
-            //    s_id = id,
-            //    id_id = data.s_id_id,
-            //    EmpCount = data.s_empcount,
-            //    Money = data.s_money,
-            //    //Date = data.s_date_time.ToString("yyyy-MM"),
-            //    Date = data.s_date_time,
-            //    ApplicationName = data.s_application_name,
-            //    LaborName = data.s_insur_member_name,
-            //    ApplicantsListName = data.s_applicants_name,
-            //    AffidavitName = data.s_affidavit_name,
-            //    ReceiptName = data.s_receipt_name,
-            //    EmployeeListName = data.s_emp_lst_name,
-            //    OtherFileName = data.s_else_name,
-            //    Review = data.s_review
-            //};
-
             var data = db.subsidy.Where(x => x.s_id == id).Join(db.industry, x => x.s_id_id, y => y.id_id, (x, y) => new SubsidyEdit
             {
                 s_id = id,

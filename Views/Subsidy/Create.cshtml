@@ -26,21 +26,33 @@
                         <div class="form-flex">
                             <div class="form-group">
                                 <div class="form-col">
-                                    <div class="form-input">
-                                        <label class="required">申請補助日期 <!--申請補助月份(起)--></label>
+
+                                    <!--mark by v0.5-->
+                                    <!--<div class="form-input">
+                                    <label class="required">申請補助日期-->
+                                    <!--申請補助月份(起)-->
+                                    <!--</label>
                                         <div class="input date">
                                             @Html.TextBoxFor(x => x.Date, new { @type = "date", @required = "required" })
                                         </div>
-                                    </div>
+                                    </div>-->
+                                    <!--mark by v0.5-->
 
                                     <div class="form-input">
-                                        <label class="required">申請書</label>
+                                        <!--modify by v0.5-->
+                                        @*<label class="required">申請書</label>*@
+                                        <label class="required">申請文件</label>
+                                        <!--modify by v0.5-->
+
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.Application, new { @type = "file", @required = "required", @accept = ".pdf" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
-                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                                <!--modify by v0.5-->
+                                                @*<p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>*@
+                                                <p>*說明:包含申請書、切結書和領據需在同一文件<br>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                                    <!--modify by v0.5-->
                                             </div>
                                         </div>
 
@@ -50,9 +62,9 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label for="file1">全公司勞保明細</label>
+                                        <label for="file1" class="required">全公司勞保明細</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.Labor, new { @type = "file", @accept = ".pdf" })
+                                            @Html.TextBoxFor(x => x.Labor, new { @type = "file", @required = "required", @accept = ".pdf" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
@@ -88,6 +100,51 @@
                                             <p>2.第二次及以後申請時,請附申請月份的當月在保證明</p><br />
                                         </div>
                                     </div>
+                                </div>
+
+                                <div class="form-col">
+
+                                    <!--mark by v0.5-->
+                                    <!--<div class="form-input">
+                                    <label class="">~-->
+                                    <!--申請補助月份(迄)-->
+                                    <!--</label>
+                                        <div class="input date">
+                                            @Html.TextBoxFor(x => x.s_date_time_end, new { @type = "date", @required = "required" })
+                                        </div>
+                                    </div>-->
+                                    @*<div class="form-input">
+                                            <label class="required">切結書</label>
+                                            <div class="input file">
+                                                @Html.TextBoxFor(x => x.Affidavit, new { @type = "file", @required = "required", @accept = ".pdf" })
+                                                <span></span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                                <div class="red-text">
+                                                    <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                                </div>
+                                            </div>
+
+                                            <label class="demo-file">
+                                                <a href="~/assets/sample/切結書(範本檔).pdf" download>範本檔</a>
+                                            </label>
+                                        </div>*@
+
+                                    @*<div class="form-input">
+                                            <label class="required">領據</label>
+                                            <div class="input file">
+                                                @Html.TextBoxFor(x => x.Receipt, new { @type = "file", @required = "required", @accept = ".pdf" })
+                                                <span></span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                                <div class="red-text">
+                                                    <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                                </div>
+                                            </div>
+
+                                            <label class="demo-file">
+                                                <a href="~/assets/sample/領據(範本檔).pdf" download>範本檔</a>
+                                            </label>
+                                        </div>*@
+                                    <!--mark by v0.5-->
 
                                     <div class="form-input">
                                         <label class="required">申請人員清冊</label>
@@ -106,62 +163,12 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label class="required">申請金額</label>
-                                        <div class="input">
-                                            @Html.TextBoxFor(x => x.Money, new { @type = "number", @required = "required" })
-                                        </div>
-                                    </div>
-                                    <div class="form-input">
-                                        <div class="red-text">
-                                            <p>說明: 請依規定符合資格者每人每月補助5000元<p><br />
-                                       
-                                        </div>
-                                    </div>
-                                    
-                                </div>
 
-                                <div class="form-col">
-                                    <div class="form-input">
-                                        <label class="">~<!--申請補助月份(迄)--></label>
-                                        <div class="input date">
-                                            @Html.TextBoxFor(x => x.s_date_time_end, new { @type = "date", @required = "required" })
-                                        </div>
-                                    </div>
+                                        <!--modify by v0.5-->
+                                        @*<label for="file5">其他文件</label>*@
+                                        <label for="file5">補件資料</label>
+                                        <!--modify by v0.5-->
 
-                                    <div class="form-input">
-                                        <label class="required">切結書</label>
-                                        <div class="input file">
-                                            @Html.TextBoxFor(x => x.Affidavit, new { @type = "file", @required = "required", @accept = ".pdf" })
-                                            <span></span>
-                                            <button class="onfile" type="button">上傳檔案</button>
-                                            <div class="red-text">
-                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
-                                            </div>
-                                        </div>
-
-                                        <label class="demo-file">
-                                            <a href="~/assets/sample/切結書(範本檔).pdf" download>範本檔</a>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-input">
-                                        <label class="required">領據</label>
-                                        <div class="input file">
-                                            @Html.TextBoxFor(x => x.Receipt, new { @type = "file", @required = "required", @accept = ".pdf" })
-                                            <span></span>
-                                            <button class="onfile" type="button">上傳檔案</button>
-                                            <div class="red-text">
-                                                <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
-                                            </div>
-                                        </div>
-
-                                        <label class="demo-file">
-                                            <a href="~/assets/sample/領據(範本檔).pdf" download>範本檔</a>
-                                        </label>
-                                    </div>
-
-                                    <div class="form-input">
-                                        <label for="file5">其他文件</label>
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.OtherFile, new { @type = "file", @accept = "" })
                                             <span></span>
@@ -170,16 +177,30 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label class="required">申請人數</label>
+                                        <label class="required">申請金額</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.EmpCount, new { @type = "number", @required = "required" })
+                                            @Html.TextBoxFor(x => x.Money, new { @type = "number", @required = "required" })
                                         </div>
-                                        <label>可申請人數：@(ViewBag.Maxmember-ViewBag.SubMemberCount) </label>
                                     </div>
 
                                     <div class="form-input">
                                         <div class="red-text">
-                                            <p>說明:每家觀光旅館、旅館及民宿申請補助之總人數不得超過房間數八分之一;不足1人者,以1人計</p>
+                                            <p>說明: 請依規定符合資格者每人每月補助5000元<p><br />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label class="required">申請人數</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.EmpCount, new { @type = "number", @required = "required",@style="width:150px" })
+											<span>可申請人數：@(ViewBag.Maxmember-ViewBag.SubMemberCount) </span>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="form-input">
+                                        <div class="red-text">
+                                            <p>說明:每個申請單位申請補助之總人數不得超過房間數八分之一;不足1人者,以1人計</p>
                                         </div>
                                     </div>
                                 </div>

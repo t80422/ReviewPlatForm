@@ -42,7 +42,6 @@
         <div class="container-nav">
             <a href="@Url.Action("Index","Subsidy")" class="is-active">申請補助列表</a>
             <a href="@Url.Action("Index","SubMembers")">補助申請人員</a>
-            <!--<a href="@Url.Action("InsurList","Subsidy")">各月勞保清冊</a>-->
         </div>
 
         <div class="list-wrap">
@@ -51,8 +50,12 @@
                 <div class="list-main">
                     <div class="list-title pr-2 pl-2">
                         <div class="f-3">案號</div>
-                        <div class="f-3">申請月份(起)</div>
-                        <div class="f-3">申請月份(迄)</div>
+
+                        <!--mark by v0.5-->
+                        @*<div class="f-3">申請月份(起)</div>
+                            <div class="f-3">申請月份(迄)</div>*@
+                        <!--mark by v0.5-->
+
                         @if (perm < 3)
                         {<div class="f-3 ta-left ml-6">旅宿名稱</div>}
 
@@ -60,7 +63,11 @@
                         <div class="f-3">撥款日期</div>
                         <div class="f-3 ta-right">申請金額</div>
                         <div class="f-3">審核狀態</div>
-                        <div class="f-1">案件送出</div>
+
+                        <!--mark by v0.5-->
+                        @*<div class="f-1">案件送出</div>*@
+                        <!--mark by v0.5-->
+
                         @if (perm == 3)
                         {
                             <div class="f-1">詳細</div>
@@ -75,8 +82,12 @@
                     {
                         <div class="list-row pr-2 pl-2">
                             <div class="f-3">@data.s_no</div>
-                            <div class="f-3">@data.s_date_time.ToString("yyyy年MM月")</div>
-                            <div class="f-3">@(data.s_date_time_end.HasValue?data.s_date_time_end.Value.ToString("yyyy年MM月"):"N/A")</div>
+
+                            <!--mark by v0.5-->
+                            @*<div class="f-3">@data.s_date_time.ToString("yyyy年MM月")</div>
+                                <div class="f-3">@(data.s_date_time_end.HasValue?data.s_date_time_end.Value.ToString("yyyy年MM月"):"N/A")</div>*@
+                            <!--mark by v0.5-->
+
                             @if (perm < 3)
                             {<div class="f-3 ta-left ml-6">@data.id_name</div>}
 
@@ -94,9 +105,11 @@
 
                             <div class="f-3 ta-right">@data.s_money</div>
                             <div class="f-3">@data.s_review</div>
-                            <div class="f-1">
-                                <button class="btn-add" onClick="location.href='@Url.Action("Status", "Subsidy", new {id=data.s_id})';event.stopPropagation();"></button>
-                            </div>
+                            <!--mark by v0.5-->
+                            @*<div class="f-1">
+                                    <button class="btn-add" onClick="location.href='@Url.Action("Status", "Subsidy", new {id=data.s_id})';event.stopPropagation();"></button>
+                                </div>*@
+                            <!--mark by v0.5-->
                             @if (perm == 3)
                             {
                                 <div class="f-1">
