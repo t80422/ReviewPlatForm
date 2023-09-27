@@ -42,6 +42,10 @@ public partial class subsidy_member
 
     public Nullable<int> sm_mb_id { get; set; }
 
+    public string sm_income_certificate { get; set; }
+
+    public string sm_income_certificate_name { get; set; }
+
 }
 
 }

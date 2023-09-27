@@ -1,0 +1,115 @@
+﻿@model IEnumerable<WebApplication1.Models.information>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    string controller = "Video";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <!-- tool -->
+        @if (perm >= 0 && perm < 3)
+        {
+            <div class="tool-wrap">
+                <div class="tool-btn">
+                    <button class="btn-add" onClick="window.location.href = '@Url.Action("Create","Video")'">新增</button>
+                </div>
+            </div>
+        }
+
+        <div class="container-nav">
+            <a href="@Url.Action("Index","Video")" class="is-active">操作說明</a>
+            <a href="@Url.Action("Index","News")">訊息公告</a>
+            <a href="@Url.Action("Index","Download")">表單下載</a>
+            <a href="@Url.Action("Index","QA")">Q&A</a>
+        </div>
+
+        <!-- list -->
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="yt-list">
+
+                        @if (Model != null)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <div class="yt-item">
+                                    <div class="yt-iframe">
+                                        <iframe src="@item.if_connect" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                                    </div>
+
+                                    @if (perm >= 0 && perm < 3)
+                                    {
+                                        <div class="yt-btn">
+                                            <button class="btn-edit" type="button" onclick="location.href = '@Url.Action("Edit", "Video", new {id=item.if_id})'"></button>
+                                            <button class="btn-del" type="button" onclick="del(@item.if_id)"></button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+
+                    </div>
+                    <!-- example end -->
+                </div>
+            </div>
+        </div>
+        <!-- pages -->
+        @*<div class="pages-wrap">
+                <button class="btn-prev"></button>
+                <ul>
+                    <li class="is-active">1</li>
+                    <li><a href="">2</a></li>
+                    <li><a href="">3</a></li>
+                </ul>
+                <button class="btn-next"></button>
+            </div>*@
+        <div class="pages-wrap">
+            @Html.PagedListPager((IPagedList)Model, x => Url.Action("Index", new { page = x }))
+        </div>
+    </div>
+</main>
+
+<!-- popup -->
+<div class="popup-wrap js-del-popup">
+    <div class="popup-main">
+        <div class="popup-content">
+            <p>是否確定刪除</p>
+            <div class="popup-btn">
+                <button class="btn-cancel">取消</button>
+                <button class="btn-submit">確定</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="popup-overlay"></div>
+<!-- JS -->
+<script>
+    let itemID;
+
+    function del(id){
+        itemID = id;
+        $(".popup-overlay, .js-del-popup").fadeIn();
+
+        $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+
+        $(".popup-overlay, .popup-btn .btn-cancel").on('click', function () {
+            $(".popup-overlay, .popup-wrap").fadeOut();
+        });
+
+        $('.popup-btn .btn-submit').on('click', function () {
+            window.location.href = '@Url.Action("Delete","Video")'+"?id="+ id;
+        })
+    }
+
+</script>

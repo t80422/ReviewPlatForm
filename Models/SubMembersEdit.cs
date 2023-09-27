@@ -5,6 +5,12 @@ namespace WebApplication1.Models
 {
     public class SubMembersEdit
     {
+        //薪資證明檔案名稱
+        public string sm_income_certificateFile { get; set; }
+        //薪資證明名稱
+        public string sm_income_certificate_name { get; set; }
+        //薪資證明檔案
+        public HttpPostedFileBase sm_income_certificate {  get; set; }
         public string mb_position { get; set; }
         //到職日期
         public DateTime? mb_arrive_date { get; set; }

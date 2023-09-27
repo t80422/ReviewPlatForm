@@ -1,0 +1,75 @@
+﻿@{
+    ViewBag.Title = "ResetPwd";
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="form-wrap">
+            @using (Html.BeginForm("ResetPwd", "Login"))
+            {
+                @Html.AntiForgeryToken();
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })<div class="form-main">
+                    <div class="form-title">
+                        <h1>修改密碼</h1>
+                    </div>
+                    @if ((string)Session["First"] == "Y")
+                    {
+                        <div class="red-text">
+                            <p>第一次登入請修改密碼,並重新登入</p>
+                        </div>
+                        Session["First"] = null;
+                    }
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">舊密碼</label>
+                                        <div class="input">
+                                            <input type="password" name="oldPassword" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">新密碼</label>
+                                        <div class="input">
+                                            <input type="password" name="newPassword" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">確認密碼</label>
+                                        <div class="input">
+                                            <input type="password" name="confirmPassword" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-btn">
+                    <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                    <button class="btn-submit" type="submit">儲存</button>
+                </div>
+
+                if (ViewBag.Message != null)
+                {
+                    <script>alert('@ViewBag.Message')</script>
+                }
+
+            }
+
+        </div>
+    </div>
+</main>

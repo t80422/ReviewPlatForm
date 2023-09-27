@@ -158,6 +158,10 @@
           <Property Name="s_applicants" Type="nvarchar" MaxLength="100" />
           <Property Name="s_applicants_name" Type="nvarchar" MaxLength="100" />
           <Property Name="s_submit" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_else_two" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_else_two_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_else_three" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_else_three_name" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="subsidy_member">
           <Key>
@@ -175,6 +179,8 @@
           <Property Name="sm_last_time" Type="datetime" />
           <Property Name="sm_id_id" Type="int" />
           <Property Name="sm_mb_id" Type="int" />
+          <Property Name="sm_income_certificate" Type="nvarchar" MaxLength="100" />
+          <Property Name="sm_income_certificate_name" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <!--產生期間發現錯誤:
 警告 6013: 資料表/檢視 'ReviewPlatform.dbo.system' 未定義主索引鍵，也無法推斷有效的主索引鍵。此資料表/檢視已被排除。如果要使用此實體，您必須檢閱您的結構描述，加入正確的索引鍵，並將它取消註解。
@@ -215,160 +221,17 @@
     <edmx:ConceptualModels>
       <Schema Namespace="ReviewPlatformModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ReviewPlatformEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="industry" EntityType="ReviewPlatformModel.industry" />
+          <EntitySet Name="information" EntityType="ReviewPlatformModel.information" />
           <EntitySet Name="information_group" EntityType="ReviewPlatformModel.information_group" />
           <EntitySet Name="login_out" EntityType="ReviewPlatformModel.login_out" />
           <EntitySet Name="manager" EntityType="ReviewPlatformModel.manager" />
-          <EntitySet Name="user_accounts" EntityType="ReviewPlatformModel.user_accounts" />
-          <EntitySet Name="information" EntityType="ReviewPlatformModel.information" />
-          <EntitySet Name="member" EntityType="ReviewPlatformModel.member" />
-          <EntitySet Name="subsidy_member" EntityType="ReviewPlatformModel.subsidy_member" />
           <EntitySet Name="News" EntityType="ReviewPlatformModel.News" />
+          <EntitySet Name="subsidy_member" EntityType="ReviewPlatformModel.subsidy_member" />
+          <EntitySet Name="user_accounts" EntityType="ReviewPlatformModel.user_accounts" />
+          <EntitySet Name="member" EntityType="ReviewPlatformModel.member" />
           <EntitySet Name="subsidy" EntityType="ReviewPlatformModel.subsidy" />
-          <EntitySet Name="industry" EntityType="ReviewPlatformModel.industry" />
         </EntityContainer>
-        <EntityType Name="information_group">
-          <Key>
-            <PropertyRef Name="ig_id" />
-          </Key>
-          <Property Name="ig_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ig_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="login_out">
-          <Key>
-            <PropertyRef Name="l_id" />
-          </Key>
-          <Property Name="l_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="l_in" Type="DateTime" Precision="3" />
-          <Property Name="l_out" Type="DateTime" Precision="3" />
-          <Property Name="l_id_id" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="manager">
-          <Key>
-            <PropertyRef Name="mg_id" />
-          </Key>
-          <Property Name="mg_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="mg_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mg_phone" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mg_mail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mg_job_title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="user_accounts">
-          <Key>
-            <PropertyRef Name="ua_id" />
-          </Key>
-          <Property Name="ua_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ua_acct" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="ua_psw" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="ua_perm" Type="Int32" />
-          <Property Name="ua_user_id" Type="Int32" />
-        </EntityType>
-        <EntityType Name="information">
-          <Key>
-            <PropertyRef Name="if_id" />
-          </Key>
-          <Property Name="if_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="if_ig_id" Type="Int32" />
-          <Property Name="if_date" Type="DateTime" Precision="3" />
-          <Property Name="if_title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="if_connect" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_file_one" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_name_file_one" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_file_two" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_name_file_two" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_file_three" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_name_file_three" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_file_four" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_name_file_four" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_file_five" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_name_file_five" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="if_visible" Type="Boolean" Nullable="false" />
-        </EntityType>
-        <EntityType Name="member">
-          <Key>
-            <PropertyRef Name="mb_id" />
-          </Key>
-          <Property Name="mb_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="mb_id_id" Type="Int32" />
-          <Property Name="mb_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_id_card" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_birthday" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_insur_salary" Type="Int32" />
-          <Property Name="mb_add_insur" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_add_insur_date" Type="DateTime" Precision="0" />
-          <Property Name="mb_surrender_date" Type="DateTime" Precision="0" />
-          <Property Name="mb_memo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_last_time" Type="DateTime" Precision="3" />
-          <Property Name="mb_contract" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_contract_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_insurance_id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_full_time_date" Type="DateTime" Precision="0" />
-          <Property Name="mb_income_certificate" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_income_certificate_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mb_full_time_or_not" Type="Boolean" />
-          <Property Name="mb_s_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="mb_hire_type" Type="Int32" />
-          <Property Name="mb_arrive_date" Type="DateTime" Precision="0" />
-          <Property Name="mb_position" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="subsidy_member">
-          <Key>
-            <PropertyRef Name="sm_id" />
-          </Key>
-          <Property Name="sm_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="sm_s_id" Type="Int32" />
-          <Property Name="sm_agree_start" Type="DateTime" Precision="0" />
-          <Property Name="sm_agree_end" Type="DateTime" Precision="0" />
-          <Property Name="sm_advance_money" Type="Int32" />
-          <Property Name="sm_review" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="sm_date_review" Type="DateTime" Precision="3" />
-          <Property Name="sm_mg_id_fst" Type="Int32" />
-          <Property Name="sm_mg_id_snd" Type="Int32" />
-          <Property Name="sm_last_time" Type="DateTime" Precision="3" />
-          <Property Name="sm_id_id" Type="Int32" />
-          <Property Name="sm_mb_id" Type="Int32" />
-        </EntityType>
-        <EntityType Name="News">
-          <Key>
-            <PropertyRef Name="n_id" />
-          </Key>
-          <Property Name="n_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="n_title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="n_content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="n_date" Type="DateTime" Precision="0" />
-        </EntityType>
-        <EntityType Name="subsidy">
-          <Key>
-            <PropertyRef Name="s_id" />
-          </Key>
-          <Property Name="s_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="s_id_id" Type="Int32" />
-          <Property Name="s_date_time" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="s_date_time_end" Type="DateTime" Precision="0" />
-          <Property Name="s_money" Type="Int32" />
-          <Property Name="s_grant_date" Type="DateTime" Precision="0" />
-          <Property Name="s_review" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_mg_id_fst" Type="Int32" />
-          <Property Name="s_mg_id_snd" Type="Int32" />
-          <Property Name="s_last_time" Type="DateTime" Precision="3" />
-          <Property Name="s_insur_member" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_insur_member_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_emp_lst" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_emp_lst_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_affidavit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_affidavit_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_receipt" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_receipt_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_else" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_else_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_no" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_empcount" Type="Int32" />
-          <Property Name="s_application" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_application_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_applicants" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_applicants_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="s_submit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
         <EntityType Name="industry">
           <Key>
             <PropertyRef Name="id_id" />
@@ -407,164 +270,161 @@
           <Property Name="id_bank_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="id_owner_email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="information">
+          <Key>
+            <PropertyRef Name="if_id" />
+          </Key>
+          <Property Name="if_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="if_ig_id" Type="Int32" />
+          <Property Name="if_date" Type="DateTime" Precision="3" />
+          <Property Name="if_title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="if_connect" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_file_one" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_name_file_one" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_file_two" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_name_file_two" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_file_three" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_name_file_three" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_file_four" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_name_file_four" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_file_five" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_name_file_five" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="if_visible" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="information_group">
+          <Key>
+            <PropertyRef Name="ig_id" />
+          </Key>
+          <Property Name="ig_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ig_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="login_out">
+          <Key>
+            <PropertyRef Name="l_id" />
+          </Key>
+          <Property Name="l_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="l_in" Type="DateTime" Precision="3" />
+          <Property Name="l_out" Type="DateTime" Precision="3" />
+          <Property Name="l_id_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="manager">
+          <Key>
+            <PropertyRef Name="mg_id" />
+          </Key>
+          <Property Name="mg_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mg_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mg_phone" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mg_mail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mg_job_title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="n_id" />
+          </Key>
+          <Property Name="n_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="n_title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="n_content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="n_date" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="subsidy_member">
+          <Key>
+            <PropertyRef Name="sm_id" />
+          </Key>
+          <Property Name="sm_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sm_s_id" Type="Int32" />
+          <Property Name="sm_agree_start" Type="DateTime" Precision="0" />
+          <Property Name="sm_agree_end" Type="DateTime" Precision="0" />
+          <Property Name="sm_advance_money" Type="Int32" />
+          <Property Name="sm_review" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="sm_date_review" Type="DateTime" Precision="3" />
+          <Property Name="sm_mg_id_fst" Type="Int32" />
+          <Property Name="sm_mg_id_snd" Type="Int32" />
+          <Property Name="sm_last_time" Type="DateTime" Precision="3" />
+          <Property Name="sm_id_id" Type="Int32" />
+          <Property Name="sm_mb_id" Type="Int32" />
+          <Property Name="sm_income_certificate" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="sm_income_certificate_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="user_accounts">
+          <Key>
+            <PropertyRef Name="ua_id" />
+          </Key>
+          <Property Name="ua_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ua_acct" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ua_psw" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ua_perm" Type="Int32" />
+          <Property Name="ua_user_id" Type="Int32" />
+        </EntityType>
+        <EntityType Name="member">
+          <Key>
+            <PropertyRef Name="mb_id" />
+          </Key>
+          <Property Name="mb_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mb_id_id" Type="Int32" />
+          <Property Name="mb_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_id_card" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_birthday" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_insur_salary" Type="Int32" />
+          <Property Name="mb_add_insur" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_add_insur_date" Type="DateTime" Precision="0" />
+          <Property Name="mb_surrender_date" Type="DateTime" Precision="0" />
+          <Property Name="mb_memo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_last_time" Type="DateTime" Precision="3" />
+          <Property Name="mb_contract" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_contract_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_insurance_id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_full_time_date" Type="DateTime" Precision="0" />
+          <Property Name="mb_income_certificate" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_income_certificate_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mb_full_time_or_not" Type="Boolean" />
+          <Property Name="mb_s_no" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="mb_hire_type" Type="Int32" />
+          <Property Name="mb_arrive_date" Type="DateTime" Precision="0" />
+          <Property Name="mb_position" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="subsidy">
+          <Key>
+            <PropertyRef Name="s_id" />
+          </Key>
+          <Property Name="s_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="s_id_id" Type="Int32" />
+          <Property Name="s_date_time" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="s_date_time_end" Type="DateTime" Precision="0" />
+          <Property Name="s_money" Type="Int32" />
+          <Property Name="s_grant_date" Type="DateTime" Precision="0" />
+          <Property Name="s_review" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_mg_id_fst" Type="Int32" />
+          <Property Name="s_mg_id_snd" Type="Int32" />
+          <Property Name="s_last_time" Type="DateTime" Precision="3" />
+          <Property Name="s_insur_member" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_insur_member_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_emp_lst" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_emp_lst_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_affidavit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_affidavit_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_receipt" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_receipt_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_else" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_else_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_no" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_empcount" Type="Int32" />
+          <Property Name="s_application" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_application_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_applicants" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_applicants_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_submit" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_else_two" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_else_two_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_else_three" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="s_else_three_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ReviewPlatformModelStoreContainer" CdmEntityContainer="ReviewPlatformEntities">
-          <EntitySetMapping Name="information_group">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.information_group">
-              <MappingFragment StoreEntitySet="information_group">
-                <ScalarProperty Name="ig_name" ColumnName="ig_name" />
-                <ScalarProperty Name="ig_id" ColumnName="ig_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="login_out">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.login_out">
-              <MappingFragment StoreEntitySet="login_out">
-                <ScalarProperty Name="l_id_id" ColumnName="l_id_id" />
-                <ScalarProperty Name="l_out" ColumnName="l_out" />
-                <ScalarProperty Name="l_in" ColumnName="l_in" />
-                <ScalarProperty Name="l_id" ColumnName="l_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="manager">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.manager">
-              <MappingFragment StoreEntitySet="manager">
-                <ScalarProperty Name="mg_job_title" ColumnName="mg_job_title" />
-                <ScalarProperty Name="mg_mail" ColumnName="mg_mail" />
-                <ScalarProperty Name="mg_phone" ColumnName="mg_phone" />
-                <ScalarProperty Name="mg_name" ColumnName="mg_name" />
-                <ScalarProperty Name="mg_id" ColumnName="mg_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="user_accounts">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.user_accounts">
-              <MappingFragment StoreEntitySet="user_accounts">
-                <ScalarProperty Name="ua_user_id" ColumnName="ua_user_id" />
-                <ScalarProperty Name="ua_perm" ColumnName="ua_perm" />
-                <ScalarProperty Name="ua_psw" ColumnName="ua_psw" />
-                <ScalarProperty Name="ua_acct" ColumnName="ua_acct" />
-                <ScalarProperty Name="ua_id" ColumnName="ua_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="information">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.information">
-              <MappingFragment StoreEntitySet="information">
-                <ScalarProperty Name="if_visible" ColumnName="if_visible" />
-                <ScalarProperty Name="if_name_file_five" ColumnName="if_name_file_five" />
-                <ScalarProperty Name="if_file_five" ColumnName="if_file_five" />
-                <ScalarProperty Name="if_name_file_four" ColumnName="if_name_file_four" />
-                <ScalarProperty Name="if_file_four" ColumnName="if_file_four" />
-                <ScalarProperty Name="if_name_file_three" ColumnName="if_name_file_three" />
-                <ScalarProperty Name="if_file_three" ColumnName="if_file_three" />
-                <ScalarProperty Name="if_name_file_two" ColumnName="if_name_file_two" />
-                <ScalarProperty Name="if_file_two" ColumnName="if_file_two" />
-                <ScalarProperty Name="if_name_file_one" ColumnName="if_name_file_one" />
-                <ScalarProperty Name="if_file_one" ColumnName="if_file_one" />
-                <ScalarProperty Name="if_connect" ColumnName="if_connect" />
-                <ScalarProperty Name="if_content" ColumnName="if_content" />
-                <ScalarProperty Name="if_title" ColumnName="if_title" />
-                <ScalarProperty Name="if_date" ColumnName="if_date" />
-                <ScalarProperty Name="if_ig_id" ColumnName="if_ig_id" />
-                <ScalarProperty Name="if_id" ColumnName="if_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="member">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.member">
-              <MappingFragment StoreEntitySet="member">
-                <ScalarProperty Name="mb_position" ColumnName="mb_position" />
-                <ScalarProperty Name="mb_arrive_date" ColumnName="mb_arrive_date" />
-                <ScalarProperty Name="mb_hire_type" ColumnName="mb_hire_type" />
-                <ScalarProperty Name="mb_s_no" ColumnName="mb_s_no" />
-                <ScalarProperty Name="mb_full_time_or_not" ColumnName="mb_full_time_or_not" />
-                <ScalarProperty Name="mb_income_certificate_name" ColumnName="mb_income_certificate_name" />
-                <ScalarProperty Name="mb_income_certificate" ColumnName="mb_income_certificate" />
-                <ScalarProperty Name="mb_full_time_date" ColumnName="mb_full_time_date" />
-                <ScalarProperty Name="mb_insurance_id" ColumnName="mb_insurance_id" />
-                <ScalarProperty Name="mb_contract_name" ColumnName="mb_contract_name" />
-                <ScalarProperty Name="mb_contract" ColumnName="mb_contract" />
-                <ScalarProperty Name="mb_last_time" ColumnName="mb_last_time" />
-                <ScalarProperty Name="mb_memo" ColumnName="mb_memo" />
-                <ScalarProperty Name="mb_surrender_date" ColumnName="mb_surrender_date" />
-                <ScalarProperty Name="mb_add_insur_date" ColumnName="mb_add_insur_date" />
-                <ScalarProperty Name="mb_add_insur" ColumnName="mb_add_insur" />
-                <ScalarProperty Name="mb_insur_salary" ColumnName="mb_insur_salary" />
-                <ScalarProperty Name="mb_birthday" ColumnName="mb_birthday" />
-                <ScalarProperty Name="mb_id_card" ColumnName="mb_id_card" />
-                <ScalarProperty Name="mb_name" ColumnName="mb_name" />
-                <ScalarProperty Name="mb_id_id" ColumnName="mb_id_id" />
-                <ScalarProperty Name="mb_id" ColumnName="mb_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="subsidy_member">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.subsidy_member">
-              <MappingFragment StoreEntitySet="subsidy_member">
-                <ScalarProperty Name="sm_mb_id" ColumnName="sm_mb_id" />
-                <ScalarProperty Name="sm_id_id" ColumnName="sm_id_id" />
-                <ScalarProperty Name="sm_last_time" ColumnName="sm_last_time" />
-                <ScalarProperty Name="sm_mg_id_snd" ColumnName="sm_mg_id_snd" />
-                <ScalarProperty Name="sm_mg_id_fst" ColumnName="sm_mg_id_fst" />
-                <ScalarProperty Name="sm_date_review" ColumnName="sm_date_review" />
-                <ScalarProperty Name="sm_review" ColumnName="sm_review" />
-                <ScalarProperty Name="sm_advance_money" ColumnName="sm_advance_money" />
-                <ScalarProperty Name="sm_agree_end" ColumnName="sm_agree_end" />
-                <ScalarProperty Name="sm_agree_start" ColumnName="sm_agree_start" />
-                <ScalarProperty Name="sm_s_id" ColumnName="sm_s_id" />
-                <ScalarProperty Name="sm_id" ColumnName="sm_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="News">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.News">
-              <MappingFragment StoreEntitySet="News">
-                <ScalarProperty Name="n_date" ColumnName="n_date" />
-                <ScalarProperty Name="n_content" ColumnName="n_content" />
-                <ScalarProperty Name="n_title" ColumnName="n_title" />
-                <ScalarProperty Name="n_id" ColumnName="n_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="subsidy">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.subsidy">
-              <MappingFragment StoreEntitySet="subsidy">
-                <ScalarProperty Name="s_submit" ColumnName="s_submit" />
-                <ScalarProperty Name="s_applicants_name" ColumnName="s_applicants_name" />
-                <ScalarProperty Name="s_applicants" ColumnName="s_applicants" />
-                <ScalarProperty Name="s_application_name" ColumnName="s_application_name" />
-                <ScalarProperty Name="s_application" ColumnName="s_application" />
-                <ScalarProperty Name="s_empcount" ColumnName="s_empcount" />
-                <ScalarProperty Name="s_no" ColumnName="s_no" />
-                <ScalarProperty Name="s_else_name" ColumnName="s_else_name" />
-                <ScalarProperty Name="s_else" ColumnName="s_else" />
-                <ScalarProperty Name="s_receipt_name" ColumnName="s_receipt_name" />
-                <ScalarProperty Name="s_receipt" ColumnName="s_receipt" />
-                <ScalarProperty Name="s_affidavit_name" ColumnName="s_affidavit_name" />
-                <ScalarProperty Name="s_affidavit" ColumnName="s_affidavit" />
-                <ScalarProperty Name="s_emp_lst_name" ColumnName="s_emp_lst_name" />
-                <ScalarProperty Name="s_emp_lst" ColumnName="s_emp_lst" />
-                <ScalarProperty Name="s_insur_member_name" ColumnName="s_insur_member_name" />
-                <ScalarProperty Name="s_insur_member" ColumnName="s_insur_member" />
-                <ScalarProperty Name="s_last_time" ColumnName="s_last_time" />
-                <ScalarProperty Name="s_mg_id_snd" ColumnName="s_mg_id_snd" />
-                <ScalarProperty Name="s_mg_id_fst" ColumnName="s_mg_id_fst" />
-                <ScalarProperty Name="s_review" ColumnName="s_review" />
-                <ScalarProperty Name="s_grant_date" ColumnName="s_grant_date" />
-                <ScalarProperty Name="s_money" ColumnName="s_money" />
-                <ScalarProperty Name="s_date_time_end" ColumnName="s_date_time_end" />
-                <ScalarProperty Name="s_date_time" ColumnName="s_date_time" />
-                <ScalarProperty Name="s_id_id" ColumnName="s_id_id" />
-                <ScalarProperty Name="s_id" ColumnName="s_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="industry">
             <EntityTypeMapping TypeName="ReviewPlatformModel.industry">
               <MappingFragment StoreEntitySet="industry">
@@ -601,6 +461,164 @@
                 <ScalarProperty Name="id_name" ColumnName="id_name" />
                 <ScalarProperty Name="id_it_id" ColumnName="id_it_id" />
                 <ScalarProperty Name="id_id" ColumnName="id_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="information">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.information">
+              <MappingFragment StoreEntitySet="information">
+                <ScalarProperty Name="if_visible" ColumnName="if_visible" />
+                <ScalarProperty Name="if_name_file_five" ColumnName="if_name_file_five" />
+                <ScalarProperty Name="if_file_five" ColumnName="if_file_five" />
+                <ScalarProperty Name="if_name_file_four" ColumnName="if_name_file_four" />
+                <ScalarProperty Name="if_file_four" ColumnName="if_file_four" />
+                <ScalarProperty Name="if_name_file_three" ColumnName="if_name_file_three" />
+                <ScalarProperty Name="if_file_three" ColumnName="if_file_three" />
+                <ScalarProperty Name="if_name_file_two" ColumnName="if_name_file_two" />
+                <ScalarProperty Name="if_file_two" ColumnName="if_file_two" />
+                <ScalarProperty Name="if_name_file_one" ColumnName="if_name_file_one" />
+                <ScalarProperty Name="if_file_one" ColumnName="if_file_one" />
+                <ScalarProperty Name="if_connect" ColumnName="if_connect" />
+                <ScalarProperty Name="if_content" ColumnName="if_content" />
+                <ScalarProperty Name="if_title" ColumnName="if_title" />
+                <ScalarProperty Name="if_date" ColumnName="if_date" />
+                <ScalarProperty Name="if_ig_id" ColumnName="if_ig_id" />
+                <ScalarProperty Name="if_id" ColumnName="if_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="information_group">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.information_group">
+              <MappingFragment StoreEntitySet="information_group">
+                <ScalarProperty Name="ig_name" ColumnName="ig_name" />
+                <ScalarProperty Name="ig_id" ColumnName="ig_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="login_out">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.login_out">
+              <MappingFragment StoreEntitySet="login_out">
+                <ScalarProperty Name="l_id_id" ColumnName="l_id_id" />
+                <ScalarProperty Name="l_out" ColumnName="l_out" />
+                <ScalarProperty Name="l_in" ColumnName="l_in" />
+                <ScalarProperty Name="l_id" ColumnName="l_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="manager">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.manager">
+              <MappingFragment StoreEntitySet="manager">
+                <ScalarProperty Name="mg_job_title" ColumnName="mg_job_title" />
+                <ScalarProperty Name="mg_mail" ColumnName="mg_mail" />
+                <ScalarProperty Name="mg_phone" ColumnName="mg_phone" />
+                <ScalarProperty Name="mg_name" ColumnName="mg_name" />
+                <ScalarProperty Name="mg_id" ColumnName="mg_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="n_date" ColumnName="n_date" />
+                <ScalarProperty Name="n_content" ColumnName="n_content" />
+                <ScalarProperty Name="n_title" ColumnName="n_title" />
+                <ScalarProperty Name="n_id" ColumnName="n_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="subsidy_member">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.subsidy_member">
+              <MappingFragment StoreEntitySet="subsidy_member">
+                <ScalarProperty Name="sm_income_certificate_name" ColumnName="sm_income_certificate_name" />
+                <ScalarProperty Name="sm_income_certificate" ColumnName="sm_income_certificate" />
+                <ScalarProperty Name="sm_mb_id" ColumnName="sm_mb_id" />
+                <ScalarProperty Name="sm_id_id" ColumnName="sm_id_id" />
+                <ScalarProperty Name="sm_last_time" ColumnName="sm_last_time" />
+                <ScalarProperty Name="sm_mg_id_snd" ColumnName="sm_mg_id_snd" />
+                <ScalarProperty Name="sm_mg_id_fst" ColumnName="sm_mg_id_fst" />
+                <ScalarProperty Name="sm_date_review" ColumnName="sm_date_review" />
+                <ScalarProperty Name="sm_review" ColumnName="sm_review" />
+                <ScalarProperty Name="sm_advance_money" ColumnName="sm_advance_money" />
+                <ScalarProperty Name="sm_agree_end" ColumnName="sm_agree_end" />
+                <ScalarProperty Name="sm_agree_start" ColumnName="sm_agree_start" />
+                <ScalarProperty Name="sm_s_id" ColumnName="sm_s_id" />
+                <ScalarProperty Name="sm_id" ColumnName="sm_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="user_accounts">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.user_accounts">
+              <MappingFragment StoreEntitySet="user_accounts">
+                <ScalarProperty Name="ua_user_id" ColumnName="ua_user_id" />
+                <ScalarProperty Name="ua_perm" ColumnName="ua_perm" />
+                <ScalarProperty Name="ua_psw" ColumnName="ua_psw" />
+                <ScalarProperty Name="ua_acct" ColumnName="ua_acct" />
+                <ScalarProperty Name="ua_id" ColumnName="ua_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="member">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.member">
+              <MappingFragment StoreEntitySet="member">
+                <ScalarProperty Name="mb_position" ColumnName="mb_position" />
+                <ScalarProperty Name="mb_arrive_date" ColumnName="mb_arrive_date" />
+                <ScalarProperty Name="mb_hire_type" ColumnName="mb_hire_type" />
+                <ScalarProperty Name="mb_s_no" ColumnName="mb_s_no" />
+                <ScalarProperty Name="mb_full_time_or_not" ColumnName="mb_full_time_or_not" />
+                <ScalarProperty Name="mb_income_certificate_name" ColumnName="mb_income_certificate_name" />
+                <ScalarProperty Name="mb_income_certificate" ColumnName="mb_income_certificate" />
+                <ScalarProperty Name="mb_full_time_date" ColumnName="mb_full_time_date" />
+                <ScalarProperty Name="mb_insurance_id" ColumnName="mb_insurance_id" />
+                <ScalarProperty Name="mb_contract_name" ColumnName="mb_contract_name" />
+                <ScalarProperty Name="mb_contract" ColumnName="mb_contract" />
+                <ScalarProperty Name="mb_last_time" ColumnName="mb_last_time" />
+                <ScalarProperty Name="mb_memo" ColumnName="mb_memo" />
+                <ScalarProperty Name="mb_surrender_date" ColumnName="mb_surrender_date" />
+                <ScalarProperty Name="mb_add_insur_date" ColumnName="mb_add_insur_date" />
+                <ScalarProperty Name="mb_add_insur" ColumnName="mb_add_insur" />
+                <ScalarProperty Name="mb_insur_salary" ColumnName="mb_insur_salary" />
+                <ScalarProperty Name="mb_birthday" ColumnName="mb_birthday" />
+                <ScalarProperty Name="mb_id_card" ColumnName="mb_id_card" />
+                <ScalarProperty Name="mb_name" ColumnName="mb_name" />
+                <ScalarProperty Name="mb_id_id" ColumnName="mb_id_id" />
+                <ScalarProperty Name="mb_id" ColumnName="mb_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="subsidy">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.subsidy">
+              <MappingFragment StoreEntitySet="subsidy">
+                <ScalarProperty Name="s_else_three_name" ColumnName="s_else_three_name" />
+                <ScalarProperty Name="s_else_three" ColumnName="s_else_three" />
+                <ScalarProperty Name="s_else_two_name" ColumnName="s_else_two_name" />
+                <ScalarProperty Name="s_else_two" ColumnName="s_else_two" />
+                <ScalarProperty Name="s_submit" ColumnName="s_submit" />
+                <ScalarProperty Name="s_applicants_name" ColumnName="s_applicants_name" />
+                <ScalarProperty Name="s_applicants" ColumnName="s_applicants" />
+                <ScalarProperty Name="s_application_name" ColumnName="s_application_name" />
+                <ScalarProperty Name="s_application" ColumnName="s_application" />
+                <ScalarProperty Name="s_empcount" ColumnName="s_empcount" />
+                <ScalarProperty Name="s_no" ColumnName="s_no" />
+                <ScalarProperty Name="s_else_name" ColumnName="s_else_name" />
+                <ScalarProperty Name="s_else" ColumnName="s_else" />
+                <ScalarProperty Name="s_receipt_name" ColumnName="s_receipt_name" />
+                <ScalarProperty Name="s_receipt" ColumnName="s_receipt" />
+                <ScalarProperty Name="s_affidavit_name" ColumnName="s_affidavit_name" />
+                <ScalarProperty Name="s_affidavit" ColumnName="s_affidavit" />
+                <ScalarProperty Name="s_emp_lst_name" ColumnName="s_emp_lst_name" />
+                <ScalarProperty Name="s_emp_lst" ColumnName="s_emp_lst" />
+                <ScalarProperty Name="s_insur_member_name" ColumnName="s_insur_member_name" />
+                <ScalarProperty Name="s_insur_member" ColumnName="s_insur_member" />
+                <ScalarProperty Name="s_last_time" ColumnName="s_last_time" />
+                <ScalarProperty Name="s_mg_id_snd" ColumnName="s_mg_id_snd" />
+                <ScalarProperty Name="s_mg_id_fst" ColumnName="s_mg_id_fst" />
+                <ScalarProperty Name="s_review" ColumnName="s_review" />
+                <ScalarProperty Name="s_grant_date" ColumnName="s_grant_date" />
+                <ScalarProperty Name="s_money" ColumnName="s_money" />
+                <ScalarProperty Name="s_date_time_end" ColumnName="s_date_time_end" />
+                <ScalarProperty Name="s_date_time" ColumnName="s_date_time" />
+                <ScalarProperty Name="s_id_id" ColumnName="s_id_id" />
+                <ScalarProperty Name="s_id" ColumnName="s_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+
+}
+
+@model WebApplication1.Models.SubMembersEdit
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="form-wrap">
+            @using (Html.BeginForm("Create", "SubMembers"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(x => x.sm_s_id)
+
+                <div class="form-main">
+                    <div class="form-title">
+                        <h3>新增申請補助人員</h3>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">符合申請(起)</label>
+                                        <div class="input">
+                                            @Html.EditorFor(x => x.sm_agree_start, new { htmlAttributes = new { type = "date" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">申請金額</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.sm_advance_money)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">符合申請(迄)</label>
+                                        <div class="input">
+                                            @Html.EditorFor(x => x.sm_agree_end, new { htmlAttributes = new { type = "date" } })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">人員名稱</label>
+                                        <div class="input">
+                                            @Html.DropDownListFor(x => x.sm_mb_id, (SelectList)ViewBag.Members, "-- 請選擇 --")
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-btn">
+                    <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                    <button class="btn-submit" type="submit">儲存</button>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+

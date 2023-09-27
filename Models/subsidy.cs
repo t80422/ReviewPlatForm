@@ -72,6 +72,14 @@ public partial class subsidy
 
     public string s_submit { get; set; }
 
+    public string s_else_two { get; set; }
+
+    public string s_else_two_name { get; set; }
+
+    public string s_else_three { get; set; }
+
+    public string s_else_three_name { get; set; }
+
 }
 
 }

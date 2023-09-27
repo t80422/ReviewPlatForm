@@ -28,7 +28,10 @@ namespace WebApplication1.Controllers
                     sm_s_id = (int)joined.SubMember.sm_s_id,
                     sm_id = joined.SubMember.sm_id,
                     SubsidyNo = s.s_no,
-                    mb_income_certificate_name = joined.Member.mb_income_certificate_name,
+                    //modify by v0.6
+                    //mb_income_certificate_name = joined.Member.mb_income_certificate_name,
+                    sm_income_certificate_name=joined.SubMember.sm_income_certificate_name,
+                    //modify by v0.6
                     mb_contract_name = joined.Member.mb_contract_name,
                     sm_id_id = joined.SubMember.sm_id_id
                 });
@@ -121,8 +124,6 @@ namespace WebApplication1.Controllers
 
                 if (newdata == null)
                 {
-
-
                     var insertData = new subsidy_member()
                     {
                         sm_s_id = data.sm_s_id,
@@ -132,7 +133,6 @@ namespace WebApplication1.Controllers
                         sm_mb_id = data.sm_mb_id,
                         sm_review = "待補件"
                     };
-
                     db.subsidy_member.Add(insertData);
                     db.SaveChanges();
 
@@ -170,8 +170,8 @@ namespace WebApplication1.Controllers
                 mb_last_time = (DateTime)b.mb_last_time,
                 mb_contractFile=b.mb_contract,
                 mb_contract_name = b.mb_contract_name,
-                mb_income_certificateFile=b.mb_income_certificate,
-                mb_income_certificate_name = b.mb_income_certificate_name,
+                sm_income_certificateFile=a.sm_income_certificate,
+                sm_income_certificate_name = a.sm_income_certificate_name,
                 mb_insurance_id = b.mb_insurance_id,
                 mb_full_time_date = b.mb_full_time_date,
                 mb_full_time_or_not = (bool)b.mb_full_time_or_not,
@@ -214,6 +214,7 @@ namespace WebApplication1.Controllers
                 #region 必填
 
                 var reloadMember = db.member.Find(data.sm_mb_id);
+                var reloadSubMember = db.subsidy_member.Find(data.sm_id);
 
                 if (string.IsNullOrEmpty(reloadMember.mb_contract) && data.mb_contract==null)
                 {
@@ -237,14 +238,15 @@ namespace WebApplication1.Controllers
 
                     data.mb_contract_name = reloadMember.mb_contract_name;
                     data.mb_contractFile = reloadMember.mb_contract;
-                    data.mb_income_certificate_name = reloadMember.mb_income_certificate_name;
-                    data.mb_income_certificateFile=reloadMember.mb_income_certificate;
+                    data.sm_income_certificate_name = reloadSubMember.sm_income_certificate_name;
+                    data.sm_income_certificateFile= reloadSubMember.sm_income_certificate;
                     
                     Session["msg"] = "請上傳勞動契約";
+
                     return View(data);
                 }
 
-                if (string.IsNullOrEmpty(data.mb_income_certificateFile) && data.mb_income_certificate == null )
+                if (string.IsNullOrEmpty(data.sm_income_certificateFile) && data.sm_income_certificate == null )
                 {
                     switch (int.Parse("0" + data.mb_add_insur))
                     {
@@ -266,8 +268,8 @@ namespace WebApplication1.Controllers
 
                     data.mb_contract_name = reloadMember.mb_contract_name;
                     data.mb_contractFile = reloadMember.mb_contract;
-                    data.mb_income_certificate_name = reloadMember.mb_income_certificate_name;
-                    data.mb_income_certificateFile = reloadMember.mb_income_certificate;
+                    data.sm_income_certificate_name = reloadSubMember.sm_income_certificate_name;
+                    data.sm_income_certificateFile = reloadSubMember.sm_income_certificate;
 
                     Session["msg"] = "請上傳薪資證明";
                     return View(data);
@@ -287,15 +289,15 @@ namespace WebApplication1.Controllers
                     string path = Server.MapPath("~/assets/upload/Members");
 
                     var contract = ajax.UploadFile(data.mb_contract, path);
-                    var incom = ajax.UploadFile(data.mb_income_certificate, path);
+                    var incom = ajax.UploadFile(data.sm_income_certificate, path);
 
                     if (!string.IsNullOrEmpty(contract)) ajax.DeleteFile($"{path}/{updateMember.mb_contract}");
-                    if (!string.IsNullOrEmpty(incom)) ajax.DeleteFile($"{path}/{updateMember.mb_income_certificate}");
+                    if (!string.IsNullOrEmpty(incom)) ajax.DeleteFile($"{path}/{updateData.sm_income_certificate}");
 
                     updateMember.mb_contract = contract ?? updateMember.mb_contract;
                     updateMember.mb_contract_name = data.mb_contract != null ? data.mb_contract.FileName : updateMember.mb_contract_name;
-                    updateMember.mb_income_certificate = incom ?? updateMember.mb_income_certificate;
-                    updateMember.mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate.FileName : updateMember.mb_income_certificate_name;
+                    updateData.sm_income_certificate = incom ?? updateData.sm_income_certificate;
+                    updateData.sm_income_certificate_name = data.sm_income_certificate != null ? data.sm_income_certificate.FileName : updateData.sm_income_certificate_name;
 
                     db.SaveChanges();
                     Session["msg"] = "修改成功";
@@ -360,9 +362,9 @@ namespace WebApplication1.Controllers
 
         public ActionResult AllCaseSubmit(int id)
         {
-            db.subsidy.Where(x => x.s_id == id).ToList().ForEach(x => x.s_review = "審核中");
+            db.subsidy.Where(x => x.s_id == id).ToList().ForEach(x => x.s_review = "待審核");
             db.SaveChanges();
-            db.subsidy_member.Where(x => x.sm_s_id == id).ToList().ForEach(x => x.sm_review = "審核中");
+            db.subsidy_member.Where(x => x.sm_s_id == id).ToList().ForEach(x => x.sm_review = "待審核");
             db.SaveChanges();
 
             Session["msg"] = "本次案件送出成功";

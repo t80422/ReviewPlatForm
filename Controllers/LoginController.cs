@@ -26,12 +26,20 @@ namespace WebApplication1.Controllers
                 var hasPassowrd = ajax.ConvertToSHA256(password);
                 var user = db.user_accounts.Where(x => x.ua_acct == account && x.ua_psw == hasPassowrd).FirstOrDefault();
 
+
                 if (user != null)
-                {
+                {                   
                     Session["ua_id"] = user.ua_id;
                     Session["UserID"] = user.ua_user_id;
                     Session["perm"] = user.ua_perm;
                     Session["acct"] = user.ua_acct;
+
+                    if (user.ua_perm == 3)
+                    {
+                        var review = db.industry.Find(user.ua_user_id);
+                        Session["userReview"] = review.id_review;
+                    }
+
                     Session["msg"] = "登入成功";
                     Session["logintime"] = DateTime.Now.ToString("yyyy/MM/dd");
 
@@ -43,7 +51,6 @@ namespace WebApplication1.Controllers
 
                         if (password == taxID)
                         {
-                            //Session["msg"] = "第一次登入請修改密碼,並重新登入";
                             Session["First"] = "Y";
                             return RedirectToAction("ResetPwd");
                         }
@@ -112,7 +119,7 @@ namespace WebApplication1.Controllers
             {
                 ViewBag.Message = "新密碼與確認密碼不相符";
             }
-            
+
             return View();
         }
     }

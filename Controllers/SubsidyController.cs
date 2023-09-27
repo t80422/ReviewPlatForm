@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
-using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using WebApplication1.Models;
@@ -33,14 +32,15 @@ namespace WebApplication1.Controllers
                 id_id = b.id_id,
             });
 
-            var query = perm == 3 ? joinQuery.Where(c => c.id_id == userID) : joinQuery;            
+            var query = perm == 3 ? joinQuery.Where(c => c.id_id == userID) : joinQuery;
             var result = query.OrderBy(c => c.s_id).ToPagedList((int)page, 10);
-            
+
             var industry = db.industry.Find(userID);
             ViewBag.Name = industry?.id_name ?? "";
             ViewBag.Maxmember = (industry?.id_room ?? 0) / 8;
+
             if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
-            ViewBag.SubMemberCount = db.member.Count(x => x.mb_id_id == userID);
+            ViewBag.MemberCount = db.member.Count(x => x.mb_id_id == userID);
             ViewBag.IndustryId = userID;
 
             return View(result);
@@ -50,14 +50,19 @@ namespace WebApplication1.Controllers
         {
             if (id_id == null || id_id == 0) return HttpNotFound();
 
-            var data = new SubsidyEdit();
-            data.id_id = (int)id_id;
+            var data = new SubsidyEdit
+            {
+                id_id = (int)id_id
+            };
 
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             var industry = db.industry.Find(userID);
+
             ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+
             if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
-            ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
+
+            ViewBag.MemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
 
             return View(data);
         }
@@ -87,34 +92,30 @@ namespace WebApplication1.Controllers
                 //}
                 //mark by v0.5
 
-                #region 檢查人數限制
+                //mark by v0.6
+                //#region 檢查人數限制
 
-                var count = data.EmpCount;
+                //var count = data.EmpCount;
+                //int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
+                //var industry = db.industry.Find(userID);
+                //var max = (industry != null ? (int)industry.id_room : 0) / 8;
 
-                int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
-                var industry = db.industry.Find(userID);
-                var max = (industry != null ? (int)industry.id_room : 0) / 8;
-                if (max == 0) { max = 1; }
-                var c = db.member.Where(x => x.mb_id_id == userID).Count();
-                if (count > (max - c))
-                {
-                    Session["msg"] = "超出申請人數";
-                    return View(data);
-                }
+                //if (max == 0) { max = 1; }
 
-                #endregion
+                //var c = db.member.Where(x => x.mb_id_id == userID).Count();
+
+                //if (count > (max - c))
+                //{
+                //    Session["msg"] = "超出申請人數";
+                //    return View(data);
+                //}
+
+                //#endregion
+                //mark by v0.6
 
                 #region 上傳檔案
 
                 string path = Server.MapPath($"~/assets/upload/Subsidy/{IndustryData.id_name + "_" + IndustryData.id_id}");
-                //data.ApplicationName = ajax.UploadFile(data.Application, path) ?? "";
-                //data.LaborName = ajax.UploadFile(data.Labor, path) ?? "";
-                //data.ApplicantsListName = ajax.UploadFile(data.ApplicantsList, path) ?? "";
-                //data.AffidavitName = ajax.UploadFile(data.Affidavit, path) ?? "";
-                //data.ReceiptName = ajax.UploadFile(data.Receipt, path) ?? "";
-                //data.EmployeeListName = ajax.UploadFile(data.EmployeeList, path) ?? "";
-                //data.OtherFileName = ajax.UploadFile(data.OtherFile, path) ?? "";
-
                 var Application = ajax.UploadFile(data.Application, path) ?? "";
                 var Labor = ajax.UploadFile(data.Labor, path) ?? "";
                 var ApplicantsList = ajax.UploadFile(data.ApplicantsList, path) ?? "";
@@ -122,7 +123,8 @@ namespace WebApplication1.Controllers
                 var Receipt = ajax.UploadFile(data.Receipt, path) ?? "";
                 var EmployeeList = ajax.UploadFile(data.EmployeeList, path) ?? "";
                 var OtherFile = ajax.UploadFile(data.OtherFile, path) ?? "";
-
+                var OtherFile2 = ajax.UploadFile(data.s_else_two, path) ?? "";
+                var OtherFile3= ajax.UploadFile(data.s_else_three, path) ?? "";
                 #endregion 上傳檔案
 
                 #region 加入資料
@@ -146,6 +148,10 @@ namespace WebApplication1.Controllers
                     s_receipt_name = data.Receipt != null ? data.Receipt.FileName : "",
                     s_else = OtherFile,
                     s_else_name = data.OtherFile != null ? data.OtherFile.FileName : "",
+                    s_else_two = OtherFile2,
+                    s_else_two_name = data.s_else_two != null ? data.s_else_two.FileName : "",
+                    s_else_three = OtherFile3,
+                    s_else_three_name = data.s_else_three != null ? data.s_else_three.FileName : "",
                     s_applicants = ApplicantsList,
                     s_applicants_name = data.ApplicantsList != null ? data.ApplicantsList.FileName : "",
                     s_review = "待補件",
@@ -171,21 +177,10 @@ namespace WebApplication1.Controllers
                     // 第一列為標題
                     for (var i = 1; i < sheet.Value.Count(); i++)
                     {
-                        if (String.IsNullOrEmpty(sheet.Value[i][3])) continue;
+                        if (string.IsNullOrEmpty(sheet.Value[i][3])) continue;
 
-                        //string insur;
-                        //switch (sheet.Value[i][5])
-                        //{
-                        //    case "加保":
-                        //        insur = "1"; break;
-                        //    case "退保":
-                        //        insur = "2"; break;
-                        //    case "調薪":
-                        //        insur = "3"; break;
-                        //    default:
-                        //        insur = ""; break;
-                        //}
                         int hire;
+
                         switch (sheet.Value[i][10])
                         {
                             case "新聘":
@@ -195,8 +190,10 @@ namespace WebApplication1.Controllers
                             default:
                                 hire = 0; break;
                         }
+
                         string IDCard = sheet.Value[i][3] ?? "";
-                        if (IDCard!="")
+
+                        if (IDCard != "")
                         {
                             member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
 
@@ -207,10 +204,8 @@ namespace WebApplication1.Controllers
                             memberData.mb_birthday = sheet.Value[i][2] ?? "";
                             memberData.mb_id_card = sheet.Value[i][3] ?? "";
                             memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
-                            //memberData.mb_add_insur = insur;
                             memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][5] ?? ""));
                             memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
-                            //memberData.mb_memo = sheet.Value[i][7] ?? "";
                             memberData.mb_full_time_or_not = sheet.Value[i][7] == "是";
                             memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][8] ?? ""));
                             memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][9] ?? ""));
@@ -269,6 +264,8 @@ namespace WebApplication1.Controllers
                 ReceiptName = x.s_receipt_name,
                 EmployeeListName = x.s_emp_lst_name,
                 OtherFileName = x.s_else_name,
+                s_else_two_name=x.s_else_two_name,
+                s_else_three_name=x.s_else_three_name,
                 id_name = y.id_name,
                 s_no = x.s_no,
                 s_date_time_end = x.s_date_time_end
@@ -336,6 +333,8 @@ namespace WebApplication1.Controllers
                 var Receipt = ajax.UploadFile(data.Receipt, path) ?? "";
                 var EmployeeList = ajax.UploadFile(data.EmployeeList, path) ?? "";
                 var OtherFile = ajax.UploadFile(data.OtherFile, path) ?? "";
+                var OtherFile2 = ajax.UploadFile(data.s_else_two, path) ?? "";
+                var OtherFile3 = ajax.UploadFile(data.s_else_three, path) ?? "";
 
                 #endregion 上傳檔案
 
@@ -348,6 +347,8 @@ namespace WebApplication1.Controllers
                 if (!String.IsNullOrEmpty(Receipt)) ajax.DeleteFile($"{path}/{updateData.s_receipt}");
                 if (!String.IsNullOrEmpty(EmployeeList)) ajax.DeleteFile($"{path}/{updateData.s_emp_lst}");
                 if (!String.IsNullOrEmpty(OtherFile)) ajax.DeleteFile($"{path}/{updateData.s_else}");
+                if (!String.IsNullOrEmpty(OtherFile2)) ajax.DeleteFile($"{path}/{updateData.s_else_two}");
+                if (!String.IsNullOrEmpty(OtherFile3)) ajax.DeleteFile($"{path}/{updateData.s_else_three}");
 
                 #endregion 有新檔案刪除舊檔案
 
@@ -369,6 +370,10 @@ namespace WebApplication1.Controllers
                 updateData.s_receipt_name = data.Receipt != null ? data.Receipt.FileName : updateData.s_receipt_name;
                 updateData.s_else = OtherFile;
                 updateData.s_else_name = data.OtherFile != null ? data.OtherFile.FileName : updateData.s_else_name;
+                updateData.s_else_two = OtherFile2;
+                updateData.s_else_two_name = data.s_else_two != null ? data.s_else_two.FileName : updateData.s_else_two_name;
+                updateData.s_else_three = OtherFile3;
+                updateData.s_else_three_name = data.s_else_three != null ? data.s_else_three.FileName : updateData.s_else_three_name;
                 updateData.s_applicants = ApplicantsList;
                 updateData.s_applicants_name = data.ApplicantsList != null ? data.ApplicantsList.FileName : updateData.s_applicants_name;
 
@@ -378,38 +383,91 @@ namespace WebApplication1.Controllers
 
                 #region 更新人員清冊
 
-                string PK = updateData.s_no;
+                //mark by v0.6
+                //string PK = updateData.s_no;
+                //mark by v0.6
 
                 if (data.ApplicantsList != null)
                 {
-                    // 先刪除舊的人員
-                    db.subsidy_member.RemoveRange(db.subsidy_member.Where(x => x.sm_s_id == data.s_id).ToList());
-                    db.SaveChanges();
+                    //modify by v0.6==========
+                    //// 先刪除舊的人員
+                    //db.subsidy_member.RemoveRange(db.subsidy_member.Where(x => x.sm_s_id == data.s_id).ToList());
+                    //db.SaveChanges();
 
+                    //var AppList = ajax.ReadFile(data.ApplicantsList);
+                    //List<subsidy_member> insertSMembers = new List<subsidy_member>();
+
+                    //foreach (var sheet in AppList)
+                    //{
+                    //    // 第0列為標題，從1開始
+                    //    for (var i = 1; i < sheet.Value.Count(); i++)
+                    //    {
+
+                    //        if (String.IsNullOrEmpty(sheet.Value[i][3])) continue;
+
+                    //        string insur;
+                    //        switch (sheet.Value[i][5])
+                    //        {
+                    //            case "加保":
+                    //                insur = "1"; break;
+                    //            case "退保":
+                    //                insur = "2"; break;
+                    //            case "調薪":
+                    //                insur = "3"; break;
+                    //            default:
+                    //                insur = ""; break;
+                    //        }
+                    //        int hire;
+                    //        switch (sheet.Value[i][10])
+                    //        {
+                    //            case "新聘":
+                    //                hire = 1; break;
+                    //            case "部份工時轉正職":
+                    //                hire = 2; break;
+                    //            default:
+                    //                hire = 0; break;
+                    //        }
+                    //        string IDCard = sheet.Value[i][3] ?? "";
+                    //        if (IDCard != "")
+                    //        {
+                    //            member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
+
+                    //            memberData.mb_id = memberData.mb_id > 0 ? memberData.mb_id : 0;
+                    //            memberData.mb_id_id = data.id_id;
+                    //            memberData.mb_insurance_id = sheet.Value[i][0] ?? "";
+                    //            memberData.mb_name = sheet.Value[i][1] ?? "";
+                    //            memberData.mb_birthday = sheet.Value[i][2] ?? "";
+                    //            memberData.mb_id_card = sheet.Value[i][3] ?? "";
+                    //            memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
+                    //            memberData.mb_add_insur = insur;
+                    //            memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][5] ?? ""));
+                    //            memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
+                    //            memberData.mb_full_time_or_not = sheet.Value[i][7] == "是";
+                    //            memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][8] ?? ""));
+                    //            memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][9] ?? ""));
+                    //            memberData.mb_hire_type = hire;
+                    //            memberData.mb_position = sheet.Value[i][11] ?? "";
+                    //            memberData.mb_last_time = DateTime.Now;
+
+                    //            db.member.AddOrUpdate(x => x.mb_id_card, memberData);
+                    //            db.SaveChanges();
+
+                    //=============================================================================
                     var AppList = ajax.ReadFile(data.ApplicantsList);
+
+                    //mark by v0.6
                     List<subsidy_member> insertSMembers = new List<subsidy_member>();
+                    //mark by v0.6
 
                     foreach (var sheet in AppList)
                     {
-                        // 第0列為標題，從1開始
+                        // 第一列為標題
                         for (var i = 1; i < sheet.Value.Count(); i++)
                         {
+                            if (string.IsNullOrEmpty(sheet.Value[i][3])) continue;
 
-                            if (String.IsNullOrEmpty(sheet.Value[i][3])) continue;
-
-                            string insur;
-                            switch (sheet.Value[i][5])
-                            {
-                                case "加保":
-                                    insur = "1"; break;
-                                case "退保":
-                                    insur = "2"; break;
-                                case "調薪":
-                                    insur = "3"; break;
-                                default:
-                                    insur = ""; break;
-                            }
                             int hire;
+
                             switch (sheet.Value[i][10])
                             {
                                 case "新聘":
@@ -419,7 +477,9 @@ namespace WebApplication1.Controllers
                                 default:
                                     hire = 0; break;
                             }
+
                             string IDCard = sheet.Value[i][3] ?? "";
+
                             if (IDCard != "")
                             {
                                 member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
@@ -431,21 +491,20 @@ namespace WebApplication1.Controllers
                                 memberData.mb_birthday = sheet.Value[i][2] ?? "";
                                 memberData.mb_id_card = sheet.Value[i][3] ?? "";
                                 memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
-                                memberData.mb_add_insur = insur;
                                 memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][5] ?? ""));
                                 memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
-                                //memberData.mb_memo = sheet.Value[i][7] ?? "";
                                 memberData.mb_full_time_or_not = sheet.Value[i][7] == "是";
                                 memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][8] ?? ""));
                                 memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][9] ?? ""));
                                 memberData.mb_hire_type = hire;
                                 memberData.mb_position = sheet.Value[i][11] ?? "";
                                 memberData.mb_last_time = DateTime.Now;
-                                //memberData.mb_s_no = "A" + pkValue.ToString("D5");
+                                memberData.mb_s_no = data.s_no;
 
                                 db.member.AddOrUpdate(x => x.mb_id_card, memberData);
                                 db.SaveChanges();
 
+                                //modify by v0.6==========
                                 insertSMembers.Add(new subsidy_member()
                                 {
                                     sm_s_id = data.s_id,
@@ -457,12 +516,20 @@ namespace WebApplication1.Controllers
                                     sm_mb_id = memberData.mb_id,
                                     sm_review = "待補件"
                                 });
+                                //=========================
+                                //subsidy_member subMemberData=
+                                //db.subsidy_member.AddOrUpdate(x => x.sm_mb_id, insertSMembers);
+                                //db.SaveChanges();
+                                //modify by v0.6==========
                             }
 
                         }
                     }
+                    //mark by v0.6
                     db.subsidy_member.AddRange(insertSMembers);
                     db.SaveChanges();
+                    //mark by v0.6
+
                 }
 
                 #endregion 更新人員清冊

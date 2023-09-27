@@ -5,6 +5,14 @@ namespace WebApplication1.Models
 {
     public class SubsidyEdit
     {
+        //補件資料2
+        public HttpPostedFileBase s_else_two { get; set; }
+        //補件資料名稱2
+        public string s_else_two_name { get; set; }
+        //補件資料3
+        public HttpPostedFileBase s_else_three { get; set; }
+        //補件資料名稱3
+        public string s_else_three_name { get; set; }
         //申請日期(迄)
         public Nullable<System.DateTime> s_date_time_end { get; set; }
         //案號
