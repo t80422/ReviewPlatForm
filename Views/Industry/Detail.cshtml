@@ -5,20 +5,17 @@
 // 1. 無登入-1
 // 2. 管理者0、PM1、工讀生2
 // 3. 業者3
-
 }
 
 @model WebApplication1.Models.industry
 
 <main class="container-wrap">
     <div class="container-main">
-        <div class="tool-wrap">
+        @*<div class="tool-wrap">
             <div class="tool-btn">
-                <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPwd","Login")'">修改密碼</button>
-                @*<button class="btn-cancel" type="button" onclick="location.href='@Url.Action("Edit", "Industry", new { id = (int)Session["UserID"] })'">補上傳資料</button>*@
+                <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPwd", "Login", new {id=Model.id_it_id})'">修改密碼</button>
             </div>
-        </div>
-
+        </div>*@
 
         <form>
             <div class="form-wrap">

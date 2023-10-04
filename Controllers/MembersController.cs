@@ -6,6 +6,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+    [IsLogin]
     public class MembersController : Controller
     {
         private AjaxsController ajax = new AjaxsController();
@@ -23,14 +24,6 @@ namespace WebApplication1.Controllers
 
         public ActionResult Create()
         {
-            //var list = new List<SelectListItem>
-            //{
-            //    new SelectListItem {Text="請選擇",Value=""},
-            //     new SelectListItem {Text="加保",Value="1"},
-            //      new SelectListItem {Text="退保",Value="2"},
-            //      new SelectListItem {Text="調薪",Value="3"}
-            //};
-            //ViewBag.List = new SelectList(list, "Value", "Text", string.Empty);
             var mb_add_insur = new List<SelectListItem>()
             {
                 new SelectListItem {Text="請選擇", Value="" },

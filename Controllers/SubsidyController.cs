@@ -8,6 +8,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+    [IsLogin]
     public class SubsidyController : Controller
     {
         private ReviewPlatformEntities db = new ReviewPlatformEntities();
@@ -37,7 +38,13 @@ namespace WebApplication1.Controllers
 
             var industry = db.industry.Find(userID);
             ViewBag.Name = industry?.id_name ?? "";
-            ViewBag.Maxmember = (industry?.id_room ?? 0) / 8;
+
+            //modify by v0.7 20230928
+            //ViewBag.Maxmember = (industry?.id_room ?? 0) / 8;
+            double room = industry?.id_room ?? 0;
+            double maxMember = Math.Ceiling(room / 8);
+            ViewBag.Maxmember = maxMember;
+            //modify by v0.7 20230928
 
             if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.MemberCount = db.member.Count(x => x.mb_id_id == userID);
@@ -58,7 +65,12 @@ namespace WebApplication1.Controllers
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             var industry = db.industry.Find(userID);
 
-            ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+            //modify by v0.7
+            //ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+            double room = industry?.id_room ?? 0;
+            double maxMember = Math.Ceiling(room / 8);
+            ViewBag.Maxmember = maxMember;
+            //modify by v0.7
 
             if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
 
@@ -124,7 +136,7 @@ namespace WebApplication1.Controllers
                 var EmployeeList = ajax.UploadFile(data.EmployeeList, path) ?? "";
                 var OtherFile = ajax.UploadFile(data.OtherFile, path) ?? "";
                 var OtherFile2 = ajax.UploadFile(data.s_else_two, path) ?? "";
-                var OtherFile3= ajax.UploadFile(data.s_else_three, path) ?? "";
+                var OtherFile3 = ajax.UploadFile(data.s_else_three, path) ?? "";
                 #endregion 上傳檔案
 
                 #region 加入資料
@@ -264,8 +276,8 @@ namespace WebApplication1.Controllers
                 ReceiptName = x.s_receipt_name,
                 EmployeeListName = x.s_emp_lst_name,
                 OtherFileName = x.s_else_name,
-                s_else_two_name=x.s_else_two_name,
-                s_else_three_name=x.s_else_three_name,
+                s_else_two_name = x.s_else_two_name,
+                s_else_three_name = x.s_else_three_name,
                 id_name = y.id_name,
                 s_no = x.s_no,
                 s_date_time_end = x.s_date_time_end
@@ -286,7 +298,14 @@ namespace WebApplication1.Controllers
 
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             var industry = db.industry.Find(userID);
-            ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+
+            //modify by v0.7 20230928
+            //ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
+            double room = industry?.id_room ?? 0;
+            double maxMember = Math.Ceiling(room / 8);
+            ViewBag.Maxmember = maxMember;
+            //modify by v0.7 20230928
+
             if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
             ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
 
@@ -299,24 +318,6 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid && data.id_id > 0)
             {
-                //mark by v0.5
-                //#region 防呆
-
-                //// 同月份是否申請過
-                //var Month = data.Date.ToString("yyyy-MM");
-                //DateTime startDate = DateTime.ParseExact(Month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //DateTime endDate = startDate.AddMonths(1);
-                //var SameMonth = db.subsidy.Where(x => x.s_date_time >= startDate && x.s_date_time < endDate && x.s_id_id == data.id_id).FirstOrDefault();
-                //if (SameMonth != null && SameMonth.s_id_id == data.id_id && SameMonth.s_id != data.s_id)
-                //{
-                //    var dateArray = data.Date.ToString("yyyy-MM").Split('-');
-                //    Session["msg"] = $"{dateArray[0]}年{dateArray[1]}月份已申請過";
-                //    return View(data);
-                //}
-
-                //#endregion
-                //mark by v0.5
-
                 var IndustryData = db.industry.Find(data.id_id);
                 if (IndustryData == null) return HttpNotFound();
 
@@ -455,9 +456,7 @@ namespace WebApplication1.Controllers
                     //=============================================================================
                     var AppList = ajax.ReadFile(data.ApplicantsList);
 
-                    //mark by v0.6
                     List<subsidy_member> insertSMembers = new List<subsidy_member>();
-                    //mark by v0.6
 
                     foreach (var sheet in AppList)
                     {
@@ -482,7 +481,29 @@ namespace WebApplication1.Controllers
 
                             if (IDCard != "")
                             {
-                                member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
+                                //modify by v0.7=====
+                                //member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
+
+                                //memberData.mb_id = memberData.mb_id > 0 ? memberData.mb_id : 0;
+                                //memberData.mb_id_id = data.id_id;
+                                //memberData.mb_insurance_id = sheet.Value[i][0] ?? "";
+                                //memberData.mb_name = sheet.Value[i][1] ?? "";
+                                //memberData.mb_birthday = sheet.Value[i][2] ?? "";
+                                //memberData.mb_id_card = sheet.Value[i][3] ?? "";
+                                //memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
+                                //memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][5] ?? ""));
+                                //memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
+                                //memberData.mb_full_time_or_not = sheet.Value[i][7] == "是";
+                                //memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][8] ?? ""));
+                                //memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][9] ?? ""));
+                                //memberData.mb_hire_type = hire;
+                                //memberData.mb_position = sheet.Value[i][11] ?? "";
+                                //memberData.mb_last_time = DateTime.Now;
+                                //memberData.mb_s_no = data.s_no;
+
+                                //db.member.AddOrUpdate(x => x.mb_id_card, memberData);
+                                //===================
+                                member memberData = db.member.FirstOrDefault(x => x.mb_id_card == IDCard && x.mb_id_id == data.id_id) ?? new member();
 
                                 memberData.mb_id = memberData.mb_id > 0 ? memberData.mb_id : 0;
                                 memberData.mb_id_id = data.id_id;
@@ -501,35 +522,39 @@ namespace WebApplication1.Controllers
                                 memberData.mb_last_time = DateTime.Now;
                                 memberData.mb_s_no = data.s_no;
 
-                                db.member.AddOrUpdate(x => x.mb_id_card, memberData);
+                                if (memberData.mb_id <= 0)
+                                {
+                                    db.member.Add(memberData);
+                                }
+                                //modify by v0.7=====
+
                                 db.SaveChanges();
 
-                                //modify by v0.6==========
+                                subsidy_member subMemberData = db.subsidy_member
+                                    .Where(x => x.sm_s_id.HasValue && x.sm_s_id.Value == data.s_id
+                                             && x.sm_mb_id.HasValue && x.sm_mb_id.Value == memberData.mb_id)
+                                    .FirstOrDefault();
+
+                                if (subMemberData != null)
+                                {
+                                    db.subsidy_member.Remove(subMemberData);
+                                }
+
                                 insertSMembers.Add(new subsidy_member()
                                 {
                                     sm_s_id = data.s_id,
                                     sm_agree_start = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][12] ?? "")),
                                     sm_agree_end = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][13] ?? "")),
-
                                     sm_advance_money = Convert.ToInt32(sheet.Value[i][14] ?? "0"),
                                     sm_id_id = data.id_id,
                                     sm_mb_id = memberData.mb_id,
                                     sm_review = "待補件"
                                 });
-                                //=========================
-                                //subsidy_member subMemberData=
-                                //db.subsidy_member.AddOrUpdate(x => x.sm_mb_id, insertSMembers);
-                                //db.SaveChanges();
-                                //modify by v0.6==========
                             }
-
                         }
                     }
-                    //mark by v0.6
                     db.subsidy_member.AddRange(insertSMembers);
                     db.SaveChanges();
-                    //mark by v0.6
-
                 }
 
                 #endregion 更新人員清冊

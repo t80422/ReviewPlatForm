@@ -5,7 +5,9 @@
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-@model IEnumerable<WebApplication1.Models.industry>
+@model IPagedList<WebApplication1.Models.industry>
+@using PagedList.Mvc;
+@using PagedList;
 
 <main class="container-wrap">
     <div class="container-main">
@@ -15,10 +17,11 @@
                 <input type="text" placeholder="請輸入關鍵字搜尋">
                 <button></button>
             </div>
-			<div class="tool-btn">
-				@*<button class="btn-add" onClick="export_file.click()">匯入</button>*@
+            <div class="tool-btn">
+                <button class="btn-add" onClick="export_file.click()">匯入</button>
                 <input type="file" name="export_file" style="display:none;" id="export_file" accept=".xlsx " />
-			</div>
+                <button class="btn-add" onclick="location.href='@Url.Action("Create")'">新增</button>
+            </div>
         </div>
 
         <!-- list -->
@@ -54,20 +57,20 @@
                                 <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "Industry", new {id=data.id_id})'"></button>
                             </div>
                         </div>
-                    }                    
+                    }
                 </div>
             </div>
         </div>
 
         <!-- pages -->
         <div class="pages-wrap">
-            <button class="btn-prev"></button>
-            <ul>
-                <li class="is-active">1</li>
-                <li><a href="">2</a></li>
-                <li><a href="">3</a></li>
-            </ul>
-            <button class="btn-next"></button>
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions()
+       {
+           DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+           DisplayLinkToLastPage = PagedListDisplayMode.Always,
+           DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+           DisplayLinkToNextPage = PagedListDisplayMode.Always
+       })
         </div>
     </div>
 </main>

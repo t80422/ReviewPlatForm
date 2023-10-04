@@ -208,3 +208,19 @@
         </div>
     </div>
 </main>
+<script>
+    /*20231003 add by kevin*/
+    $('#mb_contract').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#mb_contract').val('');
+        }
+    });
+    $('#sm_income_certificate').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#sm_income_certificate').val('');
+        }
+    });
+ 
+</script>

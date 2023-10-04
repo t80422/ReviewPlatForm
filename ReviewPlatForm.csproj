@@ -160,6 +160,7 @@
     </Compile>
     <Compile Include="HtmlHelpers\DateInput.cs" />
     <Compile Include="Models\InsurListEdit.cs" />
+    <Compile Include="Models\IsLogin.cs" />
     <Compile Include="Models\Members.cs" />
     <Compile Include="Models\SubMembersEdit.cs" />
     <Compile Include="Models\Download\DownloadEdit.cs" />
@@ -231,6 +232,7 @@
     <Content Include="assets\image\favico.ico" />
     <Content Include="assets\image\imgfile.png" />
     <Content Include="assets\image\logo.png" />
+    <Content Include="assets\image\logo_2.svg" />
     <Content Include="assets\image\password_icon.png" />
     <Content Include="assets\image\logo.jpg" />
     <Content Include="assets\js\jquery-2.1.4.min.js" />

@@ -7,6 +7,7 @@ using WebApplication1.Models.Download;
 
 namespace WebApplication1.Controllers
 {
+    [IsLogin]
     public class DownloadController : Controller
     {
         private ReviewPlatformEntities db = new ReviewPlatformEntities();

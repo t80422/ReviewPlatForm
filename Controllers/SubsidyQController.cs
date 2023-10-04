@@ -9,6 +9,7 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
+    [IsLogin]
     public class SubsidyQController : Controller
     {
         private ReviewPlatformEntities db = new ReviewPlatformEntities();

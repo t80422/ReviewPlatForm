@@ -37,7 +37,7 @@
                 <div class="list-main">
                     @if (ViewBag.SubNo != null)
                     {
-                        <p style="font-size: 30px; line-height: 50px; height: 50px; vertical-align: middle; font-weight:bold;">案號:@ViewBag.SubNo</p>  <span style="color:red;text-align: center; display:block;">請逐一點選上傳勞動契約與薪資證明</span>
+                        <p style="font-size: 30px; line-height: 50px; height: 50px; vertical-align: middle; font-weight:bold;">案號:@ViewBag.SubNo</p>  <span style="font-size:24px !important;color:red;text-align: right; display:block; margin-right:100px;">請點選"編緝"逐一上傳勞動契約及薪資証明</span>
                     }
 
                     <br />
@@ -102,7 +102,7 @@
     </div>
     <!-- pages -->
     <div class="pages-wrap">
-        @Html.PagedListPager(Model, page => Url.Action("Index", "Subsidy", new { page }), new PagedListRenderOptions()
+        @Html.PagedListPager(Model, page => Url.Action("Index", "SubMembers", new { page }), new PagedListRenderOptions()
    {
        DisplayLinkToFirstPage = PagedListDisplayMode.Always,
        DisplayLinkToLastPage = PagedListDisplayMode.Always,

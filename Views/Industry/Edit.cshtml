@@ -13,7 +13,7 @@
     <div class="container-main">
         <div class="tool-wrap">
             <div class="tool-btn">
-                <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPwd","Login")'">修改密碼</button>
+                <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPwd", "Login", new {id=Model.id_id})'">修改密碼</button>
             </div>
         </div>
 
@@ -158,9 +158,9 @@
                                         {
                                             <div class="input" style="display:flex">
                                                 <div style="width:60px;margin-right:15px;">
-                                                    @Html.TextBoxFor(x => x.id_owner_area_code, new { @required = "required",@onkeydown="return onlyNumber(event)" })
+                                                    @Html.TextBoxFor(x => x.id_owner_area_code, new { @required = "required", @onkeydown = "return onlyNumber(event)" })
                                                 </div>
-                                                @Html.TextBoxFor(x => x.id_tel_owner, new { @required = "required",@onkeydown="return onlyNumber(event)" })
+                                                @Html.TextBoxFor(x => x.id_tel_owner, new { @required = "required", @onkeydown = "return onlyNumber(event)" })
                                             </div>
                                         }
 
@@ -188,7 +188,7 @@
                                             }
                                             else
                                             {
-                                                @Html.TextBoxFor(x => x.id_owner_phone, new { @onkeydown="return onlyNumber(event)" })
+                                                @Html.TextBoxFor(x => x.id_owner_phone, new { @onkeydown = "return onlyNumber(event)" })
                                             }
                                         </div>
                                     </div>
@@ -221,7 +221,6 @@
                                             <span>@Model.id_passbook_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
-                                                @*<p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>*@
                                             </div>
                                         </div>
                                     </div>
@@ -233,18 +232,15 @@
                                             <span>@Model.id_register_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
-                                                <!--modify by v0.5-->
-                                                @*<p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>*@
                                                 <p>*說明:僅民宿業者須上傳<p>
-                                                <!--modify by v0.5-->
                                             </div>
                                         </div>
                                     </div>
-									<div class="form-input"> 
-                                            <div class="red-text">
-                                                <p>*說明:銀行存摺、商業登記或稅籍證明及營業執照或登記證請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
-                                            </div>
-                                         
+                                    <div class="form-input">
+                                        <div class="red-text">
+                                            <p>*說明:銀行存摺、商業登記或稅籍證明及營業執照或登記證請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -266,7 +262,7 @@
                                     <div class="form-input">
                                         <label class="required">銀行代碼(7碼)</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_bank_code, new { @required = "required" , @minlength = "7", @maxlength = "7",@onkeydown="return onlyNumber(event)"})
+                                            @Html.TextBoxFor(x => x.id_bank_code, new { @required = "required", @minlength = "7", @maxlength = "7", @onkeydown = "return onlyNumber(event)" })
                                             <a href="https://www.fisc.com.tw/TC/Service?Caid=51254999-5d15-4ddf-8e54-4b2cdb2a8399&CaStyleId=16%E6%9F%A5%E8%A9%A2" target="_blank">銀行代碼查詢</a>
                                         </div>
                                     </div>
@@ -282,7 +278,7 @@
                                             {
                                                 @Html.TextBoxFor(x => x.id_bank_acct, new { @required = "required", @onkeydown = "return onlyNumber(event)" })
                                             }
-                                            
+
                                         </div>
                                     </div>
 
@@ -293,11 +289,10 @@
                                             <span>@Model.id_license_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
-                                               @*<p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>*@
                                             </div>
                                         </div>
                                     </div>
-									
+
                                 </div>
                             </div>
 
@@ -366,6 +361,27 @@
 </div>
 
 <script>
+    /*20231003 add by kevin*/
+    $('#id_passbook').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#id_passbook').val('');
+        }
+    });
+    $('#id_license').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#id_license').val('');
+        }
+    });
+    $('#id_register').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#id_register').val('');
+        }
+    });
+</script>
+<script>
     $(function () {
         $('.show-img').on('click', function () {
             $('.popup-wrap.img').toggle();
@@ -374,15 +390,15 @@
             $(this).parents('.popup-wrap.img').toggle();
         })
     })
-	
-	function onlyNumber(evt) {
-     var e = event || evt;
-     var keyCode = e.keyCode || e.which;
-     if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode == 37 || keyCode == 39) {
-         return true;
-     } else {
-         e.preventDefault();
-         return false;
-     }
+
+    function onlyNumber(evt) {
+        var e = event || evt;
+        var keyCode = e.keyCode || e.which;
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode == 37 || keyCode == 39) {
+            return true;
+        } else {
+            e.preventDefault();
+            return false;
+        }
     }
 </script>

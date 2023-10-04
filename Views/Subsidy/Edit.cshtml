@@ -100,16 +100,18 @@
                                             <p>提醒:<p><br />
                                             <p>1.第一次申請時,請提供申請人員6個月以上投保證明</p><br />
                                             <p>2.第二次及以後申請時,請附申請月份的當月在保證明</p><br />
+											<p>3.全公司勞保明細請至勞保局申請上月最後一天的勞保明細，並根據勞保明細之勞保序號為順序，登打建立全公司勞保清冊<p>
                                         </div>
                                     </div>
 									
 									<div class="form-input">
-                                        <label class="required">申請人員清冊</label>
+                                        <label class="required">申請補助人員清冊</label>
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.ApplicantsList, new { @type = "file", @accept = ".xlsx" })
                                             <span>@Model.ApplicantsListName</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
+                                                <p>*說明:申請補助人員清冊請務必按照範本檔提供之格式登打，確定存成csv格式再上傳<p>
                                                 <p>*說明:本欄位請依範例上傳CSV格式<p>
                                             </div>
                                         </div>
@@ -362,5 +364,50 @@
             $(this).siblings('.btn-correct').toggleClass('correct').toggleClass('notyet')
         })
     })
+</script>
+<script>
+    /*20231003 add by kevin*/
+    $('#Application').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#Application').val('');
+        }
+    });
+    $('#Labor').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#Labor').val('');
+        }
+    });
+    $('#EmployeeList').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#EmployeeList').val('');
+        }
+    });
+    $('#ApplicantsList').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#ApplicantsList').val('');
+        }
+    });
+    $('#OtherFile').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#OtherFile').val('');
+        }
+    });
+    $('#s_else_two').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#s_else_two').val('');
+        }
+    });
+    $('#s_else_three').change(function () {
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過5MB");
+            $('#s_else_three').val('');
+        }
+    });
 </script>
 

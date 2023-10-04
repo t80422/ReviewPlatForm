@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
 
 
                 if (user != null)
-                {                   
+                {
                     Session["ua_id"] = user.ua_id;
                     Session["UserID"] = user.ua_user_id;
                     Session["perm"] = user.ua_perm;
@@ -37,7 +37,15 @@ namespace WebApplication1.Controllers
                     if (user.ua_perm == 3)
                     {
                         var review = db.industry.Find(user.ua_user_id);
-                        Session["userReview"] = review.id_review;
+                        if (review != null)
+                        {
+                            Session["userReview"] = review.id_review;
+                        }
+                        else
+                        {
+                            Session["msg"] = "帳號不存在";
+                            return RedirectToAction("Index");
+                        }
                     }
 
                     Session["msg"] = "登入成功";
@@ -52,7 +60,7 @@ namespace WebApplication1.Controllers
                         if (password == taxID)
                         {
                             Session["First"] = "Y";
-                            return RedirectToAction("ResetPwd");
+                            return RedirectToAction("ResetPwd", new { id = userID });
                         }
                         else
                         {
@@ -87,26 +95,27 @@ namespace WebApplication1.Controllers
         }
 
         // 重設密碼
-        public ActionResult ResetPwd()
+        public ActionResult ResetPwd(int id)
         {
             Session["ResetPW"] = "Y";
-            return View();
+            return View(id);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ResetPwd(string oldPassword, string newPassword, string confirmPassword)
+        public ActionResult ResetPwd(string oldPassword, string newPassword, string confirmPassword, int id)
         {
             if (newPassword == confirmPassword)
             {
                 if (ModelState.IsValid)
                 {
-                    var update = db.user_accounts.Find(Session["ua_id"]);
-                    if (update.ua_psw == ajax.ConvertToSHA256(oldPassword))
+                    var update = db.user_accounts.Where(x => x.ua_user_id == id).First();
+                    if ((int)Session["perm"] < 3 || update.ua_psw == ajax.ConvertToSHA256(oldPassword))
                     {
                         update.ua_psw = ajax.ConvertToSHA256(newPassword);
 
                         db.SaveChanges();
+
                         return RedirectToAction("Index");
                     }
                     else
@@ -120,7 +129,7 @@ namespace WebApplication1.Controllers
                 ViewBag.Message = "新密碼與確認密碼不相符";
             }
 
-            return View();
+            return View(id);
         }
     }
 }

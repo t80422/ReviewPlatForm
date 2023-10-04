@@ -1,4 +1,5 @@
-﻿using PagedList;
+﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
+using PagedList;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
@@ -11,10 +12,12 @@ using WebApplication1.Models.Industry;
 
 namespace WebApplication1.Controllers
 {
+    [IsLogin]
     public class IndustryController : Controller
     {
         private AjaxsController ajax = new AjaxsController();
         private ReviewPlatformEntities db = new ReviewPlatformEntities();
+
 
         // GET: Industry
         public ActionResult Index(int? page = 1)
@@ -25,10 +28,23 @@ namespace WebApplication1.Controllers
             return View(result);
         }
 
+
         public ActionResult Create()
         {
-            return View();
+            var result = new Industry();
+
+            var mb_add_insur = new List<SelectListItem>()
+            {
+                new SelectListItem {Text="請選擇", Value="" },
+                new SelectListItem {Text="觀光旅館", Value="1" },
+                new SelectListItem {Text="旅館", Value="2" },
+                new SelectListItem {Text="民宿", Value="3" },
+            };
+            ViewBag.it_id = new SelectList(mb_add_insur, "Value", "Text", string.Empty);
+
+            return View(result);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -36,46 +52,86 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
+                #region 必填
+
+                               #endregion
+
+                var checkTaxID = db.industry.Where(x => x.id_tax_id == data.id_tax_id).FirstOrDefault();
+
+                if (checkTaxID != null)
+                {
+                    Session["msg"] = data.id_tax_id + " 此統一編號已申請";
+
+                    var mb_add_insur = new List<SelectListItem>()
+                    {
+                        new SelectListItem {Text="請選擇", Value="" },
+                        new SelectListItem {Text="觀光旅館", Value="1" },
+                        new SelectListItem {Text="旅館", Value="2" },
+                        new SelectListItem {Text="民宿", Value="3" },
+                    };
+                    ViewBag.it_id = new SelectList(mb_add_insur, "Value", "Text", string.Empty);
+
+
+                    return View(data);
+                }
+
                 string path = Server.MapPath("~/assets/upload/Industry");
 
-                //var passbook = ajax.UploadFile(data.PassBook, path);
-                //var lincense = ajax.UploadFile(data.Lincense, path);
-                //var register = ajax.UploadFile(data.Register, path);
-                //var taxRegistration = ajax.UploadFile(data.TaxRegistration, path);
+                var passbook = ajax.UploadFile(data.id_passbook, path);
+                var lincense = ajax.UploadFile(data.id_license, path);
+                var register = ajax.UploadFile(data.id_register, path);
 
-                //var insertData = new industry()
-                //{
-                //    id_name = data.Name,
-                //    id_address = data.Address,
-                //    id_tel = data.Phone,
-                //    id_fax = data.Fax,
-                //    id_company = data.Company,
-                //    id_tax_id = data.TaxID,
-                //    id_owner = data.Owner,
-                //    id_tel_owner = data.OwnerPhone,
-                //    id_last_time = DateTime.Now,
-                //    id_license = lincense,
-                //    id_license_name = data.LicenseName,
-                //    id_register = register,
-                //    id_register_name = data.RegisterName,
-                //    id_email = data.Email,
-                //    id_bank_code = data.BankCode,
-                //    id_bank_acct = data.BankAcct,
-                //    id_bank_acct_name = data.BankAcctName,
-                //    id_passbook = passbook,
-                //    id_passbook_name = data.PassBookName,
-                //    id_city = data.City,
-                //    id_tax_registration = taxRegistration,
-                //    id_tax_registration_name = data.TaxRegistrationName
-                //};
+                var insertData = new industry();
 
-                //db.industry.Add(insertData);
-                db.SaveChanges();
+                if (insertData != null)
+                {
+                    insertData.id_passbook = passbook ?? insertData.id_passbook;
+                    insertData.id_passbook_name = data.id_passbook != null ? data.id_passbook.FileName : insertData.id_passbook_name;
+                    insertData.id_license = lincense ?? insertData.id_license;
+                    insertData.id_license_name = data.id_license != null ? data.id_license.FileName : insertData.id_license_name;
+                    insertData.id_register = register ?? insertData.id_register;
+                    insertData.id_register_name = data.id_register != null ? data.id_register.FileName : insertData.id_register_name;
 
-                Session["msg"] = "新增成功";
+                    insertData.id_name = data.id_name;
+                    insertData.id_tax_id = data.id_tax_id;
+                    insertData.id_room = data.id_room;
+                    insertData.id_company = data.id_company;
+                    insertData.id_it_id = data.id_it_id;
+                    insertData.id_email = data.id_email;
+                    insertData.id_postal_code = data.id_postal_code;
+                    insertData.id_city = data.id_city;
+                    insertData.id_address = data.id_address;
+                    insertData.id_tel = data.id_tel;
+                    insertData.id_fax = data.id_fax;
+                    insertData.id_owner = data.id_owner;
+                    insertData.id_tel_owner = data.id_tel_owner;
+                    insertData.id_owner_area_code = data.id_owner_area_code;
+                    insertData.id_extension = data.id_extension;
+                    insertData.id_owner_phone = data.id_owner_phone;
+                    insertData.id_bank_name = data.BankName;
+                    insertData.id_bank_acct_name = data.id_bank_acct_name;
+                    insertData.id_owner_email = data.OwnerEmail;
+                    insertData.id_bank_code = data.id_bank_code;
+                    insertData.id_bank_acct = data.id_bank_acct;
+                    db.industry.Add(insertData);
+                    db.SaveChanges();
 
-                return RedirectToAction("Index", "Login");
+                    user_accounts User = new user_accounts()
+                    {
+                        ua_acct = insertData.id_tax_id,
+                        ua_psw = ajax.ConvertToSHA256(insertData.id_tax_id),
+                        ua_perm = 3,
+                        ua_user_id = insertData.id_id,
+                    };
+                    db.user_accounts.Add(User);
+                    db.SaveChanges();
+
+                    Session["msg"] = "新增成功";
+
+                    return RedirectToAction("Index");
+                }
             }
+
             return View(data);
         }
 
@@ -93,36 +149,34 @@ namespace WebApplication1.Controllers
                 return HttpNotFound();
             }
 
-            var result = new Industry
-            {
-                id_id = id.Value,
-                id_address = data.id_address,
-                id_tel = data.id_tel,
-                id_fax = data.id_fax,
-                id_company = data.id_company,
-                id_tax_id = data.id_tax_id,
-                id_owner = data.id_owner,
-                id_tel_owner = data.id_tel_owner,
-                id_extension = data.id_extension,
-                id_owner_phone = data.id_owner_phone,
-                id_room = (int)data.id_room,
-                id_license_name = data.id_license_name,
-                id_register_name = data.id_register_name,
-                id_email = data.id_email,
-                id_bank_code = data.id_bank_code,
-                id_bank_acct = data.id_bank_acct,
-                id_bank_acct_name = data.id_bank_acct_name,
-                id_passbook_name = data.id_passbook_name,
-                id_review = data.id_review,
-                id_city = data.id_city,
-                id_it_id = data.id_it_id,
-                id_area_code = data.id_area_code,
-                id_postal_code = data.id_postal_code,
-                id_name = data.id_name,
-                id_owner_area_code = data.id_owner_area_code,
-                BankName=data.id_bank_name,
-                OwnerEmail=data.id_owner_email,
-            };
+            var result = new Industry();
+            result.id_id = id.Value;
+            result.id_address = data.id_address;
+            result.id_tel = data.id_tel;
+            result.id_fax = data.id_fax;
+            result.id_company = data.id_company;
+            result.id_tax_id = data.id_tax_id;
+            result.id_owner = data.id_owner;
+            result.id_tel_owner = data.id_tel_owner;
+            result.id_extension = data.id_extension;
+            result.id_owner_phone = data.id_owner_phone;
+            result.id_room = data.id_room;
+            result.id_license_name = data.id_license_name;
+            result.id_register_name = data.id_register_name;
+            result.id_email = data.id_email;
+            result.id_bank_code = data.id_bank_code;
+            result.id_bank_acct = data.id_bank_acct;
+            result.id_bank_acct_name = data.id_bank_acct_name;
+            result.id_passbook_name = data.id_passbook_name;
+            result.id_review = data.id_review;
+            result.id_city = data.id_city;
+            result.id_it_id = data.id_it_id;
+            result.id_area_code = data.id_area_code;
+            result.id_postal_code = data.id_postal_code;
+            result.id_name = data.id_name;
+            result.id_owner_area_code = data.id_owner_area_code;
+            result.BankName = data.id_bank_name;
+            result.OwnerEmail = data.id_owner_email;
 
             return View(result);
         }
@@ -133,6 +187,30 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
+                #region 必填
+
+                var checkIndustry = db.industry.Find(Session["UserID"]);
+
+                if (string.IsNullOrEmpty(checkIndustry.id_license) && data.id_license == null)
+                {
+                    Session["msg"] = "請上傳 營業執照或登記證";
+
+                    data.id_passbook_name = checkIndustry.id_passbook_name;
+
+                    return View(data);
+                }
+
+                if (string.IsNullOrEmpty(checkIndustry.id_passbook) && data.id_passbook == null)
+                {
+                    Session["msg"] = "請上傳 銀行存摺";
+
+                    data.id_license_name = checkIndustry.id_license_name;
+
+                    return View(data);
+                }
+
+                #endregion
+
                 string path = Server.MapPath("~/assets/upload/Industry");
 
                 var passbook = ajax.UploadFile(data.id_passbook, path);
@@ -174,6 +252,7 @@ namespace WebApplication1.Controllers
             }
             return View(data);
         }
+
 
         public ActionResult Detail(int? id)
         {
@@ -286,7 +365,6 @@ namespace WebApplication1.Controllers
                                 Data.id_it_id = type;
                                 Data.id_name = Row.IndexOf("中文名稱") >= 0 ? row[Row.IndexOf("中文名稱")] : Data.id_name;
                                 Data.id_postal_code = citySplit[0] != null ? citySplit[0] : "";
-                                //Data.id_address = Row.IndexOf("地址") >= 0 ? row[Row.IndexOf("地址")] : Data.id_address;
                                 Data.id_address = citySplit[1] != null ? citySplit[1] : "";
                                 Data.id_tel = Row.IndexOf("電話或手機") >= 0 ? row[Row.IndexOf("電話或手機")] : Data.id_tel;
                                 Data.id_fax = Row.IndexOf("傳真") >= 0 ? row[Row.IndexOf("傳真")] : Data.id_fax;
@@ -329,12 +407,12 @@ namespace WebApplication1.Controllers
                             }
                             catch (Exception e)
                             {
+
                                 fail++;
                             }
                         }
 
                     }
-
                     return Json($"成功 {success} 筆，失敗 {fail} 筆");
                 }
 
