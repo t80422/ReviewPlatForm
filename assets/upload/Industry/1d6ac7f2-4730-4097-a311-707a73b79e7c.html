@@ -1,0 +1,204 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>大庄地磅</title>
+</head>
+<body>
+    <div class="form-wrap"><!-- 供確認用 完稿請刪除 -->
+        <h1>虎尾有機肥場</h1>
+        <h2><span>地磅記錄單</span></h2>
+        <div class="form-content">
+            <div class="form-side"></div>
+            <div class="form-table">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td colspan="3"><span style="margin-right: .8cm;">序</span>號</td>
+                            <td colspan="5">[$磅單序號]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="large">入廠時間</td>
+                            <td colspan="5" class="large">[$入廠時間]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" class="large">出廠時間</td>
+                            <td colspan="5" class="large">[$出廠時間]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span style="margin-right: .8cm;">車</span>號</td>
+                            <td colspan="5">[$車牌號碼]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span style="margin-right: .8cm;">客</span>戶</td>
+                            <td colspan="5">[$客戶/廠商]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span style="margin-right: .8cm;">料</span>號</td>
+                            <td colspan="5">[$產品名稱]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span style="margin-right: .8cm;">總</span>重</td>
+                            <td colspan="5">[$總重]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span style="margin-right: .8cm;">空</span>重</td>
+                            <td colspan="5">[$a.空重]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><span style="margin-right: .8cm;">淨</span>重</td>
+                            <td colspan="5">[$淨重]</td>
+                        </tr>
+                        <tr>
+                            <td colspan="1">主<br><br>管</td>
+                            <td colspan="3"></td>
+                            <td colspan="1">過<br>磅<br>員</td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="large"><span style="margin-right: .4cm;">備</span>註</td>
+                            <td colspan="6" class="large"></td>
+                        </tr>
+                        <tr class="hidden">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="form-side">
+                <p>
+                    <b>第</b>
+                    <b>一</b>
+                    <b>聯</b>
+                    <b>單</b>
+                    <b>：</b>
+                    <b>地</b>
+                    <b>磅</b>
+                    <b>室</b>
+                    <b>留</b>
+                    <b>存</b>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        @font-face {
+            font-family: '標楷體';
+            src: url('../fonts/kaiu.ttf') format("truetype");
+        }
+        * {
+            box-sizing: border-box;
+        }
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .form-wrap {
+            width: 10cm;
+            height: 15cm;
+            color: #529ed9;
+            padding-top: 0.4cm;
+        }
+        .form-wrap h1 {
+            line-height: 1;
+            text-align: center;
+            letter-spacing: 0.2cm;
+            font-family: "微軟正黑體";
+            font-size: 0.7cm;
+            font-weight: bold;
+            margin: 0;
+            margin-bottom: 0.4cm;
+            padding: 0;
+            padding-left: 0.2cm;
+        }
+        .form-wrap h2 {
+            line-height: 1;
+            text-align: center;
+            letter-spacing: 0.2cm;
+            font-family: "微軟正黑體";
+            font-size: 0.6cm;
+            font-weight: bold;
+            margin: 0;
+            padding: 0;
+        }
+        .form-wrap h2 span {
+            display: inline-block;
+            border-bottom: 2px solid #529ed9;
+            padding-left: 0.2cm;
+            padding-bottom: 0.1cm;
+        }
+        .form-content {
+            width: 7.6cm;
+            height: 12.4cm;
+            font-family: "標楷體";
+            margin: 0 auto;
+        }
+        .form-side {
+            width: 0.7cm;
+            height: 100%;
+            padding-top: 0.25cm;
+            padding-left: 0.1cm;
+            float: left;
+        }
+        .form-side p {
+            line-height: 1;
+            font-size: 0.38cm;
+            margin: 0;
+            padding: 0;
+        }
+        .form-side p b {
+            display: block;
+        }
+        .form-table {
+            width: 6.2cm;
+            height: 11.36cm;
+            margin-top: .9cm;
+            float: left;
+        }
+        .form-table table {
+            width: 100%;
+            color: #529ed9;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 2px solid #529ed9;
+            border-bottom-width: 1px;
+        }
+        .form-table table tr.hidden {
+            height: 0;
+            overflow: hidden;
+        }
+        .form-table table tr.hidden td {
+            height: 0;
+            border: 0;
+            padding: 0;
+        }
+        .form-table table td {
+            width: 12.5%;
+            height: 0.8cm;
+            line-height: 1;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 0.4cm;
+            border: 1px solid #529ed9;
+            padding: 0.22cm 0;
+        }
+        .form-table table td.large {
+            padding: 0.38cm 0;
+        }
+        
+        @page{
+                size:10cm 15CM ;
+				margin: 0;
+            }
+    </style>
+</body>
+</html>

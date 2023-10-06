@@ -31,30 +31,14 @@
                         <div class="form-flex">
                             <div class="form-group">
                                 <div class="form-col">
-
-                                    <!--mark by v0.5-->
-                                    @*<div class="form-input">
-                                            <label>申請日期(起)</label>
-                                            <div class="input date">
-                                                @Html.DateInputFor(x => x.Date, new { @readonly = "readonly" })
-                                            </div>
-                                        </div>*@
-                                    <!--mark by v0.5-->
-
                                     <div class="form-input">
-                                        <!--modify by v0.5-->
-                                        @*<label class="required">申請書</label>*@
                                         <label class="required">申請文件</label>
-                                        <!--modify by v0.5-->
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.Application, new { @type = "file", @accept = ".pdf" })
                                             <span>@Model.ApplicationName</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
-                                                <!--modify by v0.5-->
-                                                @*<p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>*@
                                                 <p>*說明:包含申請書、切結書和領據需在同一文件,請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
-                                                    <!--modify by v0.5-->
                                             </div>
                                         </div>
 
@@ -124,51 +108,6 @@
                                 </div>
 
                                 <div class="form-col">
-                                    <!--mark by v0.5-->
-                                    @*<div class="form-input">
-                                            <label class="required">申請日期(迄)</label>
-                                            <div class="input date">
-                                                @Html.DateInputFor(x => x.s_date_time_end)
-                                            </div>
-                                        </div>
-
-                                        <div class="form-input">
-                                            <label class="required">切結書</label>
-                                            <div class="input file">
-                                                @Html.TextBoxFor(x => x.Affidavit, new { @type = "file", @accept = ".pdf" })
-                                                <span>@Model.AffidavitName</span>
-                                                <button class="onfile" type="button">上傳檔案</button>
-                                                <div class="red-text">
-                                                    <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
-                                                </div>
-                                            </div>
-
-                                            <label class="demo-file">
-                                                <a href="~/assets/sample/切結書(範本檔).pdf" download>範本檔</a>
-                                            </label>
-                                        </div>
-
-                                        <div class="form-input">
-                                            <label class="required">領據</label>
-                                            <div class="input file">
-                                                @Html.TextBoxFor(x => x.Receipt, new { @type = "file", @accept = ".pdf" })
-                                                <span>@Model.ReceiptName</span>
-                                                <button class="onfile" type="button">上傳檔案</button>
-                                                <div class="red-text">
-                                                    <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
-                                                </div>
-                                            </div>
-
-                                            <label class="demo-file">
-                                                <a href="~/assets/sample/領據(範本檔).pdf" download>範本檔</a>
-                                            </label>
-                                        </div>*@
-                                    <!--mark by v0.5-->
-
-                                    
-
-                                    
-
                                     <div class="form-input">
                                         <label class="required">申請金額</label>
                                         <div class="input">

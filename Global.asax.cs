@@ -33,7 +33,7 @@ namespace WebApplication1
                 }
                 catch (Exception ex)
                 {
-                    Response.Redirect("~/");                    
+                    Response.Redirect("~/");
                 }
             }
         }

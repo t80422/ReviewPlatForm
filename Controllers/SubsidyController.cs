@@ -26,14 +26,14 @@ namespace WebApplication1.Controllers
                 s_date_time = a.s_date_time,
                 id_owner = b.id_owner,
                 s_grant_date = a.s_grant_date,
-                s_money = (int)a.s_money,
+                s_money = (int)(a.s_money??0),
                 s_review = a.s_review,
                 id_name = b.id_name,
                 s_id = a.s_id,
                 id_id = b.id_id,
-            });
+            }).ToList();
 
-            var query = perm == 3 ? joinQuery.Where(c => c.id_id == userID) : joinQuery;
+            var query = perm == 3 ? joinQuery.Where(c => c.id_id == userID).ToList() : joinQuery.ToList();
             var result = query.OrderBy(c => c.s_id).ToPagedList((int)page, 10);
 
             var industry = db.industry.Find(userID);
@@ -90,41 +90,6 @@ namespace WebApplication1.Controllers
                 // 有無旅宿業者
                 if (IndustryData == null) return HttpNotFound();
 
-                //mark by v0.5
-                //// 同月份是否申請過
-                //var Month = data.Date.ToString("yyyy-MM");
-                //DateTime startDate = DateTime.ParseExact(Month + "-01", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                //DateTime endDate = startDate.AddMonths(1);
-                //var SameMonth = db.subsidy.Where(x => x.s_date_time >= startDate && x.s_date_time < endDate && x.s_id_id == data.id_id).FirstOrDefault();
-                //if (SameMonth != null)
-                //{
-                //    var dateArray = data.Date.ToString("yyyy-MM").Split('-');
-                //    Session["msg"] = $"{dateArray[0]}年{dateArray[1]}月份已申請過";
-                //    return View(data);
-                //}
-                //mark by v0.5
-
-                //mark by v0.6
-                //#region 檢查人數限制
-
-                //var count = data.EmpCount;
-                //int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
-                //var industry = db.industry.Find(userID);
-                //var max = (industry != null ? (int)industry.id_room : 0) / 8;
-
-                //if (max == 0) { max = 1; }
-
-                //var c = db.member.Where(x => x.mb_id_id == userID).Count();
-
-                //if (count > (max - c))
-                //{
-                //    Session["msg"] = "超出申請人數";
-                //    return View(data);
-                //}
-
-                //#endregion
-                //mark by v0.6
-
                 #region 上傳檔案
 
                 string path = Server.MapPath($"~/assets/upload/Subsidy/{IndustryData.id_name + "_" + IndustryData.id_id}");
@@ -146,7 +111,7 @@ namespace WebApplication1.Controllers
                     s_id_id = data.id_id,
                     s_empcount = data.EmpCount,
                     s_date_time = data.Date,
-                    s_money = data.Money,
+                    s_money = data.Money??0,
                     s_last_time = DateTime.Now,
                     s_application = Application,
                     s_application_name = data.Application != null ? data.Application.FileName : "",
@@ -357,7 +322,7 @@ namespace WebApplication1.Controllers
 
                 updateData.s_empcount = data.EmpCount;
                 updateData.s_date_time = data.Date;
-                updateData.s_money = data.Money;
+                updateData.s_money = data.Money??0;
                 updateData.s_last_time = DateTime.Now;
                 updateData.s_application = Application;
                 updateData.s_application_name = data.Application != null ? data.Application.FileName : updateData.s_application_name;

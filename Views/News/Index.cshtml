@@ -6,18 +6,26 @@
     Layout = "~/Views/Shared/Layout.cshtml";
     string controller = "News";
 
-    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
-    // 1. 無登入-1
-    // 2. 管理者0、PM1、工讀生2
-    // 3. 業者3
+    //modify by v0.8
+    //int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    //// 1. 無登入-1
+    //// 2. 管理者0、PM1、工讀生2
+    //// 3. 業者3
+    //==============
+    bool canEditOrDelete = Session["perm"] is int perm && perm >= 0 && perm < 3;
+    //modify by v0.8
 }
 
 <main class="container-wrap">
     <div class="container-main">
         <!-- tool -->
         <div class="tool-wrap">
-            @if (perm >= 0 && perm < 3)
+            <!--modify by v0.8-->
+            @*@if (perm >= 0 && perm < 3)*@
+            @if (canEditOrDelete)
             {
+                <!--modify by v0.8-->
+
                 <div class="tool-btn">
                     <button class="btn-add" onClick="window.location.href = '@Url.Action("Create",controller)'">新增</button>
                 </div>
@@ -37,27 +45,36 @@
                 <div class="list-main">
                     <div class="list-title pr-2 pl-2">
                         <div class="f-2 ta-center ml-1">建立日期</div>
+
                         <div class="f-5 ta-left">標題</div>
+
                         <div class="f-5 ta-left">內容</div>
-                        @if (perm >= 0 && perm < 3)
-                        {
-                            <div class="f-1">操作</div>
-                        }
-                    </div>
+                        <!--modify by v0.8-->
+                        @*@if (perm >= 0 && perm < 3)*@
+                            @if (canEditOrDelete)
+                            {
+                                <!--modify by v0.8-->
+                                <div class="f-1">操作</div>
+                            }
+                        </div>
 
                     @if (Model != null)
                     {
                         foreach (var item in Model)
                         {
-                            <div class="list-row pr-2 pl-2" onclick="location.href='@Url.Action("Index", new {id=item.n_id})'">
+                            <div class="list-row pr-2 pl-2">
                                 <div class="f-2 ta-center ml-1">@(item.n_date != null ? Convert.ToDateTime(item.n_date).ToString("yyyy/MM/dd") : "")</div>
+
                                 <div class="f-5 ta-left">@item.n_title</div>
+
                                 <div class="f-5 ta-left">
-                                    <!--<textarea class="textarea-autoheigh" disabled>@item.n_content</textarea>-->
-                                           <a href = '@Url.Action("Detail","News",new { id = item.n_id })'>詳細</a>
+                                    <a href='@Url.Action("Detail","News",new { id = item.n_id })'>詳細</a>
                                 </div>
-                                @if (perm >= 0 && perm < 3)
+                                <!--modify by v0.8-->
+                                @*@if (perm >= 0 && perm < 3)*@
+                                @if (canEditOrDelete)
                                 {
+                                    <!--modify by v0.8-->
                                     <div class="f-1">
                                         <button class="btn-edit" onClick="location.href = '@Url.Action("Edit","News",new { id = item.n_id })'"></button>
                                         <button class="btn-del" onclick="del(@item.n_id)"></button>
@@ -66,11 +83,11 @@
                             </div>
                         }
                     }
-
                     <!-- example end -->
                 </div>
             </div>
         </div>
+
         <!-- pages -->
         <div class="pages-wrap">
             @Html.PagedListPager((IPagedList)Model, x => Url.Action("Index", new { page = x }))
@@ -90,7 +107,9 @@
         </div>
     </div>
 </div>
+
 <div class="popup-overlay"></div>
+
 <!-- JS -->
 <script>
     let itemID;
@@ -109,5 +128,4 @@
             window.location.href = '@Url.Action("Delete","News")'+"?id="+ id;
         })
     }
-
 </script>

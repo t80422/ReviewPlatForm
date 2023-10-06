@@ -100,36 +100,86 @@ namespace WebApplication1.Controllers
             Session["ResetPW"] = "Y";
             return View(id);
         }
+        //modify by v0.8
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult ResetPwd(string oldPassword, string newPassword, string confirmPassword, int id)
+        //{
+        //    if (newPassword == confirmPassword)
+        //    {
+        //        if (ModelState.IsValid)
+        //        {
+        //            var update = db.user_accounts.Where(x => x.ua_user_id == id).First();
+        //            if ((int)Session["perm"] < 3 || update.ua_psw == ajax.ConvertToSHA256(oldPassword))
+        //            {
+        //                update.ua_psw = ajax.ConvertToSHA256(newPassword);
 
+        //                db.SaveChanges();
+
+        //                //modify by v0.8
+        //                //return RedirectToAction("Index");
+        //                //==============
+        //                Session["ResetPW"] = "N";
+        //                return RedirectToAction("Index","Subsidy");
+        //                //modify by v0.8
+        //            }
+        //            else
+        //            {
+        //                ViewBag.Message = "舊密碼輸入錯誤";
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ViewBag.Message = "新密碼與確認密碼不相符";
+        //    }
+
+        //    return View(id);
+        //}
+        //==============        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ResetPwd(string oldPassword, string newPassword, string confirmPassword, int id)
         {
-            if (newPassword == confirmPassword)
+            // 直接檢查 ModelState
+            if (!ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    var update = db.user_accounts.Where(x => x.ua_user_id == id).First();
-                    if ((int)Session["perm"] < 3 || update.ua_psw == ajax.ConvertToSHA256(oldPassword))
-                    {
-                        update.ua_psw = ajax.ConvertToSHA256(newPassword);
-
-                        db.SaveChanges();
-
-                        return RedirectToAction("Index");
-                    }
-                    else
-                    {
-                        ViewBag.Message = "舊密碼輸入錯誤";
-                    }
-                }
+                return View(id);
             }
-            else
+
+            // 檢查新密碼與確認密碼
+            if (newPassword != confirmPassword)
             {
                 ViewBag.Message = "新密碼與確認密碼不相符";
+
+                return View(id);
             }
+
+            var update = db.user_accounts.SingleOrDefault(x => x.ua_user_id == id);
+
+            if (update == null)
+            {
+                ViewBag.Message = "找不到指定用戶";
+
+                return View(id);
+            }
+
+            // 使用者是管理員或者輸入的舊密碼是正確的
+            if ((int)Session["perm"] < 3 || update.ua_psw == ajax.ConvertToSHA256(oldPassword))
+            {
+                update.ua_psw = ajax.ConvertToSHA256(newPassword);
+
+                db.SaveChanges();
+
+                Session["ResetPW"] = "N";
+
+                return RedirectToAction("Index", "Subsidy");
+            }
+
+            ViewBag.Message = "舊密碼輸入錯誤";
 
             return View(id);
         }
+        //modify by v0.8
     }
 }

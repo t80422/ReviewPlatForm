@@ -1,8 +1,6 @@
-﻿using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using PagedList;
+﻿using PagedList;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -33,14 +31,7 @@ namespace WebApplication1.Controllers
         {
             var result = new Industry();
 
-            var mb_add_insur = new List<SelectListItem>()
-            {
-                new SelectListItem {Text="請選擇", Value="" },
-                new SelectListItem {Text="觀光旅館", Value="1" },
-                new SelectListItem {Text="旅館", Value="2" },
-                new SelectListItem {Text="民宿", Value="3" },
-            };
-            ViewBag.it_id = new SelectList(mb_add_insur, "Value", "Text", string.Empty);
+            ViewBag.it_id = new SelectList(GetIndustryTypes(), "Value", "Text", string.Empty);
 
             return View(result);
         }
@@ -54,23 +45,14 @@ namespace WebApplication1.Controllers
             {
                 #region 必填
 
-                               #endregion
+                #endregion
 
                 var checkTaxID = db.industry.Where(x => x.id_tax_id == data.id_tax_id).FirstOrDefault();
 
                 if (checkTaxID != null)
                 {
                     Session["msg"] = data.id_tax_id + " 此統一編號已申請";
-
-                    var mb_add_insur = new List<SelectListItem>()
-                    {
-                        new SelectListItem {Text="請選擇", Value="" },
-                        new SelectListItem {Text="觀光旅館", Value="1" },
-                        new SelectListItem {Text="旅館", Value="2" },
-                        new SelectListItem {Text="民宿", Value="3" },
-                    };
-                    ViewBag.it_id = new SelectList(mb_add_insur, "Value", "Text", string.Empty);
-
+                    ViewBag.it_id = new SelectList(GetIndustryTypes(), "Value", "Text", string.Empty);
 
                     return View(data);
                 }
@@ -113,6 +95,7 @@ namespace WebApplication1.Controllers
                     insertData.id_owner_email = data.OwnerEmail;
                     insertData.id_bank_code = data.id_bank_code;
                     insertData.id_bank_acct = data.id_bank_acct;
+
                     db.industry.Add(insertData);
                     db.SaveChanges();
 
@@ -131,6 +114,7 @@ namespace WebApplication1.Controllers
                     return RedirectToAction("Index");
                 }
             }
+            ViewBag.it_id = new SelectList(GetIndustryTypes(), "Value", "Text", string.Empty);
 
             return View(data);
         }
@@ -181,78 +165,168 @@ namespace WebApplication1.Controllers
             return View(result);
         }
 
+        //modify by v0.8
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit(Industry data)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        #region 必填
+
+        //        //modify by v0.8
+        //        //var checkIndustry = db.industry.Find(Session["UserID"]);
+        //        //==============
+        //        var checkIndustry = db.industry.Find(data.id_id);
+        //        //modify by v0.8
+
+        //        if (string.IsNullOrEmpty(checkIndustry.id_license) && data.id_license == null)
+        //        {
+        //            Session["msg"] = "請上傳 營業執照或登記證";
+
+        //            data.id_passbook_name = checkIndustry.id_passbook_name;
+
+        //            return View(data);
+        //        }
+
+        //        if (string.IsNullOrEmpty(checkIndustry.id_passbook) && data.id_passbook == null)
+        //        {
+        //            Session["msg"] = "請上傳 銀行存摺";
+
+        //            data.id_license_name = checkIndustry.id_license_name;
+
+        //            return View(data);
+        //        }
+
+        //        #endregion
+
+        //        string path = Server.MapPath("~/assets/upload/Industry");
+
+        //        var passbook = ajax.UploadFile(data.id_passbook, path);
+        //        var lincense = ajax.UploadFile(data.id_license, path);
+        //        var register = ajax.UploadFile(data.id_register, path);
+
+        //        //modify by v0.8
+        //        //var updateData = db.industry.Find((int)Session["UserID"]);
+        //        //==============
+        //        var updateData = db.industry.Find(data.id_id);
+        //        //modify by v0.8
+
+        //        if (updateData != null)
+        //        {
+        //            if (!string.IsNullOrEmpty(passbook)) ajax.DeleteFile($"{path}/{updateData.id_passbook}");
+        //            if (!string.IsNullOrEmpty(lincense)) ajax.DeleteFile($"{path}/{updateData.id_license}");
+        //            if (!string.IsNullOrEmpty(register)) ajax.DeleteFile($"{path}/{updateData.id_register}");
+
+        //            updateData.id_passbook = passbook ?? updateData.id_passbook;
+        //            updateData.id_passbook_name = data.id_passbook != null ? data.id_passbook.FileName : updateData.id_passbook_name;
+        //            updateData.id_license = lincense ?? updateData.id_license;
+        //            updateData.id_license_name = data.id_license != null ? data.id_license.FileName : updateData.id_license_name;
+        //            updateData.id_register = register ?? updateData.id_register;
+        //            updateData.id_register_name = data.id_register != null ? data.id_register.FileName : updateData.id_register_name;
+
+        //            updateData.id_bank_acct_name = data.id_bank_acct_name;
+        //            updateData.id_bank_code = data.id_bank_code;
+        //            updateData.id_owner = data.id_owner;
+        //            updateData.id_tel_owner = data.id_tel_owner;
+        //            updateData.id_extension = data.id_extension;
+        //            updateData.id_owner_phone = data.id_owner_phone;
+        //            updateData.id_tax_id = data.id_tax_id;
+        //            updateData.id_bank_acct = data.id_bank_acct;
+        //            updateData.id_owner_area_code = data.id_owner_area_code;
+        //            updateData.id_bank_name = data.BankName;
+        //            updateData.id_owner_email = data.OwnerEmail;
+
+        //            db.SaveChanges();
+        //            Session["msg"] = "修改成功";
+
+        //            return (int)Session["perm"] < 3 ? RedirectToAction("Index") : RedirectToAction("Edit", new { id = data.id_id });
+        //        }            
+        //    return View(data);
+        //}
+        //=================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(Industry data)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                #region 必填
-
-                var checkIndustry = db.industry.Find(Session["UserID"]);
-
-                if (string.IsNullOrEmpty(checkIndustry.id_license) && data.id_license == null)
-                {
-                    Session["msg"] = "請上傳 營業執照或登記證";
-
-                    data.id_passbook_name = checkIndustry.id_passbook_name;
-
-                    return View(data);
-                }
-
-                if (string.IsNullOrEmpty(checkIndustry.id_passbook) && data.id_passbook == null)
-                {
-                    Session["msg"] = "請上傳 銀行存摺";
-
-                    data.id_license_name = checkIndustry.id_license_name;
-
-                    return View(data);
-                }
-
-                #endregion
-
-                string path = Server.MapPath("~/assets/upload/Industry");
-
-                var passbook = ajax.UploadFile(data.id_passbook, path);
-                var lincense = ajax.UploadFile(data.id_license, path);
-                var register = ajax.UploadFile(data.id_register, path);
-
-                var updateData = db.industry.Find((int)Session["UserID"]);
-
-                if (updateData != null)
-                {
-                    if (!string.IsNullOrEmpty(passbook)) ajax.DeleteFile($"{path}/{updateData.id_passbook}");
-                    if (!string.IsNullOrEmpty(lincense)) ajax.DeleteFile($"{path}/{updateData.id_license}");
-                    if (!string.IsNullOrEmpty(register)) ajax.DeleteFile($"{path}/{updateData.id_register}");
-
-                    updateData.id_passbook = passbook ?? updateData.id_passbook;
-                    updateData.id_passbook_name = data.id_passbook != null ? data.id_passbook.FileName : updateData.id_passbook_name;
-                    updateData.id_license = lincense ?? updateData.id_license;
-                    updateData.id_license_name = data.id_license != null ? data.id_license.FileName : updateData.id_license_name;
-                    updateData.id_register = register ?? updateData.id_register;
-                    updateData.id_register_name = data.id_register != null ? data.id_register.FileName : updateData.id_register_name;
-
-                    updateData.id_bank_acct_name = data.id_bank_acct_name;
-                    updateData.id_bank_code = data.id_bank_code;
-                    updateData.id_owner = data.id_owner;
-                    updateData.id_tel_owner = data.id_tel_owner;
-                    updateData.id_extension = data.id_extension;
-                    updateData.id_owner_phone = data.id_owner_phone;
-                    updateData.id_tax_id = data.id_tax_id;
-                    updateData.id_bank_acct = data.id_bank_acct;
-                    updateData.id_owner_area_code = data.id_owner_area_code;
-                    updateData.id_bank_name = data.BankName;
-                    updateData.id_owner_email = data.OwnerEmail;
-
-                    db.SaveChanges();
-                    Session["msg"] = "修改成功";
-
-                    return (int)Session["perm"] < 3 ? RedirectToAction("Index") : RedirectToAction("Edit", new { id = data.id_id });
-                }
+                return View(data);
             }
-            return View(data);
-        }
 
+            var updateData = db.industry.Find(data.id_id);
+
+            if (updateData == null)
+            {
+                return View(data);
+            }
+
+            #region 檔案管理
+            
+            string path = Server.MapPath("~/assets/upload/Industry");
+
+            Func<HttpPostedFileBase, string, string> HandleFile = (file, existingFilePath) =>
+            {
+                if (file != null)
+                {
+                    if (!string.IsNullOrEmpty(existingFilePath))
+                    {
+                        ajax.DeleteFile($"{path}/{existingFilePath}");
+                    }
+                    return ajax.UploadFile(file, path);
+                }
+                return existingFilePath;
+            };
+
+            updateData.id_passbook = HandleFile(data.id_passbook, updateData.id_passbook);
+            updateData.id_passbook_name=data.id_passbook?.FileName ??updateData.id_passbook_name;
+
+            updateData.id_license = HandleFile(data.id_license, updateData.id_license);
+            updateData.id_license_name = data.id_license?.FileName ?? updateData.id_license_name;
+
+            updateData.id_register = HandleFile(data.id_register, updateData.id_register);
+            updateData.id_register_name = data.id_register?.FileName ?? updateData.id_register_name;
+
+            #endregion
+
+            #region 必填檔案
+
+            if (string.IsNullOrEmpty(updateData.id_license))
+            {
+                Session["msg"] = "請上傳 營業執照或登記證";
+                return View(data);
+            }
+
+            if (string.IsNullOrEmpty(updateData.id_passbook))
+            {
+                Session["msg"] = "請上傳 銀行存摺";
+                return View(data);
+            }
+            #endregion
+
+            #region 資料上傳
+
+            updateData.id_bank_acct_name = data.id_bank_acct_name;
+            updateData.id_bank_code = data.id_bank_code;
+            updateData.id_owner = data.id_owner;
+            updateData.id_tel_owner = data.id_tel_owner;
+            updateData.id_extension = data.id_extension;
+            updateData.id_owner_phone = data.id_owner_phone;
+            updateData.id_tax_id = data.id_tax_id;
+            updateData.id_bank_acct = data.id_bank_acct;
+            updateData.id_owner_area_code = data.id_owner_area_code;
+            updateData.id_bank_name = data.BankName;
+            updateData.id_owner_email = data.OwnerEmail;
+
+            db.SaveChanges();
+            Session["msg"] = "修改成功";
+
+            #endregion
+
+            return (int)Session["perm"] < 3 ? RedirectToAction("Index") : RedirectToAction("Edit", new { id = data.id_id });
+        }
+        //modify by v0.8
 
         public ActionResult Detail(int? id)
         {
@@ -380,14 +454,40 @@ namespace WebApplication1.Controllers
                                 Data.id_email = Row.IndexOf("E-mail") >= 0 ? row[Row.IndexOf("E-mail")] : Data.id_email;
                                 Data.id_city = Row.IndexOf("所在縣市") >= 0 ? row[Row.IndexOf("所在縣市")] : Data.id_city;
 
-                                db.industry.AddOrUpdate(x => x.id_tax_id, Data);
-                                db.SaveChanges();
+                                //modify by v0.8 匯入改為新增沒有的資料
+                                //db.industry.AddOrUpdate(x => x.id_tax_id, Data);
+                                //db.SaveChanges();
+                                //=====================================
+                                bool inserted = false;
+                                var existingData = db.industry.FirstOrDefault(x => x.id_tax_id == Data.id_tax_id);
+                                if (existingData == null)
+                                {
+                                    db.industry.Add(Data);
+                                    db.SaveChanges();
+
+                                    inserted = true;
+                                }
+                                //modify by v0.8 匯入改為新增沒有的資料
 
                                 #endregion 加入資料
 
                                 #region 新增則加入帳號
 
-                                if (!Updated)
+                                //modify by v0.8 匯入改為新增沒有的資料
+                                //if (!Updated)
+                                //{
+                                //    user_accounts User = new user_accounts()
+                                //    {
+                                //        ua_acct = TaxId,
+                                //        ua_psw = ajax.ConvertToSHA256(TaxId),
+                                //        ua_perm = 3,
+                                //        ua_user_id = Data.id_id,
+                                //    };
+                                //    db.user_accounts.Add(User);
+                                //    db.SaveChanges();
+                                //}
+                                //=====================================
+                                if (!Updated && inserted)
                                 {
                                     user_accounts User = new user_accounts()
                                     {
@@ -399,13 +499,14 @@ namespace WebApplication1.Controllers
                                     db.user_accounts.Add(User);
                                     db.SaveChanges();
                                 }
+                                //modify by v0.8 匯入改為新增沒有的資料
 
                                 #endregion 新增則加入帳號
 
                                 success++;
 
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
 
                                 fail++;
@@ -415,16 +516,23 @@ namespace WebApplication1.Controllers
                     }
                     return Json($"成功 {success} 筆，失敗 {fail} 筆");
                 }
-
-
                 return Json("查無資料");
             }
             else
             {
                 throw new Exception("找無檔案");
             }
+        }
 
-
+        private List<SelectListItem> GetIndustryTypes()
+        {
+            return new List<SelectListItem>
+            {
+                new SelectListItem { Text="請選擇",Value=""},
+                new SelectListItem { Text="觀光旅館",Value="1"},
+                new SelectListItem { Text="旅館",Value="2"},
+                new SelectListItem { Text="民宿",Value="3"},
+            };
         }
     }
 }

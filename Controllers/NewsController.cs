@@ -6,17 +6,18 @@ using System;
 
 namespace WebApplication1.Controllers
 {
+    //訊息公告
     public class NewsController : Controller
     {
         private ReviewPlatformEntities db = new ReviewPlatformEntities();
-        
+
         public ActionResult Index(int? page = 1)
         {
             page = page ?? 1;
 
             var data = db.News.OrderByDescending(x => x.n_id).ToList();
 
-            var result = data.ToPagedList((int)page, 8);            
+            var result = data.ToPagedList((int)page, 8);
 
             return View(result);
         }
@@ -28,13 +29,13 @@ namespace WebApplication1.Controllers
 
             if (data == null) return HttpNotFound();
 
-            return View(data);            
+            return View(data);
         }
 
         // GET: News/Create
         public ActionResult Create()
         {
-            var data = new News();            
+            var data = new News();
             return View(data);
         }
 
@@ -52,7 +53,7 @@ namespace WebApplication1.Controllers
                     n_date = DateTime.Today
                 };
 
-                
+
                 db.News.Add(inserData);
                 db.SaveChanges();
                 Session["msg"] = "新增成功";
