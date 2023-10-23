@@ -3,6 +3,9 @@
     // 1. 無登入-1
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
+    int userID = (int?)Session["UserID"] ?? 0;
+    string userReview = (string)Session["userReview"];
+    string loginTime = Session["logintime"]?.ToString();
 }
 
 <!DOCTYPE html>
@@ -44,7 +47,7 @@
             <div class="banner-text">交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助</div>
         </div>
 
-        @if (Session["ResetPW"] == "N")
+        @if ((string)Session["ResetPW"] == "N")
         {
             <!-- aside -->
             <aside class="aside-wrap">
@@ -63,16 +66,14 @@
 
                             @if (perm == 3)
                             {
-
-
                                 <li class="nav-item">
-                                    @if ((string)Session["userReview"] == "審核完成")
+                                    @if (userReview == "審核完成")
                                     {
-                                        <a href="@Url.Action("Edit", "Industry", new { id = (int)Session["UserID"] })"><span>基本資料 (已建置)</span></a>
+                                        <a href="@Url.Action("Edit", "Industry", new { id = userID })"><span>基本資料 (已建置)</span></a>
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("Edit", "Industry", new { id = (int)Session["UserID"] })"><span>基本資料</span></a>
+                                        <a href="@Url.Action("Edit", "Industry", new { id = userID })"><span>基本資料</span></a>
                                     }
 
                                 </li>
@@ -87,15 +88,16 @@
                             else if (perm >= 0)
                             {
                                 <li class="nav-item">
-                                    <a href="@Url.Action("Index","Industry")"><span>旅宿業者</span></a>
+                                    <a href="@Url.Action("Index","Industry")"><span>基本資料</span></a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <button type="button"><span>補助申請</span></button>
-                                    <ul class="nav-sub">
-                                        <li><a href="@Url.Action("Index","Subsidy")">補助申請</a></li>
-                                        <li><a href="@Url.Action("Index","SubMembers")">申請補助人員</a></li>
-                                    </ul>
+                                    @*<button type="button"><span>補助申請</span></button>
+                                        <ul class="nav-sub">
+                                            <li><a href="@Url.Action("Index","Subsidy")">補助申請</a></li>
+                                            <li><a href="@Url.Action("Index","SubMembers")">申請補助人員</a></li>
+                                        </ul>*@
+                                    <a href="@Url.Action("Index","Subsidy")">補助申請</a>
                                 </li>
 
                                 <li class="nav-item">
@@ -104,6 +106,14 @@
 
                                 <li class="nav-item">
                                     <a href="@Url.Action("Index","MngAccount")"><span>帳號管理</span></a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href=""><span>案件查詢</span></a>
+                                </li>
+
+                                <li class="nav-item">
+                                    <a href=""><span>每月請款</span></a>
                                 </li>
                             }
                         </ul>
@@ -114,7 +124,7 @@
                     <button class="btn-logout" onClick="window.location.href = '@Url.Action("Logout","Login")'">登出</button>
                     <div class="aside-time">
                         <span>登入時間</span>
-                        <time>@Session["logintime"]</time>
+                        <time>@loginTime</time>
                     </div>
                 </div>
 

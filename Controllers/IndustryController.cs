@@ -16,16 +16,23 @@ namespace WebApplication1.Controllers
         private AjaxsController ajax = new AjaxsController();
         private ReviewPlatformEntities db = new ReviewPlatformEntities();
 
-
         // GET: Industry
-        public ActionResult Index(int? page = 1)
+        public ActionResult Index(string key, string review, int? page = 1)
         {
-            var query = db.industry.OrderByDescending(x => x.id_id);
-            var result = query.ToPagedList((int)page, 10);
+            var query = db.industry.AsEnumerable();
+            var perm = (int)Session["perm"];
+            var userID = (int)Session["UserID"];
 
-            return View(result);
+            if (perm == 2)
+            {
+                query = query.Where(x => x.id_mg_id_fst == userID);
+            }
+
+            var data = new IndustryModelView.Index();
+            data.Industries=query.OrderByDescending(x=>x.id_id).ToPagedList((int)page, 10);
+
+            return View(data);
         }
-
 
         public ActionResult Create()
         {
@@ -35,7 +42,6 @@ namespace WebApplication1.Controllers
 
             return View(result);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -327,6 +333,18 @@ namespace WebApplication1.Controllers
             return (int)Session["perm"] < 3 ? RedirectToAction("Index") : RedirectToAction("Edit", new { id = data.id_id });
         }
         //modify by v0.8
+
+        public ActionResult Edit_Manager(int industryID)
+        {
+            var data=new IndustryModelView.Edit_Manager();
+
+            data.Industry = db.industry.Find(industryID);
+            data.InitialReviewer = db.manager.Find(data.Industry.id_mg_id_fst);
+            data.SecondaryReviewer = db.manager.Find(data.Industry.id_mg_id_snd);
+            data.AssociationReviewer = db.manager.Find(data.Industry.id_mg_id_association);
+
+            return View(data);
+        }
 
         public ActionResult Detail(int? id)
         {

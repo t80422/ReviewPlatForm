@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+@using PagedList.Mvc;
+@using PagedList;
+
+@model IPagedList<WebApplication1.Models.employment_insurance>
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="list-wrap">          
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title">申請補助人員勞保資料</div>
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-1">年度</div>
+                        <div class="f-1">月份</div>
+                        <div class="f-1">序號</div>
+                        <div class="f-1">姓名</div>
+                        <div class="f-1">身份證號</div>
+                        <div class="f-1">出生日期</div>
+                        <div class="f-1">最近異動別</div>
+                        <div class="f-1">最近異動日期</div>
+                        <div class="f-1">特殊身份別</div>
+                    </div>
+
+                    @foreach (var data in Model)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@data.ei_year</div>
+                            <div class="f-1">@data.ei_month</div>
+                            <div class="f-1">@data.ei_no</div>
+                            <div class="f-1">@data.ei_name</div>
+                            <div class="f-1">@data.ei_id_card</div>
+                            <div class="f-1">@data.ei_birthday</div>
+                            <div class="f-1">@data.ei_type</div>
+                            <div class="f-1">@data.ei_last_change_date</div>
+                            <div class="f-1">@data.ei_memo</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="pages-wrap">
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions()
+   {
+       DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+       DisplayLinkToLastPage = PagedListDisplayMode.Always,
+       DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+       DisplayLinkToNextPage = PagedListDisplayMode.Always
+   })
+    </div>
+</main>
+
+

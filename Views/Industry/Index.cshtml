@@ -5,26 +5,29 @@
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-@model IPagedList<WebApplication1.Models.industry>
+@model WebApplication1.Models.IndustryModelView.Index
 @using PagedList.Mvc;
 @using PagedList;
 
 <main class="container-wrap">
     <div class="container-main">
-        <!-- tool -->
         <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁＞基本資料</h3>
+            </div>
+
+            <div class="tool-btn">
+                <button class="btn-add" onclick="location.href='@Url.Action("Create")'">新增</button>
+                <!--mark by v0.9-->
+                @*<button class="btn-add" onClick="export_file.click()">匯入</button>
+            <input type="file" name="export_file" style="display:none;" id="export_file" accept=".xlsx " />*@
+            </div>
+
             <div class="tool-search">
                 <input type="text" placeholder="請輸入關鍵字搜尋">
-                <button></button>
-            </div>
-            <div class="tool-btn">
-                <button class="btn-add" onClick="export_file.click()">匯入</button>
-                <input type="file" name="export_file" style="display:none;" id="export_file" accept=".xlsx " />
-                <button class="btn-add" onclick="location.href='@Url.Action("Create")'">新增</button>
             </div>
         </div>
 
-        <!-- list -->
         <div class="list-wrap">
             <div class="form-title">
                 <h3>旅宿業者</h3>
@@ -42,7 +45,7 @@
                         <div class="f-1">操作</div>
                     </div>
 
-                    @foreach (var data in Model)
+                    @foreach (var data in Model.Industries)
                     {
                         <div class="list-row pr-2 pl-2">
                             <div class="f-1 ta-left ml-6">@data.id_name</div>
@@ -64,7 +67,7 @@
 
         <!-- pages -->
         <div class="pages-wrap">
-            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions()
+            @Html.PagedListPager(Model.Industries, page => Url.Action("Index", new { page }), new PagedListRenderOptions()
        {
            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
            DisplayLinkToLastPage = PagedListDisplayMode.Always,

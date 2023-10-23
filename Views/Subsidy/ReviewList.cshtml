@@ -1,0 +1,71 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+@model WebApplication1.Models.Subsidy_ReviewIndex
+@using PagedList.Mvc;
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁>補助申請>審核紀錄</h3>
+            </div>
+        </div>
+
+        <div class="list-wrap">
+            <div class="form-title">
+                <h3>補助申請審核記錄 案號 @Model.Subsidy.s_no</h3>
+            </div>
+            <!--todo 模組化列表View-->
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-1">日期</div>
+                        <div class="f-1">時間</div>
+                        <div class="f-1">操作人員</div>
+                        <div class="f-1">申請金額</div>
+                        <div class="f-1">申請書</div>
+                        <div class="f-1">全公司勞保明細</div>
+                        <div class="f-1">建立全公司勞保清冊</div>
+                        <div class="f-1">申請人員清冊</div>
+                        <div class="f-1">補件1</div>
+                        <div class="f-1">補件2</div>
+                        <div class="f-1">補件3</div>
+                    </div>
+
+                    @foreach (var data in Model.Subsidy_ReviewList)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@(data.sr_date?.ToString("yyyy/MM/dd"))</div>
+                            <div class="f-1">@data.sr_time</div>
+                            <div class="f-1">@data.sr_reviewer</div>
+                            <div class="f-1">@data.sr_application_amount</div>
+                            <div class="f-1">@data.sr_review_application</div>
+                            <div class="f-1">@data.sr_review_insur_member</div>
+                            <div class="f-1">@data.sr_review_emp_lst</div>
+                            <div class="f-1">@data.sr_review_applicants</div>
+                            <div class="f-1">@data.sr_review_else</div>
+                            <div class="f-1">@data.sr_review_else2</div>
+                            <div class="f-1">@data.sr_review_else3</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="pages-wrap">
+            @Html.PagedListPager(Model.Subsidy_ReviewList, page => Url.Action("ReviewList", new { page }), new PagedListRenderOptions()
+            {
+                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always
+            })
+        </div>
+
+        <div class="form-btn">
+            <button class="btn-cancel" type="button" onclick="history.back()">回上頁</button>
+        </div>
+    </div>
+</main>

@@ -52,6 +52,12 @@ public partial class ReviewPlatformEntities : DbContext
 
     public virtual DbSet<subsidy> subsidy { get; set; }
 
+    public virtual DbSet<employment_insurance> employment_insurance { get; set; }
+
+    public virtual DbSet<subsidy_member_review> subsidy_member_review { get; set; }
+
+    public virtual DbSet<subsidy_review> subsidy_review { get; set; }
+
 }
 
 }

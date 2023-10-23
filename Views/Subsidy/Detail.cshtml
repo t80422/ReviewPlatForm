@@ -10,10 +10,10 @@
 <main class="container-wrap">
     <div class="container-main">
         <div class="form-wrap">
-            <form action="">
+            <form>
                 <div class="form-main">
                     <div class="form-title">
-                        <h3>補助申請-詳細資料</h3>
+                        <h3>補助申請詳細資料</h3>
                     </div>
 
                     <div class="form-content">
@@ -28,12 +28,7 @@
                                     </div>
 
                                     <div class="form-input">
-
-                                        <!--modify by v0.5-->
-                                        @*<label>申請書</label>*@
                                         <label>申請文件</label>
-                                        <!--modify by v0.5-->
-
                                         <a target="_blank" href=@filePath@Model.ApplicationFile>@Model.ApplicationName</a>
                                     </div>
 
@@ -51,36 +46,12 @@
                                 </div>
 
                                 <div class="form-col">
-
-                                    <!--mark by v0.5-->
-                                    @*<div class="form-input">
-                                            <label>切結書</label>
-                                            <a target="_blank" href=@filePath@Model.AffidavitFile>@Model.AffidavitName</a>
-                                        </div>
-
-                                        <div class="form-input">
-                                            <label>領據</label>
-                                            <a target="_blank" href=@filePath@Model.ReceiptFile>@Model.ReceiptName</a>
-                                        </div>*@
-                                    <!--mark by v0.5-->
-
                                     <div class="form-input">
                                         <label>申請人員清冊</label>
                                         <a target="_blank" href=@filePath@Model.ApplicantsListFile>@Model.ApplicantsListName</a>
                                     </div>
-
-                                    @*<div class="form-input">
-                                        <label>員工清冊</label>
-                                        <a target="_blank" href=@filePath@Model.EmployeeListFile>@Model.EmployeeList</a>
-                                    </div>*@
-
                                     <div class="form-input">
-
-                                        <!--modify by v0.5-->
-                                        @*<label for="file5">其他文件</label>*@
                                         <label for="file5">補件資料</label>
-                                        <!--modify by v0.5-->
-
                                         <a target="_blank" href=@filePath@Model.OtherFileFile>@Model.OtherFileName</a>
                                     </div>
 

@@ -84,6 +84,8 @@ public partial class industry
 
     public string id_owner_email { get; set; }
 
+    public Nullable<int> id_mg_id_association { get; set; }
+
 }
 
 }

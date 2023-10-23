@@ -46,6 +46,16 @@ public partial class subsidy_member
 
     public string sm_income_certificate_name { get; set; }
 
+    public Nullable<int> sm_approved_amount { get; set; }
+
+    public Nullable<int> sm_mg_id_association { get; set; }
+
+    public string sm_review_income_certificate { get; set; }
+
+    public Nullable<bool> sm_qualifications { get; set; }
+
+    public Nullable<int> sm_calculation { get; set; }
+
 }
 
 }

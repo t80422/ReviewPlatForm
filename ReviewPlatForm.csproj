@@ -140,6 +140,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AjaxsController.cs" />
     <Compile Include="Controllers\DownloadController.cs" />
+    <Compile Include="Controllers\EmploymentInsuranceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\IndustryController.cs" />
     <Compile Include="Controllers\IndustryLogController.cs" />
@@ -155,10 +156,19 @@
     <Compile Include="Controllers\VideoController.cs" />
     <Compile Include="Filters\AdminFilter.cs" />
     <Compile Include="Filters\MemberFilter.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="HtmlHelpers\DateInput.cs" />
+    <Compile Include="Models\CommonViewModel.cs" />
+    <Compile Include="Models\employment_insurance.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\IndustryModelView.cs" />
     <Compile Include="Models\InsurListEdit.cs" />
     <Compile Include="Models\IsLogin.cs" />
     <Compile Include="Models\Members.cs" />
+    <Compile Include="Models\SubMemberList.cs" />
     <Compile Include="Models\SubMembersEdit.cs" />
     <Compile Include="Models\Download\DownloadEdit.cs" />
     <Compile Include="Models\industry.cs">
@@ -202,14 +212,23 @@
     <Compile Include="Models\subsidy.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SubsidyData.cs" />
     <Compile Include="Models\SubsidyEdit.cs" />
     <Compile Include="Models\SubsidyIndustry.cs" />
+    <Compile Include="Models\SubsidyMemberData.cs" />
     <Compile Include="Models\subsidy_member.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\subsidy_member_review.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\subsidy_review.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\user_accounts.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="OpenXmlExcel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -295,6 +314,7 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\Site.css" />
+    <Content Include="Global.asax" />
     <Content Include="index.html" />
     <Content Include="Models\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -417,6 +437,7 @@
     <Content Include="assets\vendor\swiper\swiper-bundle.min.js.map" />
     <Content Include="assets\補助旅宿業穩定接待國際旅客服務量能QA.pdf" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
+    <Content Include="Scripts\common.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery-3.4.1.slim.js" />
@@ -490,11 +511,18 @@
     <Content Include="Views\SubsidyQ\InsurList.cshtml" />
     <Content Include="Views\SubsidyQ\Report.cshtml" />
     <Content Include="Views\SubMembers\IndexQ.cshtml" />
+    <Content Include="Views\Subsidy\Edit_Manager.cshtml" />
+    <Content Include="Views\EmploymentInsurance\Import.cshtml" />
+    <Content Include="Views\Subsidy\ReviewList.cshtml" />
+    <Content Include="Views\SubMembers\Edit_Manager.cshtml" />
+    <Content Include="Views\SubMembers\ReviewList.cshtml" />
+    <Content Include="Views\EmploymentInsurance\Index.cshtml" />
+    <Content Include="Views\Industry\Edit_Manager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="assets\upload\Download\" />
-    <Folder Include="Views\Ajaxs\" />
+    <Folder Include="Views\Default\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

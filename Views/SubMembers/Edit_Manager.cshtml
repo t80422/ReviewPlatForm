@@ -1,0 +1,365 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+
+    var attribute = new Dictionary<string, object>();
+    var disable = new Dictionary<string, object>();
+
+    if (perm == 2)
+    {
+        attribute["readonly"] = "readonly";
+        disable["disabled"] = "disabled";
+    }
+
+    var filePath = Url.Content("~/assets/upload/Members/");
+}
+
+@model WebApplication1.Models.SubsidyMemberData
+@using WebApplication1.HtmlHelpers
+
+@functions{
+    public Dictionary<string, object> AddTempAttribute(Dictionary<string, object> attribute, string key, object value)
+    {
+        var newAttribute = new Dictionary<string, object>(attribute);
+        newAttribute[key] = value;
+        return newAttribute;
+    }
+}
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="form-wrap">
+            @using (Html.BeginForm("Edit_Manager", "SubMembers", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(x => x.Subsidy_Member.sm_s_id)
+                @Html.HiddenFor(x => x.Subsidy_Member.sm_id)
+                @Html.HiddenFor(x => x.Subsidy_Member.sm_mb_id)
+
+                <div class="form-main">
+                    <div class="form-title">
+                        <h3>申請補助人員詳細資料</h3>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">姓名</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Member.mb_name, attribute)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>生日</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Member.mb_birthday, AddTempAttribute(attribute, "type", "number"))
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">身份證</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Member.mb_id_card, attribute)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>勞保狀態</label>
+                                        <div class="input select">
+                                            @Html.DropDownListFor(x => x.Member.mb_add_insur, Model.InsuranceStatusOptions, "勞保狀態", disable)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">投保薪資</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Member.mb_insur_salary, AddTempAttribute(attribute, "type", "number"))
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">職務</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Member.mb_position, attribute)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">勞保序號</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Member.mb_insurance_id, AddTempAttribute(attribute, "type", "number"))
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">加保日期</label>
+                                        <div class="input">
+                                            @if (perm == 2)
+                                            {
+                                                <input value="@(Model.Member.mb_add_insur_date?.ToString("yyyy/MM/dd"))" readonly />
+                                            }
+                                            else if (perm >= 0 && perm < 2)
+                                            {
+                                                @Html.DateInputFor(x => x.Member.mb_add_insur_date)
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">退保日期</label>
+                                        <div class="input">
+                                            @if (perm == 2)
+                                            {
+                                                <input value="@(Model.Member.mb_surrender_date?.ToString("yyyy/MM/dd"))" readonly />
+                                            }
+                                            else if (perm >= 0 && perm < 2)
+                                            {
+                                                @Html.DateInputFor(x => x.Member.mb_surrender_date)
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>是否到職轉正</label>
+                                        <div class="input">
+                                            @Html.DropDownListFor(x => x.FullTimeOrNotString, Model.YesOrNo, disable)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">到職轉正日期</label>
+                                        <div class="input">
+                                            @if (perm == 2)
+                                            {
+                                                <input value="@(Model.Member.mb_full_time_date?.ToString("yyyy/MM/dd"))" readonly />
+                                            }
+                                            else if (perm >= 0 && perm < 2)
+                                            {
+                                                @Html.DateInputFor(x => x.Member.mb_full_time_date)
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label id="showPDF1" class="showPDF" style="color:blue">勞動契約</label>
+
+                                        <a href="@(filePath+Model.Member.mb_contract)" download>下載</a>
+
+                                        <div class="input">
+                                            @Html.DropDownListFor(x => x.Member.mb_review_contract, Model.FileReviewOptions)
+                                        </div>
+                                    </div>
+
+
+                                    @if (perm < 2 && perm >= 0)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Member.mb_contract)
+                                                @Html.TextBoxFor(x => x.ContractFile, new { @type = "file", @accept = ".pdf" })
+
+                                                <span>@Model.Member.mb_contract_name</span>
+
+                                                <button type="button" class="onfile">上傳檔案</button>
+
+                                                <div class="red-text">
+                                                    <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+
+                                    <div class="form-input">
+                                        <label id="showPDF2" class="showPDF" style="color:blue">薪資證明</label>
+
+                                        <a href="@(filePath+Model.Subsidy_Member.sm_income_certificate)" download>下載</a>
+
+                                        <div class="input">
+                                            @Html.DropDownListFor(x => x.Subsidy_Member.sm_review_income_certificate, Model.FileReviewOptions)
+                                        </div>
+                                    </div>
+
+
+                                    @if (perm < 2 && perm >= 0)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy_Member.sm_income_certificate)
+                                                @Html.TextBoxFor(x => x.IncomeCertificateFile, new { @type = "file", @accept = ".pdf" })
+
+                                                <span>@Model.Subsidy_Member.sm_income_certificate_name</span>
+
+                                                <button type="button" class="onfile">上傳檔案</button>
+
+                                                <div class="red-text">
+                                                    <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="form-input">
+                                        <div class="input">
+                                            <a href="@Url.Action("Index", "EmploymentInsurance", new {idCard=Model.Member.mb_id_card})" target="_blank">顯示勞保資料</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>是否符合資格</label>
+                                        <div class="input">
+                                            @*<input value="@(Model.Qualifications?"是":"否")" readonly />*@
+                                            @Html.DropDownListFor(x => x.QualificationsString, Model.YesOrNo, disable)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>符合申請(起)</label>
+                                        <div class="input">
+                                            @if (perm == 2)
+                                            {
+                                                <input value="@(Model.Subsidy_Member.sm_agree_start?.ToString("yyyy/MM/dd"))" readonly />
+                                            }
+                                            else if (perm >= 0 && perm < 2)
+                                            {
+                                                @Html.DateInputFor(x => x.Subsidy_Member.sm_agree_start)
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>符合申請(迄)</label>
+                                        <div class="input">
+                                            @if (perm == 2)
+                                            {
+                                                <input value="@(Model.Subsidy_Member.sm_agree_end?.ToString("yyyy/MM/dd"))" readonly />
+                                            }
+                                            else if (perm >= 0 && perm < 2)
+                                            {
+                                                @Html.DateInputFor(x => x.Subsidy_Member.sm_agree_end)
+                                            }
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請金額</label>
+                                        <div class="input">
+                                            @if (perm == 2)
+                                            {
+                                                @Html.TextBoxFor(x => x.Subsidy_Member.sm_advance_money, new { @required = "required", @readonly = "readonly", @type = "number" })
+                                            }
+                                            else if (perm >= 0 && perm < 2)
+                                            {
+                                                @Html.TextBoxFor(x => x.Subsidy_Member.sm_advance_money, new { @required = "required", @type = "number" })
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <iframe id="pdfFrame" width="750" height="1300" scrolling="yes"></iframe>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>審核狀態</label>
+                                        <div class="input select">
+                                            @Html.DropDownListFor(x => x.Subsidy_Member.sm_review, Model.ReviewOptions, "審核狀態")
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>核准金額</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Subsidy_Member.sm_approved_amount, AddTempAttribute(attribute, "type", "number"))
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>系統試算</label>
+                                        <div class="input">
+                                            @*<input value="@Model.Calculation" readonly />*@
+                                            @Html.TextBoxFor(x => x.Subsidy_Member.sm_calculation, perm == 2)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">初審人員</label>
+                                        <div class="input">
+                                            <input value="@Model.GetInitialReviewerName()" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">複審人員</label>
+                                        <div class="input">
+                                            <input value="@Model.GetSecondaryReviewerName()" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">協會審查</label>
+                                        <div class="input">
+                                            <input value="@Model.GetAssociationReviewer()" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-btn">
+                        <button class="btn-submit" type="submit">儲存</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+<script>
+    function checkFileSize(inputElement, maxSize) {
+        $(inputElement).change(function () {
+            if (this.files[0].size > maxSize) {
+                alert("檔案大小超過" + (maxSize / 1000000) + "MB");
+                $(this).val('');
+            }
+        });
+    }
+
+    // 使用
+    checkFileSize('#mb_contract', 5000000);
+    checkFileSize('#sm_income_certificate', 5000000);
+
+    function updateIframeSrc(newUrl) {
+        $('#pdfFrame').attr('src', newUrl);
+    }
+
+    $('.showPDF').on('click', function () {
+        var newUrl;
+        if ($(this).attr('id') === 'showPDF1') {
+            newUrl = "@filePath@Model.Member.mb_contract";
+        } else if ($(this).attr('id') === 'showPDF2') {
+            newUrl = "@filePath@Model.Subsidy_Member.sm_income_certificate";
+        }
+        updateIframeSrc(newUrl);
+    })
+</script>

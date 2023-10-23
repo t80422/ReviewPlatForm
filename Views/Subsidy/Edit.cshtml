@@ -3,15 +3,12 @@
 @{
     Layout = "~/Views/Shared/Layout.cshtml";
 
-    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
     // 1. 無登入-1
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
-
     var MemberList = (List<WebApplication1.Models.SubMembersEdit>)ViewBag.SubMemberList;
 }
-
-@using WebApplication1.HtmlHelpers
 
 <main class="container-wrap">
     <div class="container-main">
@@ -22,6 +19,7 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(x => x.s_id)
                 @Html.HiddenFor(x => x.id_id)
+
                 <div class="form-main">
                     <div class="form-title">
                         <h3>修改補助申請</h3>
@@ -35,8 +33,11 @@
                                         <label class="required">申請文件</label>
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.Application, new { @type = "file", @accept = ".pdf" })
+
                                             <span>@Model.ApplicationName</span>
+
                                             <button class="onfile" type="button">上傳檔案</button>
+
                                             <div class="red-text">
                                                 <p>*說明:包含申請書、切結書和領據需在同一文件,請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
                                             </div>
@@ -84,11 +85,11 @@
                                             <p>提醒:<p><br />
                                             <p>1.第一次申請時,請提供申請人員6個月以上投保證明</p><br />
                                             <p>2.第二次及以後申請時,請附申請月份的當月在保證明</p><br />
-											<p>3.全公司勞保明細請至勞保局申請上月最後一天的勞保明細，並根據勞保明細之勞保序號為順序，登打建立全公司勞保清冊<p>
+                                            <p>3.全公司勞保明細請至勞保局申請上月最後一天的勞保明細，並根據勞保明細之勞保序號為順序，登打建立全公司勞保清冊<p>
                                         </div>
                                     </div>
-									
-									<div class="form-input">
+
+                                    <div class="form-input">
                                         <label class="required">申請補助人員清冊</label>
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.ApplicantsList, new { @type = "file", @accept = ".xlsx" })
@@ -104,7 +105,7 @@
                                             <a href="~/assets/sample/申請人員清冊(範本檔).xlsx" download>範本檔</a>
                                         </label>
                                     </div>
-									
+
                                 </div>
 
                                 <div class="form-col">
@@ -134,14 +135,10 @@
                                             <p>說明:每個申請單位申請補助之總人數不得超過房間數八分之一;不足1人者,以1人計</p>
                                         </div>
                                     </div>
-									
-									
-									<div class="form-input">
 
-                                        <!--modify by v0.5-->
-                                        @*<label for="file5">其他文件</label>*@
+
+                                    <div class="form-input">
                                         <label for="file5">補件資料1</label>
-                                        <!--modify by v0.5-->
 
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.OtherFile, new { @type = "file", @accept = "" })
@@ -149,7 +146,7 @@
                                             <button class="onfile" type="button">上傳檔案</button>
                                         </div>
                                     </div>
-									<div class="form-input">
+                                    <div class="form-input">
                                         <label for="file5">補件資料2</label>
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.s_else_two, new { @type = "file", @accept = "" })
@@ -165,7 +162,7 @@
                                             <span>@Model.s_else_three_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                         </div>
-                                    </div>									
+                                    </div>
                                 </div>
                             </div>
 

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Web;
+using System.Web.Mvc;
 
 namespace WebApplication1.Models
 {
     public class SubsidyIndustry
     {
+        public SelectList ReviewerList { get; set; }
         //申請月份(迄)
         public Nullable<System.DateTime> s_date_time_end { get; set; }
         public int s_id { get; set; }
@@ -23,6 +25,7 @@ namespace WebApplication1.Models
 
         public string s_review { get; set; }
 
+        //初審人員id
         public Nullable<int> s_mg_id_fst { get; set; }
 
         public Nullable<int> s_mg_id_snd { get; set; }

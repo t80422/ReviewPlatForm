@@ -62,6 +62,12 @@ public partial class member
 
     public string mb_position { get; set; }
 
+    public string mb_review_contract { get; set; }
+
+    public string mb_review_income_certificate { get; set; }
+
+    public string mb_review { get; set; }
+
 }
 
 }

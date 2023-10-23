@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+@model WebApplication1.Models.SubsidyMemberData
+@using PagedList.Mvc;
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁>補助申請>補助申請人員審核記錄</h3>
+            </div>
+        </div>
+
+        <div class="list-wrap">
+            <div class="form-title">
+                <h3>補助申請人員審核記錄 案號 @Model.Subsidy.s_no @Model.Member.mb_name</h3>
+            </div>
+            <!--todo 模組化列表View-->
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-1">日期</div>
+                        <div class="f-1">時間</div>
+                        <div class="f-1">操作人員</div>
+                        <div class="f-1">勞動契約</div>
+                        <div class="f-1">薪資證明</div>
+                        <div class="f-1">確認合格狀態</div>
+                        <div class="f-1">核準金額</div>
+                    </div>
+
+                    @foreach (var data in Model.ReviewList)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@(data.smr_date?.ToString("yyyy/MM/dd"))</div>
+                            <div class="f-1">@data.smr_time</div>
+                            <div class="f-1">@data.smr_reviewer</div>
+                            <div class="f-1">@data.smr_review_contract</div>
+                            <div class="f-1">@data.smr_review_income_certificate</div>
+                            <div class="f-1">@data.smr_reveiw_status</div>
+                            <div class="f-1">@data.smr_approved_amount</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="pages-wrap">
+            @Html.PagedListPager(Model.ReviewList, page => Url.Action("ReviewList", new { page }), new PagedListRenderOptions()
+            {
+                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always
+            })
+        </div>
+
+        <div class="form-btn">
+            <button class="btn-cancel" type="button" onclick="history.back()">回上頁</button>
+        </div>
+    </div>
+</main>

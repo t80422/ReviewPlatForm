@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
                 id_owner = b.id_owner,
                 s_grant_date = a.s_grant_date,
                 s_money = (int)a.s_money,
-                s_review = a.s_review,
+                s_review = a.s_review_fst,
                 id_name = b.id_name,
                 s_id = a.s_id,
                 id_id = b.id_id,
@@ -195,7 +195,7 @@ namespace WebApplication1.Controllers
                     s_else_name = data.OtherFile != null ? data.OtherFile.FileName : "",
                     s_applicants = ApplicantsList,
                     s_applicants_name = data.ApplicantsList != null ? data.ApplicantsList.FileName : "",
-                    s_review = "待補件",
+                    s_review_fst = "待補件",
                     s_date_time_end = data.s_date_time_end
                 };
 
@@ -581,7 +581,7 @@ namespace WebApplication1.Controllers
 
             if (data == null) return HttpNotFound();
 
-            data.s_review = "審核中";
+            data.s_review_fst = "審核中";
 
             db.SaveChanges();
 

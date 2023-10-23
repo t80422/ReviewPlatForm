@@ -70,28 +70,31 @@ namespace WebApplication1.Controllers
                         int MaxCount = 0;
 
                         foreach (Row row in rows)
-                        {
-                            
-                            
+                        {                                                        
                             // 以第一列標題作為最大欄位數
                             if(row.RowIndex.Value == 1)
                             {                                
                                 MaxCount = row.Descendants<Cell>().Count();
                             }
+
                             List<string> data = new List<string>();
                             int i = 0;
+
                             foreach (Cell cell in row.Descendants<Cell>())
                             {
-                                //string Col = regex.Matches(cell.CellReference.ToString()).ToString();
                                 string Col = "";
+
                                 foreach(var match in regex.Matches(cell.CellReference.ToString())) Col += match;
+
                                 i++;
                                 int intCol = (int)GetAllBytes(Col);
+
                                 while (i < intCol)
                                 {
                                     data.Add("");
                                     i++;
                                 }
+
                                 data.Add(GetCellValue(spreadsheet, cell) ?? "");
                             }
                             if (i < MaxCount)

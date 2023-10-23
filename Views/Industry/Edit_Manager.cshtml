@@ -1,0 +1,332 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+
+    var readonlyAttr = new Dictionary<string, object>();
+    var disable = new Dictionary<string, object>();
+
+    if (perm == 2)
+    {
+        readonlyAttr["readonly"] = "readonly";
+        disable["disabled"] = "disabled";
+    }
+
+    string readonlyAttribute = (perm == 2) ? "readonly" : "false";
+
+    var filePath = Url.Content("~/assets/upload/Industry/");
+}
+
+@model WebApplication1.Models.IndustryModelView.Edit_Manager
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁＞基本資料＞詳細資料</h3>
+            </div>
+            <div class="tool-btn">
+                <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPwd", "Login", new {id=Model.Industry.id_id})'">修改密碼</button>
+            </div>
+        </div>
+
+        <div class="form-wrap">
+            @using (Html.BeginForm("Edit", "Industry", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(x => x.Industry.id_id)
+
+                <div class="form-main">
+                    <div class="form-title">
+                        <h3>新增及修改旅宿業者基本資料</h3>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">旅宿名稱</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_name, readonlyAttr)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">統編</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_tax_id, readonlyAttr)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">房間數</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_room, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">公司名稱</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_company, readonlyAttr)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">旅宿別</label>
+                                        <div class="input">
+                                            @Html.DropDownListFor(x => x.Industry.id_it_id, Model.IndustryTypeOptions, "旅宿別", disable)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">Email</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_email, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input" style="padding-left:65px;">
+                                        <label for="">地址</label>
+                                        <div class="input" style="display:flex">
+
+                                            <div style="width:100px;margin-right:15px;">
+                                                @Html.TextBoxFor(x => x.Industry.id_postal_code, readonlyAttr)
+                                            </div>
+                                            <div style="width:100px;margin-right:15px;">
+                                                @Html.TextBoxFor(x => x.Industry.id_city, readonlyAttr)
+                                            </div>
+
+                                            @Html.TextBoxFor(x => x.Industry.id_address, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">公司電話</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_tel, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">公司傳真</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_fax, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label class="required">承辦人</label>
+                                        <div class="input" style="display:flex">
+                                            @Html.TextBoxFor(x => x.Industry.id_owner, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label class="required">承辦人電話</label>
+                                        <div class="input" style="display:flex">
+                                            <div style="width:60px;margin-right:15px;">
+                                                @Html.TextBoxFor(x => x.Industry.id_owner_area_code, readonlyAttr)
+                                            </div>
+                                            @Html.TextBoxFor(x => x.Industry.id_tel_owner, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">承辦人分機</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_extension, readonlyAttr)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label class="">承辦人手機</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_owner_phone, readonlyAttr)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label class="required">銀行名稱/分行</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_name, readonlyAttr)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label class="required">銀行戶名</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_acct_name, readonlyAttr)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <a href="@(filePath+Model.Industry.id_passbook)" target="_blank">銀行存摺</a>
+
+                                        @if (perm == 0 || perm == 1)
+                                        {
+                                            <div class="input file">
+                                                @*todo 測試檔案修改*@
+                                                @Html.TextBoxFor(x => x.PassBookFile, new { @type = "file" })
+                                                <span>@Model.Industry.id_passbook_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        }
+                                    </div>
+
+                                    <div class="form-input">
+                                        <a href="@(filePath+Model.Industry.id_register)" target="_blank">商業登記或稅籍證明</a>
+
+                                        @if (perm == 0 || perm == 1)
+                                        {
+                                            <div class="input file">
+                                                @Html.TextBoxFor(x => x.RegisterFile, new { @type = "file" })
+
+                                                <span>@Model.Industry.id_passbook_name</span>
+
+                                                <button class="onfile" type="button">上傳檔案</button>
+
+                                                <div class="red-text">
+                                                    <p>*說明:僅民宿業者須上傳<p>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label class="required">承辦人Email</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_owner_email, readonlyAttr)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label class="required">銀行代碼(7碼)</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_code, new { @required = "required", @minlength = "7", @maxlength = "7", @onkeydown = "return onlyNumber(event)", @readonly = readonlyAttribute })
+                                            <a href="https://www.fisc.com.tw/TC/Service?Caid=51254999-5d15-4ddf-8e54-4b2cdb2a8399&CaStyleId=16%E6%9F%A5%E8%A9%A2" target="_blank">銀行代碼查詢</a>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label class="required">銀行帳號</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_acct, new { @required = "required", @onkeydown = "return onlyNumber(event)", @readonly = readonlyAttribute })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <a href="@(filePath+Model.Industry.id_passbook)" target="_blank">營業執照或登記證</a>
+
+                                        @if (perm == 0 || perm == 1)
+                                        {
+                                            <div class="input file">
+                                                @Html.TextBoxFor(x => x.License, new { @type = "file" })
+                                                <span>@Model.Industry.id_license_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">初審人員</label>
+                                        <div class="input">
+                                            <input value="@Model.InitialReviewer.mg_name" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">複審人員</label>
+                                        <div class="input">
+                                            <input value="@Model.SecondaryReviewer.mg_name" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label for="">協會審查</label>
+                                        <div class="input">
+                                            <input value="@Model.AssociationReviewer.mg_name" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-btn">
+                                <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                                <button class="btn-submit" type="submit" onclick="">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</main>
+
+<script src="~/Scripts/common.js"></script>
+
+<script>
+    checkFileSize('#PassBookFile', 5000000);
+    checkFileSize('#RegisterFile', 5000000);
+    checkFileSize('#License', 5000000);
+
+    $(function () {
+        $('.show-img').on('click', function () {
+            $('.popup-wrap.img').toggle();
+        })
+        $('.popup-wrap.img .popup-close').on('click', function () {
+            $(this).parents('.popup-wrap.img').toggle();
+        })
+    })
+
+    function onlyNumber(evt) {
+        var e = event || evt;
+        var keyCode = e.keyCode || e.which;
+        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode == 37 || keyCode == 39) {
+            return true;
+        } else {
+            e.preventDefault();
+            return false;
+        }
+    }
+</script>

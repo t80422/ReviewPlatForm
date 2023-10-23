@@ -17,6 +17,13 @@ namespace WebApplication1.Controllers
             return View();
         }
 
+        public ActionResult HomePage()
+        {
+            return Redirect("index.html");
+            
+        }
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(string account, string password)

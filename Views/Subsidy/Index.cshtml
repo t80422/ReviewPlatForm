@@ -5,63 +5,77 @@
     // 1. 無登入-1
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
+
 }
 
-@model IPagedList<WebApplication1.Models.SubsidyIndustry>
+@model WebApplication1.Models.SubsidyIndexViewModel
 @using PagedList.Mvc;
 @using PagedList;
-
+<script>
+    function showPerson(id, person_id) {
+        $("#Review" + id).val(person_id);
+    }
+</script>
 <main class="container-wrap">
     <div class="container-main">
-        <!-- tool -->
         <div class="tool-wrap">
-            @if (perm == 3)
-            {
-                <div class="tool-item left">
-                    <h3>@ViewBag.Name 您好!</h3>
-                </div>
-
-                <div class="tool-item">
-                    <label>可申請人數餘額：<span>@ViewBag.MemberCount / @ViewBag.Maxmember</span> </label>
-                </div>
-            }
-
-            <div class="tool-btn">
-			   
-                @if (perm >= 0 && perm < 3)
-                {
-                    <button class="btn-add" onClick="">匯出</button>
-                    <button class="btn-add" onClick="location.href = '@Url.Action("Report","Subsidy")'">報表</button>
-                }
-                else
-                {
-                    <button class="btn-add" onClick="window.location.href='@Url.Action("Create", "Subsidy", new {id_id=ViewBag.IndustryId})'">新增</button>
-                }
-				
+            <div class="tool-item left">
+                <h3>首頁>補助申請</h3>
             </div>
-			
+
+            <div class="tool-item">
+                @if (perm == 3)
+                {
+                    <label>可申請人數餘額：<span>@ViewBag.MemberCount / @ViewBag.Maxmember</span> </label>
+                    <div class="tool-btn">
+                        <button class="btn-add" onClick="window.location.href='@Url.Action("Create", "Subsidy", new {id_id=ViewBag.IndustryId})'">新增</button>
+                    </div>
+                }
+                else if (perm >= 0 && perm < 3)
+                {
+                    using (Html.BeginForm("Index", "Subsidy", FormMethod.Get))
+                    {
+                        <div class="tool-btn">
+                            <input name="key" type="text" placeholder="請輸入關鍵字搜尋">
+                            <select name="review" style="margin-left:20px">
+                                <option value="">--審核狀態--</option>
+                                <option value="待審核">待審核</option>
+                                <option value="審核中">審核中</option>
+                                <option value="待補件">待補件</option>
+                                <option value="退件">退件</option>
+                                <option value="審核完成">審核完成</option>
+                            </select>
+                            <button class="btn-add" type="submit">搜尋</button>
+                        </div>
+                    }
+                }
+            </div>
         </div>
-        @if ((string)Session["userReview"] != "審核完成"){
-				      <div style="color:red;float:right; margin-bottom:10px;">基本資料 (未建置完整),請寫基本資料</div>
-				}
+
+        @if ((string)Session["userReview"] != "審核完成" && perm == 3)
+        {
+            <div style="color:red;float:right; margin-bottom:10px;">基本資料 (未建置完整),請寫基本資料</div>
+        }
+
         <div class="container-nav">
             <a href="@Url.Action("Index","Subsidy")" class="is-active">申請補助列表</a>
             <a href="@Url.Action("Index","SubMembers")">補助申請人員</a>
         </div>
 
         <div class="list-wrap">
-            <!-- list -->
             <div class="list-overflow">
                 <div class="list-main">
                     <div class="list-title pr-2 pl-2">
                         <div class="f-3">案號</div>
 
                         @if (perm < 3)
-                        {<div class="f-3 ta-left ml-6">旅宿名稱</div>}
+                        {
+                            <div class="f-3">公司名稱</div>
+                        }
 
                         <div class="f-3">承辦人</div>
+                        <div class="f-3">申請金額</div>
                         <div class="f-3">撥款日期</div>
-                        <div class="f-3 ta-right">申請金額</div>
                         <div class="f-3">審核狀態</div>
 
                         @if (perm == 3)
@@ -71,18 +85,40 @@
                             <div class="f-1">修改</div>
                             <div class="f-1">刪除</div>
                         }
+                        else
+                        {
+                            <div class="f-1">詳細資料</div>
+                            <div class="f-1">審核紀錄</div>
+                        }
+
+                        @if (perm == 0 || perm == 1)
+                        {
+                            <div class="f-1">分案</div>
+                        }
 
                     </div>
 
-                    @foreach (var data in Model)
+                    @foreach (var data in Model.Subsidies)
                     {
                         <div class="list-row pr-2 pl-2">
                             <div class="f-3">@data.s_no</div>
 
                             @if (perm < 3)
-                            {<div class="f-3 ta-left ml-6">@data.id_name</div>}
+                            {
+                                <div class="f-3">
+                                    @if (data.id_review == "通過")
+                                    {
+                                        @(data.id_name+"(已審核)");
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Edit","Industry",new {id=data.id_id})" target="_blank">@data.id_name</a>
+                                    }
+                                </div>
+                            }
 
                             <div class="f-3">@data.id_owner</div>
+                            <div class="f-3">@data.s_money</div>
                             <div class="f-3">
                                 @if (data.s_grant_date == null)
                                 {
@@ -90,11 +126,11 @@
                                 }
                                 else
                                 {
-                                    <span>@data.s_grant_date</span>
+                                    <span>@(data.s_grant_date?.ToString("yyyy/MM/dd"))</span>
                                 }
                             </div>
 
-                            <div class="f-3 ta-right">@data.s_money</div>
+
                             <div class="f-3">@data.s_review</div>
 
                             @if (perm == 3)
@@ -107,18 +143,39 @@
                                 </div>
 
                                 <div class="f-1">
-                                    @if (data.s_review == "退件" || data.s_review == "待補件")
+                                    @if (data.s_review == "退件" || data.s_review == "待補件"  || data.s_review == "待審核")
                                     {
                                         <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "Subsidy", new {id=data.s_id})';event.stopPropagation();"></button>
                                     }
                                 </div>
 
                                 <div class="f-1">
-                                    @if (data.s_review == "待補件")
+                                    @if (data.s_review == "待補件" || data.s_review == "待審核")
                                     {
-                                        <button class="btn-del" onClick="del(@data.s_id)"></button>
+                                        <button class="btn-del" onClick="openPopup(@data.s_id,'delete')"></button>
                                     }
                                 </div>
+                            }
+                            else if (perm >= 0)
+                            {
+                                <div class="f-1">
+                                    <button class="btn-edit" onclick="location.href='@Url.Action("Edit_Manager", new { subsidyID = data.s_id })'"></button>
+                                </div>
+
+                                <div class="f-1">
+                                    <button class="btn-details" onclick="location.href='@Url.Action("ReviewList", new {subsidyID=data.s_id})'"></button>
+                                </div>
+                            }
+
+                            @if (perm == 0 || perm == 1)
+                            {
+                                <div class="f-1">
+                                    @Html.DropDownList("Review"+data.s_id, ViewBag.Reviewers as IEnumerable<SelectListItem>, new { onchange = "changePerson(this.name,this.value)" })
+                                </div>
+                                <script>
+                                    //alert("Review" + @data.s_id);
+                                    showPerson( @data.s_id, @data.s_mg_id_fst.ToString());
+                                </script>
                             }
                         </div>
                     }
@@ -126,9 +183,8 @@
             </div>
         </div>
 
-        <!-- pages -->
         <div class="pages-wrap">
-            @Html.PagedListPager(Model, page => Url.Action("Index", "Subsidy", new { page }), new PagedListRenderOptions()
+            @Html.PagedListPager(Model.Subsidies, page => Url.Action("Index", "Subsidy", new { page }), new PagedListRenderOptions()
        {
            DisplayLinkToFirstPage = PagedListDisplayMode.Always,
            DisplayLinkToLastPage = PagedListDisplayMode.Always,
@@ -139,30 +195,41 @@
     </div>
 
     <script>
-    let itemID;
-    // 刪除跳出視窗
-    function del(id){
-        itemID = id;
-        $(".popup-overlay, .js-del-popup").fadeIn();
-        $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
-        $(".popup-overlay,.js-del-popup .popup-btn .btn-cancel").on('click', function () {
-            $(".popup-overlay, .js-del-popup").fadeOut();
-        });
-        $('.js-del-popup .popup-btn .btn-submit').on('click', function () {
-            window.location.href = '@Url.Action("Delete")'+"?id="+ id;
-        })
-    }
-    // 送件
-    function review(id){
-        itemID = id;
-        $(".popup-overlay, .js-review-popup").fadeIn();
-        $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
-        $(".popup-overlay,.js-review-popup .popup-btn .btn-cancel").on('click', function () {
-            $(".popup-overlay, .js-review-popup").fadeOut();
-        });
-        $('.js-review-popup .popup-btn .btn-submit').on('click', function () {
-            window.location.href = '';
-        })
-    }
+        function changePerson(id,person_id) {
+            //alert(id);
+            $.ajax({
+                url: '@Url.Action("ChangePerson")' + '/' + id  ,
+                dataType: "html",
+                type: "post",
+                data: { 'id': id, 'person_id': person_id },
+                success: function (data) {
+                    alert(data);
+                }
+            });
+        }
+        
+        function openPopup(id, type) {
+            let popupClass, actionUrl;
+
+            //刪除視窗
+            if (type == 'delete') {
+                popupClass = '.js-del-popup';
+                actionUrl = '@Url.Action("Delete")' + "?id=" + id;
+            }
+            //送件視窗
+            else if(type=='review') {
+                popupClass = 'js-review-popup';
+                actionUrl = '';
+            }
+
+            $(".popup-overlay," + popupClass).fadeIn();
+            $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+            $(".popup-overlay, " + popupClass + " .popup-btn .btn-cancel").on('click', function () {
+                $(".popup-overlay, " + popupClass).fadeOut();
+            });
+            $(popupClass + ' .popup-btn .btn-submit').on('click', function () {
+                window.location.href = actionUrl;
+            });
+        }
     </script>
 </main>

@@ -1,0 +1,353 @@
+﻿@model WebApplication1.Models.Subsidy_EditManager
+
+@using WebApplication1.HtmlHelpers
+
+@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+    string filePath = Url.Content("~/assets/upload/Subsidy/" + Model.Industry.id_name + "_" + Model.Industry.id_id + "/");
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁>補助申請>補助申請詳細資料</h3>
+            </div>
+        </div>
+
+        <div class="form-wrap">
+            @using (Html.BeginForm("Edit_Manager", "Subsidy", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(x => x.Subsidy.s_id)
+                @Html.HiddenFor(x => x.Industry.id_name)
+                @Html.HiddenFor(x => x.Industry.id_id)
+
+                <div class="form-main">
+                    <div class="form-title">
+                        <h3>補助申請詳細資料</h3>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>申請文件</label>
+                                        <a href="@(filePath+Model.Subsidy.s_application)" target="_blank">@Model.Subsidy.s_applicants_name</a>
+                                        @*todo 測試檔案上傳*@
+                                        @Html.DropDownListFor(x => x.Subsidy.s_review_application, Model.FileReviewOptions, "審核狀態")
+                                    </div>
+
+                                    @if (perm == 0 || perm == 1)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy.s_application)
+                                                @Html.TextBoxFor(x => x.ApplicationFile, new { @type = "file" })
+                                                <span>@Model.Subsidy.s_application_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="form-input">
+                                        <label>全公司勞保明細</label>
+                                        <a href="@(filePath+Model.Subsidy.s_insur_member)" target="_blank">@Model.Subsidy.s_insur_member_name</a>
+                                        <div class="">
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_insur_member, Model.FileReviewOptions, "審核狀態")
+                                        </div>
+                                    </div>
+
+                                    @if (perm == 0 || perm == 1)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy.s_insur_member)
+                                                @Html.TextBoxFor(x => x.InsurMemberFile, new { @type = "file" })
+                                                <span>@Model.Subsidy.s_insur_member_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="form-input">
+                                        <label>建立全公司勞保清冊</label>
+                                        <a href="@(filePath+Model.Subsidy.s_emp_lst)" target="_blank"> @Model.Subsidy.s_emp_lst_name</a>
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_emp_lst, Model.FileReviewOptions, "審核狀態")
+                                        </div>
+                                    </div>
+
+                                    @if (perm == 0 || perm == 1)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy.s_emp_lst)
+                                                @Html.TextBoxFor(x => x.EmpListFile, new { @type = "file" })
+                                                <span>@Model.Subsidy.s_emp_lst_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="form-input">
+                                        <div class="red-text">
+                                            <p>提醒:<p><br />
+                                            <p>1.第一次申請時,請提供申請人員6個月以上投保證明</p><br />
+                                            <p>2.第二次及以後申請時,請附申請月份的當月在保證明</p><br />
+                                            <p>3.全公司勞保明細請至勞保局申請上月最後一天的勞保明細，並根據勞保明細之勞保序號為順序，登打建立全公司勞保清冊<p>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請補助人員清冊</label>
+                                        <a href="@(filePath+Model.Subsidy.s_applicants)" target="_blank">@Model.Subsidy.s_applicants_name</a>
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_applicants, Model.FileReviewOptions, "審核狀態")
+                                        </div>
+                                    </div>
+
+                                    @if (perm == 0 || perm == 1)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy.s_applicants)
+                                                @Html.TextBoxFor(x => x.ApplicantsFile, new { @type = "file" })
+                                                <span>@Model.Subsidy.s_applicants_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>試算金額</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.TrialAmount, new { @readonly = "" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請金額</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Subsidy.s_money,  new { @type = "number", @required = "" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請人數</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Subsidy.s_empcount,  new { @type = "number", @required = "" })
+                                        </div>
+                                        <label>可申請人數：@(ViewBag.Maxmember-ViewBag.SubMemberCount) </label>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>補件資料1</label>
+                                        <a href="@(filePath+Model.Subsidy.s_else)" target="_blank">@Model.Subsidy.s_else_name</a>
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Subsidy.s_else, Model.FileReviewOptions, "審核狀態")
+                                        </div>
+                                    </div>
+
+                                    @if (perm == 0 || perm == 1)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy.s_else)
+                                                @Html.TextBoxFor(x => x.ElseOneFile, new { @type = "file" })
+                                                <span>@Model.Subsidy.s_else_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="form-input">
+                                        <label>補件資料2</label>
+                                        <a href="@(filePath+Model.Subsidy.s_else_two)" target="_blank">@Model.Subsidy.s_else_two_name</a>
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_else2, Model.FileReviewOptions, "審核狀態")
+                                        </div>
+                                    </div>
+
+                                    @if (perm == 0 || perm == 1)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy.s_else_two)
+                                                @Html.TextBoxFor(x => x.ElseOneFile, new { @type = "file" })
+                                                <span>@Model.Subsidy.s_else_two_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div class="form-input">
+                                        <label>補件資料3</label>
+                                        <a href="@(filePath+Model.Subsidy.s_else_three)" target="_blank">@Model.Subsidy.s_else_three_name</a>
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_else3, Model.FileReviewOptions, "審核狀態")
+                                        </div>
+                                    </div>
+
+                                    @if (perm == 0 || perm == 1)
+                                    {
+                                        <div class="form-input">
+                                            <div class="input file">
+                                                @Html.HiddenFor(x => x.Subsidy.s_else_three)
+                                                @Html.TextBoxFor(x => x.ElseThreeFile, new { @type = "file" })
+                                                <span>@Model.Subsidy.s_else_three_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>審核狀態</label>
+                                        @Html.DropDownListFor(x => x.Subsidy.s_review_fst, Model.ReviewOptions, "審核狀態")
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">初審人員</label>
+                                        <div class="input">
+                                            <input value="@(Model.InitialReviewer?.mg_name)" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        @if (perm < 2 && perm >= 0)
+                                        {
+                                            <label>撥款日期</label>
+                                            @Html.DateInputFor(x => x.Subsidy.s_grant_date)
+                                        }
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">複審人員</label>
+                                        <div class="input">
+                                            <input value="@(Model.SecondaryReviewer?.mg_name)" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>核准金額</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Subsidy.s_approved_amount, new { @type = "number" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label for="">協會審查</label>
+                                        <div class="input">
+                                            <input value="@(Model.AssociationReviewer?.mg_name)" readonly />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-btn">
+                                <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                                <button class="btn-submit" type="submit">儲存</button>
+                            </div>
+
+                            @if (perm == 0 || perm == 1)
+                            {
+                                <div class="form-btn">
+                                    <button class="btn-cancel" style="width:350px;flex: 0 1 200px" type="button" onclick="location.href='@Url.Action("Import", "EmploymentInsurance", new {subsidyID=Model.Subsidy.s_id})'">
+                                        匯入公司勞保資料
+                                    </button>
+                                </div>
+                            }
+
+                            <div class="form-hgroup">
+                                <div class="form-head">
+                                    <h2>申請人員名單</h2>
+                                </div>
+
+                                <div class="form-list">
+                                    <div class="list-wrap">
+                                        <div class="list-overflow">
+                                            <div class="list-main order-view maxheight-none">
+                                                <div class="list-title">
+                                                    <div class="f-3">審查狀態</div>
+                                                    <div class="f-3">姓名</div>
+                                                    <div class="f-3">身份證字號</div>
+                                                    <div class="f-3">勞動契約</div>
+                                                    <div class="f-3">薪資證明</div>
+                                                    <div class="f-3">符合申請(起)</div>
+                                                    <div class="f-3">符合申請(迄)</div>
+                                                    <div class="f-3">申請金額</div>
+                                                    <div class="f-1">詳細資料</div>
+                                                    <div class="f-1">審核紀錄</div>
+                                                </div>
+
+                                                @if (Model.SubMemberList != null && Model.SubMemberList.Count() > 0)
+                                                {
+                                                    foreach (var member in Model.SubMemberList)
+                                                    {
+                                                        <div class="list-cont people-list">
+                                                            <div class="list-row">
+                                                                <div class="f-3">@member.Subsidy_Member.sm_review</div>
+                                                                <div class="f-3">@member.Member.mb_name</div>
+                                                                <div class="f-3">@member.Member.mb_id_card</div>
+                                                                <div class="f-3">@(member.Member.mb_review_contract==null?"否":"是")</div>
+                                                                <div class="f-3">@(member.Subsidy_Member.sm_review_income_certificate==null?"否":"是")</div>
+                                                                <div class="f-3">@(member.Subsidy_Member.sm_agree_start?.ToString("yyyy/MM/dd"))</div>
+                                                                <div class="f-3">@(member.Subsidy_Member.sm_agree_end?.ToString("yyyy/MM/dd"))</div>
+                                                                <div class="f-3">@member.Subsidy_Member.sm_advance_money</div>
+                                                                <div class="f-1">
+                                                                    <button class="btn-edit" type="button" onclick="window.open('@Url.Action("Edit_Manager", "SubMembers", new {subMemberID=member.Subsidy_Member.sm_id})', '_blank')"></button>
+                                                                </div>
+
+                                                                <div class="f-1">
+                                                                    <button class="btn-details" type="button" onclick="location.href='@Url.Action("ReviewList", "SubMembers", new {subMemberID=member.Subsidy_Member.sm_id})'"></button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>
+
+<script>
+    //防止下拉式選單同步
+    $(document).ready(function () {
+        $('.input select').on('change', function () {
+            //儲存其他下拉選單的當前選項
+            var otherSelects = $('.input select').not(this);
+            var selectValues = [];
+            otherSelects.each(function () {
+                selectValues.push($(this).val());
+            })
+            otherSelects.each(function (index) {
+                $(this).val(selectValues[index]);
+            })
+        })
+    })
+</script>

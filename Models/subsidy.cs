@@ -30,10 +30,6 @@ public partial class subsidy
 
     public Nullable<System.DateTime> s_grant_date { get; set; }
 
-    public string s_review { get; set; }
-
-    public Nullable<int> s_mg_id_fst { get; set; }
-
     public Nullable<int> s_mg_id_snd { get; set; }
 
     public Nullable<System.DateTime> s_last_time { get; set; }
@@ -42,9 +38,13 @@ public partial class subsidy
 
     public string s_insur_member_name { get; set; }
 
+    public string s_review_insur_member { get; set; }
+
     public string s_emp_lst { get; set; }
 
     public string s_emp_lst_name { get; set; }
+
+    public string s_review_emp_lst { get; set; }
 
     public string s_affidavit { get; set; }
 
@@ -58,6 +58,8 @@ public partial class subsidy
 
     public string s_else_name { get; set; }
 
+    public string s_review_else { get; set; }
+
     public string s_no { get; set; }
 
     public Nullable<int> s_empcount { get; set; }
@@ -66,9 +68,13 @@ public partial class subsidy
 
     public string s_application_name { get; set; }
 
+    public string s_review_application { get; set; }
+
     public string s_applicants { get; set; }
 
     public string s_applicants_name { get; set; }
+
+    public string s_review_applicants { get; set; }
 
     public string s_submit { get; set; }
 
@@ -76,9 +82,21 @@ public partial class subsidy
 
     public string s_else_two_name { get; set; }
 
+    public string s_review_else2 { get; set; }
+
     public string s_else_three { get; set; }
 
     public string s_else_three_name { get; set; }
+
+    public string s_review_else3 { get; set; }
+
+    public string s_review_fst { get; set; }
+
+    public Nullable<int> s_mg_id_fst { get; set; }
+
+    public Nullable<int> s_approved_amount { get; set; }
+
+    public Nullable<int> s_mg_id_association { get; set; }
 
 }
 
