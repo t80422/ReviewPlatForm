@@ -30,14 +30,7 @@ namespace WebApplication1.Models
         public IPagedList<subsidy_member_review> ReviewList { get; set; }
         public string FullTimeOrNotString { get; set; }
         public string QualificationsString { get; set; }
-        /// <summary>
-        /// 是否符合資格
-        /// </summary>
-        //public bool Qualifications {  get; set; }
-        /// <summary>
-        /// 試算補助金額
-        /// </summary>
-        //public int Calculation {  get; set; }
+        public bool ViewMode {  get; set; }
 
         public SubsidyMemberData()
         {

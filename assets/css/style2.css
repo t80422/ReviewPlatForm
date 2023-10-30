@@ -565,28 +565,28 @@ label.btn-correct.correct::before {
 .required:after {
     content: '*';
     color: red;
-    font-size:large;
+    font-size: large;
 }
 
-.textarea-autoheigh{
-	width:100%;
-	border:0;
-	transition: color .3s, background .3s;
+.textarea-autoheigh {
+    width: 100%;
+    border: 0;
+    transition: color .3s, background .3s;
     color: var(--text);
     background-color: #fff;
 }
 
-.list-row:hover textarea.textarea-autoheigh, .list-row.is-focus textarea.textarea-autoheigh{
-	color: #FFF;
+.list-row:hover textarea.textarea-autoheigh, .list-row.is-focus textarea.textarea-autoheigh {
+    color: #FFF;
     background-color: var(--c1-h);
 }
 
 .red-text p {
     color: red;
-    font-size:large;
-    vertical-align:middle;
+    font-size: large;
+    vertical-align: middle;
 }
 
 .list-main * {
-    font-size:20px !important;
+    font-size: 20px !important;
 }

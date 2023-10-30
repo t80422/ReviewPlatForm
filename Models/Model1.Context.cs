@@ -32,15 +32,9 @@ public partial class ReviewPlatformEntities : DbContext
     }
 
 
-    public virtual DbSet<industry> industry { get; set; }
-
     public virtual DbSet<information> information { get; set; }
 
     public virtual DbSet<information_group> information_group { get; set; }
-
-    public virtual DbSet<login_out> login_out { get; set; }
-
-    public virtual DbSet<manager> manager { get; set; }
 
     public virtual DbSet<News> News { get; set; }
 
@@ -57,6 +51,12 @@ public partial class ReviewPlatformEntities : DbContext
     public virtual DbSet<subsidy_member_review> subsidy_member_review { get; set; }
 
     public virtual DbSet<subsidy_review> subsidy_review { get; set; }
+
+    public virtual DbSet<industry> industry { get; set; }
+
+    public virtual DbSet<login_out> login_out { get; set; }
+
+    public virtual DbSet<manager> manager { get; set; }
 
 }
 

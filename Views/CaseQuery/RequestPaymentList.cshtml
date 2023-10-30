@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+@model WebApplication1.Models.CaseQueryViewModel.Index
+@using PagedList.Mvc;
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁＞每月請款</h3>
+            </div>
+            <form action="@Url.Action("RequestPaymentList")" method="get">
+                <div class="tool-btn">
+                    <label>申請日期</label>
+                    <input name="startDay" type="date" />
+                    <label>~</label>
+                    <input name="endDay" type="date" />
+                    <button type="submit">送出</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="list-wrap">
+            <div class="form-title">
+                <h3>每月請款</h3>
+            </div>
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-1">案號</div>
+                        <div class="f-1">旅宿名稱</div>
+                        <div class="f-1">本次申請人數</div>
+                        <div class="f-1">房間數</div>
+                        <div class="f-1">可申請人數</div>
+                        <div class="f-1">審核通過人數</div>
+                        <div class="f-1">申請金額</div>
+                        <div class="f-1">銀行名稱</div>
+                        <div class="f-1">銀行代碼</div>
+                        <div class="f-1">銀行帳號</div>
+                        <div class="f-1">戶名</div>
+                    </div>
+
+                    @foreach (var data in Model.caseQueryList)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@data.Subsidy.s_no</div>
+                            <div class="f-1">@data.Industry.id_name</div>
+                            <div class="f-1">@data.CurrentApplicants</div>
+                            <div class="f-1">@data.Industry.id_room</div>
+                            <div class="f-1">@data.EligibleApplicants</div>
+                            <div class="f-1">@data.ApprovedApplicants</div>
+                            <div class="f-1">@data.Subsidy.s_money</div>
+                            <div class="f-1">@data.Industry.id_bank_name</div>
+                            <div class="f-1">@data.Industry.id_bank_code</div>
+                            <div class="f-1">@data.Industry.id_bank_acct</div>
+                            <div class="f-1">@data.Industry.id_bank_acct_name</div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="pages-wrap">
+            @Html.PagedListPager(Model.caseQueryList, page => Url.Action("RequestPaymentList", new { page, startDay = Request.QueryString["startDay"], endDay = Request.QueryString["endDay"] }), new PagedListRenderOptions()
+            {
+               DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+               DisplayLinkToLastPage = PagedListDisplayMode.Always,
+               DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+               DisplayLinkToNextPage = PagedListDisplayMode.Always
+            })
+        </div>
+    </div>
+</main>

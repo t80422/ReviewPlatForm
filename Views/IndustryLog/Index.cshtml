@@ -1,105 +1,52 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
+@model WebApplication1.Models.IndustryLoginViewModel.Index
+@using PagedList.Mvc;
+
 <main class="container-wrap">
     <div class="container-main">
-        <!-- tool -->
-        <div class="tool-wrap">
-            <div class="tool-btn">
-                <button class="btn-add" onClick="">匯出</button>
-            </div>
+        <div class="tool-item left">
+            <h3>首頁＞業者登入登出</h3>
         </div>
-        <!-- list -->
+
         <div class="list-wrap">
+            <div class="form-title">
+                <h1>業者登入登出</h1>
+            </div>
             <div class="list-overflow">
                 <div class="list-main">
                     <div class="list-title pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿名稱</div>
+                        <div class="f-1">旅宿名稱</div>
                         <div class="f-1">承辦人</div>
                         <div class="f-1">登入時間</div>
                         <div class="f-1">登出時間</div>
                     </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <div class="list-row pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿A</div>
-                        <div class="f-1">ABC</div>
-                        <div class="f-1">2023/08/18</div>
-                        <div class="f-1">2023/08/18</div>
-                    </div>
-                    <!-- example start -->
-                    <!-- example end -->
+
+                    @foreach (var item in Model.LoginList)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@item.IndustryName</div>
+                            <div class="f-1">@item.OwnerName</div>
+                            <div class="f-1">@item.LoginTime</div>
+                            <div class="f-1">@item.LogoutTime</div>
+                        </div>
+                    }
+
                 </div>
             </div>
         </div>
         <!-- pages -->
         <div class="pages-wrap">
-            <button class="btn-prev"></button>
-            <ul>
-                <li class="is-active">1</li>
-                <li>
-                    <a href="">2</a>
-                </li>
-                <li>
-                    <a href="">3</a>
-                </li>
-            </ul>
-            <button class="btn-next"></button>
+            @Html.PagedListPager(Model.LoginList, page => Url.Action("Index", new { page}), new PagedListRenderOptions()
+{
+    DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+    DisplayLinkToLastPage = PagedListDisplayMode.Always,
+    DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+    DisplayLinkToNextPage = PagedListDisplayMode.Always
+})
         </div>
     </div>
 </main>

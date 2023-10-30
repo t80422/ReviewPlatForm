@@ -1,0 +1,78 @@
+﻿@*只有管理者使用*@
+
+@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+}
+
+@model WebApplication1.Models.CaseQueryViewModel.Index
+@using PagedList.Mvc;
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁＞案件查詢</h3>
+            </div>
+
+            <div class="tool-btn">
+                <form action="@Url.Action("Index")" method="get">
+                    @Html.Partial("Search")
+                </form>
+            </div>
+        </div>
+
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-3">案號</div>
+                        <div class="f-3">公司名稱</div>
+                        <div class="f-3">可申請人數</div>
+                        <div class="f-3">本次申請人數</div>
+                        <div class="f-3">審核通過人數</div>
+                        <div class="f-3">申請金額</div>
+                        <div class="f-3">撥款日期</div>
+                        <div class="f-3">審核狀態</div>
+                        <div class="f-1">詳細資料</div>
+                        <div class="f-1">審核紀錄</div>
+                    </div>
+
+                    @foreach (var data in Model.caseQueryList)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-3">@data.Subsidy.s_no</div>
+                            <div class="f-3">@data.Industry.id_name</div>
+                            <div class="f-3">@data.EligibleApplicants</div>
+                            <div class="f-3">@data.CurrentApplicants</div>
+                            <div class="f-3">@data.ApprovedApplicants</div>
+                            <div class="f-3">@data.Subsidy.s_money</div>
+                            <div class="f-3">@(data.Subsidy.s_grant_date?.ToString("yyyy/MM/dd"))</div>
+                            <div class="f-3">@data.Subsidy.s_review_fst</div>
+                            <div class="f-1">
+                                <button class="btn-edit" onClick="location.href='@Url.Action("Edit_Manager","Subsidy", new { subsidyID = data.Subsidy.s_id,isView=true,title=2})'"></button>
+                            </div>
+                            <div class="f-1">
+                                <button class="btn-details" onClick="location.href='@Url.Action("ReviewList", "Subsidy", new {subsidyID=data.Subsidy.s_id,title=2})'"></button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="pages-wrap">
+            @Html.PagedListPager(Model.caseQueryList, page => Url.Action("Index", new { page, key = Request.QueryString["key"], review = Request.QueryString["review"] }), new PagedListRenderOptions()
+            {
+               DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+               DisplayLinkToLastPage = PagedListDisplayMode.Always,
+               DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+               DisplayLinkToNextPage = PagedListDisplayMode.Always
+            })
+        </div>
+    </div>
+</main>

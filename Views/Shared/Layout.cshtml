@@ -39,7 +39,6 @@
 
 <body>
     <article id="wrap" class="aside-toggle">
-        <!-- banner -->
         <div class="banner-wrap">
             <div class="banner-img">
                 <img src="~/assets/image/logo.jpg">
@@ -49,7 +48,6 @@
 
         @if ((string)Session["ResetPW"] == "N")
         {
-            <!-- aside -->
             <aside class="aside-wrap">
                 <div class="aside-main">
                     <nav class="nav-wrap">
@@ -85,18 +83,13 @@
                                     <a href="@Url.Action("Index","SubsidyQ")">案件查詢</a>
                                 </li>
                             }
-                            else if (perm >= 0)
+                            else if (perm >= 0 && perm < 3)
                             {
                                 <li class="nav-item">
                                     <a href="@Url.Action("Index","Industry")"><span>基本資料</span></a>
                                 </li>
 
                                 <li class="nav-item">
-                                    @*<button type="button"><span>補助申請</span></button>
-                                        <ul class="nav-sub">
-                                            <li><a href="@Url.Action("Index","Subsidy")">補助申請</a></li>
-                                            <li><a href="@Url.Action("Index","SubMembers")">申請補助人員</a></li>
-                                        </ul>*@
                                     <a href="@Url.Action("Index","Subsidy")">補助申請</a>
                                 </li>
 
@@ -105,15 +98,21 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href="@Url.Action("Index","MngAccount")"><span>帳號管理</span></a>
+                                    <a href="@Url.Action("Index","Manager")"><span>帳號管理</span></a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href=""><span>案件查詢</span></a>
+                                    <a href="@Url.Action("Index","CaseQuery")"><span>案件查詢</span></a>
                                 </li>
 
                                 <li class="nav-item">
-                                    <a href=""><span>每月請款</span></a>
+                                    <a href="@Url.Action("RequestPaymentList","CaseQuery")"><span>每月請款</span></a>
+                                </li>
+                            }
+                            else if (perm == 4)
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Action("Index","CaseQuery")"><span>案件查詢</span></a>
                                 </li>
                             }
                         </ul>
@@ -132,11 +131,9 @@
             </aside>
         }
         <button class="nav-btn"></button>
-        <!-- main -->
         @RenderBody()
     </article>
 
-    <!-- popup -->
     <div class="popup-wrap msg">
         <div class="popup-main">
             <div class="popup-content">
@@ -147,6 +144,7 @@
             </div>
         </div>
     </div>
+
     <div class="popup-wrap js-del-popup">
         <div class="popup-main">
             <div class="popup-content">
@@ -158,6 +156,7 @@
             </div>
         </div>
     </div>
+
     <div class="popup-wrap js-review-popup">
         <div class="popup-main">
             <div class="popup-content">

@@ -48,14 +48,6 @@ public partial class industry
 
     public Nullable<System.DateTime> id_last_time { get; set; }
 
-    public string id_license { get; set; }
-
-    public string id_license_name { get; set; }
-
-    public string id_register { get; set; }
-
-    public string id_register_name { get; set; }
-
     public string id_email { get; set; }
 
     public string id_bank_code { get; set; }
@@ -64,13 +56,11 @@ public partial class industry
 
     public string id_bank_acct_name { get; set; }
 
-    public string id_passbook { get; set; }
-
-    public string id_passbook_name { get; set; }
-
     public Nullable<int> id_mg_id_fst { get; set; }
 
     public Nullable<int> id_mg_id_snd { get; set; }
+
+    public Nullable<int> id_mg_id_association { get; set; }
 
     public string id_review { get; set; }
 
@@ -84,7 +74,23 @@ public partial class industry
 
     public string id_owner_email { get; set; }
 
-    public Nullable<int> id_mg_id_association { get; set; }
+    public string id_passbook { get; set; }
+
+    public string id_passbook_name { get; set; }
+
+    public string id_review_passbook { get; set; }
+
+    public string id_license { get; set; }
+
+    public string id_license_name { get; set; }
+
+    public string id_review_license { get; set; }
+
+    public string id_register { get; set; }
+
+    public string id_register_name { get; set; }
+
+    public string id_review_register { get; set; }
 
 }
 

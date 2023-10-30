@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.Subsidy_EditManager
+﻿@model WebApplication1.Models.SubsidyViewModel.Edit_Mangager
 
 @using WebApplication1.HtmlHelpers
 
@@ -10,13 +10,24 @@
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
     string filePath = Url.Content("~/assets/upload/Subsidy/" + Model.Industry.id_name + "_" + Model.Industry.id_id + "/");
+    var disable = new Dictionary<string, object>();
+    var read = new Dictionary<string, object>();
+    if (Model.ViewMode)
+    {
+        disable["disabled"] = "disabled";
+        read["readonly"] = "readonly";
+    }
+    string title = ViewBag.Title;
 }
 
 <main class="container-wrap">
     <div class="container-main">
         <div class="tool-wrap">
             <div class="tool-item left">
-                <h3>首頁>補助申請>補助申請詳細資料</h3>
+                <h3>@title</h3>
+            </div>
+            <div class="tool-btn">
+                <button type="button">匯出報表</button>
             </div>
         </div>
 
@@ -28,6 +39,7 @@
                 @Html.HiddenFor(x => x.Subsidy.s_id)
                 @Html.HiddenFor(x => x.Industry.id_name)
                 @Html.HiddenFor(x => x.Industry.id_id)
+                @Html.HiddenFor(x => x.ViewMode)
 
                 <div class="form-main">
                     <div class="form-title">
@@ -40,12 +52,13 @@
                                 <div class="form-col">
                                     <div class="form-input">
                                         <label>申請文件</label>
-                                        <a href="@(filePath+Model.Subsidy.s_application)" target="_blank">@Model.Subsidy.s_applicants_name</a>
-                                        @*todo 測試檔案上傳*@
-                                        @Html.DropDownListFor(x => x.Subsidy.s_review_application, Model.FileReviewOptions, "審核狀態")
+                                        <a href="@(filePath+Model.Subsidy.s_application)" target="_blank">@Model.Subsidy.s_application_name</a>
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_application, Model.FileReviewOptions, "審核狀態", disable)
+                                        </div>
                                     </div>
 
-                                    @if (perm == 0 || perm == 1)
+                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -60,12 +73,12 @@
                                     <div class="form-input">
                                         <label>全公司勞保明細</label>
                                         <a href="@(filePath+Model.Subsidy.s_insur_member)" target="_blank">@Model.Subsidy.s_insur_member_name</a>
-                                        <div class="">
-                                            @Html.DropDownListFor(x => x.Subsidy.s_review_insur_member, Model.FileReviewOptions, "審核狀態")
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_insur_member, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if (perm == 0 || perm == 1)
+                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -81,11 +94,11 @@
                                         <label>建立全公司勞保清冊</label>
                                         <a href="@(filePath+Model.Subsidy.s_emp_lst)" target="_blank"> @Model.Subsidy.s_emp_lst_name</a>
                                         <div>
-                                            @Html.DropDownListFor(x => x.Subsidy.s_review_emp_lst, Model.FileReviewOptions, "審核狀態")
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_emp_lst, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if (perm == 0 || perm == 1)
+                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -110,11 +123,11 @@
                                         <label>申請補助人員清冊</label>
                                         <a href="@(filePath+Model.Subsidy.s_applicants)" target="_blank">@Model.Subsidy.s_applicants_name</a>
                                         <div>
-                                            @Html.DropDownListFor(x => x.Subsidy.s_review_applicants, Model.FileReviewOptions, "審核狀態")
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_applicants, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if (perm == 0 || perm == 1)
+                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -128,24 +141,27 @@
                                 </div>
 
                                 <div class="form-col">
-                                    <div class="form-input">
-                                        <label>試算金額</label>
-                                        <div class="input">
-                                            @Html.TextBoxFor(x => x.TrialAmount, new { @readonly = "" })
+                                    @if (!Model.ViewMode)
+                                    {
+                                        <div class="form-input">
+                                            <label>試算金額</label>
+                                            <div class="input">
+                                                @Html.TextBoxFor(x => x.TrialAmount, new { @readonly = "" })
+                                            </div>
                                         </div>
-                                    </div>
+                                    }
 
                                     <div class="form-input">
                                         <label>申請金額</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.Subsidy.s_money,  new { @type = "number", @required = "" })
+                                            @Html.TextBoxForWithReadonly(x => x.Subsidy.s_money, Model.ViewMode, new { @type = "number", @required = "" })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label>申請人數</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.Subsidy.s_empcount,  new { @type = "number", @required = "" })
+                                            @Html.TextBoxForWithReadonly(x => x.Subsidy.s_empcount, Model.ViewMode, new { @type = "number", @required = "" })
                                         </div>
                                         <label>可申請人數：@(ViewBag.Maxmember-ViewBag.SubMemberCount) </label>
                                     </div>
@@ -154,11 +170,11 @@
                                         <label>補件資料1</label>
                                         <a href="@(filePath+Model.Subsidy.s_else)" target="_blank">@Model.Subsidy.s_else_name</a>
                                         <div>
-                                            @Html.DropDownListFor(x => x.Subsidy.s_else, Model.FileReviewOptions, "審核狀態")
+                                            @Html.DropDownListFor(x => x.Subsidy.s_else, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if (perm == 0 || perm == 1)
+                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -174,11 +190,11 @@
                                         <label>補件資料2</label>
                                         <a href="@(filePath+Model.Subsidy.s_else_two)" target="_blank">@Model.Subsidy.s_else_two_name</a>
                                         <div>
-                                            @Html.DropDownListFor(x => x.Subsidy.s_review_else2, Model.FileReviewOptions, "審核狀態")
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_else2, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if (perm == 0 || perm == 1)
+                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -194,11 +210,11 @@
                                         <label>補件資料3</label>
                                         <a href="@(filePath+Model.Subsidy.s_else_three)" target="_blank">@Model.Subsidy.s_else_three_name</a>
                                         <div>
-                                            @Html.DropDownListFor(x => x.Subsidy.s_review_else3, Model.FileReviewOptions, "審核狀態")
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_else3, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if (perm == 0 || perm == 1)
+                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -216,7 +232,7 @@
                                 <div class="form-col">
                                     <div class="form-input">
                                         <label>審核狀態</label>
-                                        @Html.DropDownListFor(x => x.Subsidy.s_review_fst, Model.ReviewOptions, "審核狀態")
+                                        @Html.DropDownListFor(x => x.Subsidy.s_review_fst, Model.ReviewOptions, "審核狀態", disable)
                                     </div>
 
                                     <div class="form-input">
@@ -232,7 +248,14 @@
                                         @if (perm < 2 && perm >= 0)
                                         {
                                             <label>撥款日期</label>
-                                            @Html.DateInputFor(x => x.Subsidy.s_grant_date)
+                                            if (Model.ViewMode)
+                                            {
+                                                @Html.TextBoxFor(x => x.Subsidy.s_grant_date, new { @readonly = "readonly" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DateInputFor(x => x.Subsidy.s_grant_date)
+                                            }
                                         }
                                     </div>
 
@@ -248,7 +271,7 @@
                                     <div class="form-input">
                                         <label>核准金額</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.Subsidy.s_approved_amount, new { @type = "number" })
+                                            @Html.TextBoxForWithReadonly(x => x.Subsidy.s_approved_amount, Model.ViewMode, new { @type = "number" })
                                         </div>
                                     </div>
 
@@ -263,10 +286,15 @@
 
                             <div class="form-btn">
                                 <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
-                                <button class="btn-submit" type="submit">儲存</button>
+
+                                @if (!Model.ViewMode)
+                                {
+                                    <button class="btn-submit" type="submit">儲存</button>
+                                }
+
                             </div>
 
-                            @if (perm == 0 || perm == 1)
+                            @if ((perm == 0 || perm == 1)&& !Model.ViewMode)
                             {
                                 <div class="form-btn">
                                     <button class="btn-cancel" style="width:350px;flex: 0 1 200px" type="button" onclick="location.href='@Url.Action("Import", "EmploymentInsurance", new {subsidyID=Model.Subsidy.s_id})'">
@@ -312,11 +340,11 @@
                                                                 <div class="f-3">@(member.Subsidy_Member.sm_agree_end?.ToString("yyyy/MM/dd"))</div>
                                                                 <div class="f-3">@member.Subsidy_Member.sm_advance_money</div>
                                                                 <div class="f-1">
-                                                                    <button class="btn-edit" type="button" onclick="window.open('@Url.Action("Edit_Manager", "SubMembers", new {subMemberID=member.Subsidy_Member.sm_id})', '_blank')"></button>
+                                                                    <button class="btn-edit" type="button" onclick="window.open('@Url.Action("Edit_Manager", "SubMembers", new {subMemberID=member.Subsidy_Member.sm_id,viewMode=Model.ViewMode})', '_blank')"></button>
                                                                 </div>
 
                                                                 <div class="f-1">
-                                                                    <button class="btn-details" type="button" onclick="location.href='@Url.Action("ReviewList", "SubMembers", new {subMemberID=member.Subsidy_Member.sm_id})'"></button>
+                                                                    <button class="btn-details" type="button" onclick="location.href='@Url.Action("ReviewList", "SubMembers", new {subMemberID=member.Subsidy_Member.sm_id,title=title})'"></button>
                                                                 </div>
                                                             </div>
                                                         </div>

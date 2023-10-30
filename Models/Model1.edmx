@@ -41,25 +41,28 @@
           <Property Name="id_owner_phone" Type="nvarchar" MaxLength="100" />
           <Property Name="id_room" Type="int" />
           <Property Name="id_last_time" Type="datetime" />
-          <Property Name="id_license" Type="nvarchar" MaxLength="100" />
-          <Property Name="id_license_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="id_register" Type="nvarchar" MaxLength="100" />
-          <Property Name="id_register_name" Type="nvarchar" MaxLength="100" />
           <Property Name="id_email" Type="nvarchar" MaxLength="100" />
           <Property Name="id_bank_code" Type="nvarchar" MaxLength="100" />
           <Property Name="id_bank_acct" Type="nvarchar" MaxLength="100" />
           <Property Name="id_bank_acct_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="id_passbook" Type="nvarchar" MaxLength="100" />
-          <Property Name="id_passbook_name" Type="nvarchar" MaxLength="100" />
           <Property Name="id_mg_id_fst" Type="int" />
           <Property Name="id_mg_id_snd" Type="int" />
+          <Property Name="id_mg_id_association" Type="int" />
           <Property Name="id_review" Type="nvarchar" MaxLength="100" />
           <Property Name="id_city" Type="nvarchar" MaxLength="100" />
           <Property Name="id_postal_code" Type="nvarchar" MaxLength="100" />
           <Property Name="id_area_code" Type="nvarchar" MaxLength="100" />
           <Property Name="id_bank_name" Type="nvarchar" MaxLength="100" />
           <Property Name="id_owner_email" Type="nvarchar" MaxLength="100" />
-          <Property Name="id_mg_id_association" Type="int" />
+          <Property Name="id_passbook" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_passbook_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_review_passbook" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_license" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_license_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_review_license" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_register" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_register_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_review_register" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="information">
           <Key>
@@ -95,8 +98,8 @@
             <PropertyRef Name="l_id" />
           </Key>
           <Property Name="l_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="l_in" Type="datetime" />
-          <Property Name="l_out" Type="datetime" />
+          <Property Name="l_in" Type="datetime2" Precision="0" />
+          <Property Name="l_out" Type="datetime2" Precision="0" />
           <Property Name="l_id_id" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="manager">
@@ -126,17 +129,17 @@
           <Property Name="mb_last_time" Type="datetime" />
           <Property Name="mb_contract" Type="nvarchar" MaxLength="100" />
           <Property Name="mb_contract_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="mb_review_contract" Type="nvarchar" MaxLength="100" />
           <Property Name="mb_insurance_id" Type="nvarchar" MaxLength="100" />
           <Property Name="mb_full_time_date" Type="date" />
           <Property Name="mb_income_certificate" Type="nvarchar" MaxLength="100" />
           <Property Name="mb_income_certificate_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="mb_review_income_certificate" Type="nvarchar" MaxLength="100" />
           <Property Name="mb_full_time_or_not" Type="bit" />
           <Property Name="mb_s_no" Type="nvarchar" MaxLength="50" />
           <Property Name="mb_hire_type" Type="int" />
           <Property Name="mb_arrive_date" Type="date" />
           <Property Name="mb_position" Type="nvarchar" MaxLength="100" />
+          <Property Name="mb_review_contract" Type="nvarchar" MaxLength="100" />
+          <Property Name="mb_review_income_certificate" Type="nvarchar" MaxLength="100" />
           <Property Name="mb_review" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="News">
@@ -158,38 +161,38 @@
           <Property Name="s_date_time_end" Type="date" />
           <Property Name="s_money" Type="int" />
           <Property Name="s_grant_date" Type="date" />
+          <Property Name="s_review_fst" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_mg_id_fst" Type="int" />
           <Property Name="s_mg_id_snd" Type="int" />
           <Property Name="s_last_time" Type="datetime" />
           <Property Name="s_insur_member" Type="nvarchar" MaxLength="100" />
           <Property Name="s_insur_member_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_review_insur_member" Type="nvarchar" MaxLength="100" />
           <Property Name="s_emp_lst" Type="nvarchar" MaxLength="100" />
           <Property Name="s_emp_lst_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_review_emp_lst" Type="nvarchar" MaxLength="100" />
           <Property Name="s_affidavit" Type="nvarchar" MaxLength="100" />
           <Property Name="s_affidavit_name" Type="nvarchar" MaxLength="100" />
           <Property Name="s_receipt" Type="nvarchar" MaxLength="100" />
           <Property Name="s_receipt_name" Type="nvarchar" MaxLength="100" />
           <Property Name="s_else" Type="nvarchar" MaxLength="100" />
           <Property Name="s_else_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_review_else" Type="nvarchar" MaxLength="100" />
           <Property Name="s_no" Type="nvarchar" MaxLength="100" />
           <Property Name="s_empcount" Type="int" />
           <Property Name="s_application" Type="nvarchar" MaxLength="100" />
           <Property Name="s_application_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_review_application" Type="nvarchar" MaxLength="100" />
           <Property Name="s_applicants" Type="nvarchar" MaxLength="100" />
           <Property Name="s_applicants_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_review_applicants" Type="nvarchar" MaxLength="100" />
           <Property Name="s_submit" Type="nvarchar" MaxLength="100" />
           <Property Name="s_else_two" Type="nvarchar" MaxLength="100" />
           <Property Name="s_else_two_name" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_review_else2" Type="nvarchar" MaxLength="100" />
           <Property Name="s_else_three" Type="nvarchar" MaxLength="100" />
           <Property Name="s_else_three_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_review_application" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_review_insur_member" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_review_emp_lst" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_review_applicants" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_review_else" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_review_else2" Type="nvarchar" MaxLength="100" />
           <Property Name="s_review_else3" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_review_fst" Type="nvarchar" MaxLength="100" />
-          <Property Name="s_mg_id_fst" Type="int" />
           <Property Name="s_approved_amount" Type="int" />
           <Property Name="s_mg_id_association" Type="int" />
         </EntityType>
@@ -206,13 +209,13 @@
           <Property Name="sm_date_review" Type="datetime" />
           <Property Name="sm_mg_id_fst" Type="int" />
           <Property Name="sm_mg_id_snd" Type="int" />
-          <Property Name="sm_mg_id_association" Type="int" />
           <Property Name="sm_last_time" Type="datetime" />
           <Property Name="sm_id_id" Type="int" />
           <Property Name="sm_mb_id" Type="int" />
-          <Property Name="sm_approved_amount" Type="int" />
           <Property Name="sm_income_certificate" Type="nvarchar" MaxLength="100" />
           <Property Name="sm_income_certificate_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="sm_approved_amount" Type="int" />
+          <Property Name="sm_mg_id_association" Type="int" />
           <Property Name="sm_review_income_certificate" Type="nvarchar" MaxLength="100" />
           <Property Name="sm_qualifications" Type="bit" />
           <Property Name="sm_calculation" Type="int" />
@@ -249,6 +252,18 @@
           <Property Name="sr_review_else2" Type="nvarchar" MaxLength="100" />
           <Property Name="sr_review_else3" Type="nvarchar" MaxLength="100" />
         </EntityType>
+        <!--產生期間發現錯誤:
+警告 6013: 資料表/檢視 'ReviewPlatform.dbo.system' 未定義主索引鍵，也無法推斷有效的主索引鍵。此資料表/檢視已被排除。如果要使用此實體，您必須檢閱您的結構描述，加入正確的索引鍵，並將它取消註解。
+        <EntityType Name="system">
+          <Property Name="s_subsidy" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_salary" Type="int" />
+          <Property Name="s_city" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_city_other" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_salary_other" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_date_start" Type="date" />
+          <Property Name="s_salary_month" Type="nvarchar" MaxLength="100" />
+          <Property Name="s_logout" Type="nvarchar" MaxLength="100" />
+        </EntityType>-->
         <EntityType Name="user_accounts">
           <Key>
             <PropertyRef Name="ua_id" />
@@ -279,11 +294,8 @@
     <edmx:ConceptualModels>
       <Schema Namespace="ReviewPlatformModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="ReviewPlatformEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="industry" EntityType="ReviewPlatformModel.industry" />
           <EntitySet Name="information" EntityType="ReviewPlatformModel.information" />
           <EntitySet Name="information_group" EntityType="ReviewPlatformModel.information_group" />
-          <EntitySet Name="login_out" EntityType="ReviewPlatformModel.login_out" />
-          <EntitySet Name="manager" EntityType="ReviewPlatformModel.manager" />
           <EntitySet Name="News" EntityType="ReviewPlatformModel.News" />
           <EntitySet Name="subsidy_member" EntityType="ReviewPlatformModel.subsidy_member" />
           <EntitySet Name="user_accounts" EntityType="ReviewPlatformModel.user_accounts" />
@@ -292,46 +304,10 @@
           <EntitySet Name="employment_insurance" EntityType="ReviewPlatformModel.employment_insurance" />
           <EntitySet Name="subsidy_member_review" EntityType="ReviewPlatformModel.subsidy_member_review" />
           <EntitySet Name="subsidy_review" EntityType="ReviewPlatformModel.subsidy_review" />
+          <EntitySet Name="industry" EntityType="ReviewPlatformModel.industry" />
+          <EntitySet Name="login_out" EntityType="ReviewPlatformModel.login_out" />
+          <EntitySet Name="manager" EntityType="ReviewPlatformModel.manager" />
         </EntityContainer>
-        <EntityType Name="industry">
-          <Key>
-            <PropertyRef Name="id_id" />
-          </Key>
-          <Property Name="id_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="id_it_id" Type="Int32" />
-          <Property Name="id_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_tel" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_fax" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_company" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_tax_id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_owner" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_owner_area_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_tel_owner" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_extension" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_owner_phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_room" Type="Int32" />
-          <Property Name="id_last_time" Type="DateTime" Precision="3" />
-          <Property Name="id_license" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_license_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_register" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_register_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_bank_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_bank_acct" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_bank_acct_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_passbook" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_passbook_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_mg_id_fst" Type="Int32" />
-          <Property Name="id_mg_id_snd" Type="Int32" />
-          <Property Name="id_review" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_city" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_postal_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_area_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_bank_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_owner_email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="id_mg_id_association" Type="Int32" />
-        </EntityType>
         <EntityType Name="information">
           <Key>
             <PropertyRef Name="if_id" />
@@ -360,25 +336,6 @@
           </Key>
           <Property Name="ig_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ig_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="login_out">
-          <Key>
-            <PropertyRef Name="l_id" />
-          </Key>
-          <Property Name="l_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="l_in" Type="DateTime" Precision="3" />
-          <Property Name="l_out" Type="DateTime" Precision="3" />
-          <Property Name="l_id_id" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="manager">
-          <Key>
-            <PropertyRef Name="mg_id" />
-          </Key>
-          <Property Name="mg_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="mg_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mg_phone" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mg_mail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="mg_job_title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="News">
           <Key>
@@ -547,52 +504,73 @@
           <Property Name="sr_review_else2" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="sr_review_else3" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="industry">
+          <Key>
+            <PropertyRef Name="id_id" />
+          </Key>
+          <Property Name="id_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id_it_id" Type="Int32" />
+          <Property Name="id_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_tel" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_fax" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_company" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_tax_id" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_owner" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_owner_area_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_tel_owner" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_extension" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_owner_phone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_room" Type="Int32" />
+          <Property Name="id_last_time" Type="DateTime" Precision="3" />
+          <Property Name="id_email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_bank_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_bank_acct" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_bank_acct_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_mg_id_fst" Type="Int32" />
+          <Property Name="id_mg_id_snd" Type="Int32" />
+          <Property Name="id_mg_id_association" Type="Int32" />
+          <Property Name="id_review" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_city" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_postal_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_area_code" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_bank_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_owner_email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_passbook" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_passbook_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_review_passbook" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_license" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_license_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_review_license" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_register" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_register_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="id_review_register" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="login_out">
+          <Key>
+            <PropertyRef Name="l_id" />
+          </Key>
+          <Property Name="l_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="l_in" Type="DateTime" Precision="0" />
+          <Property Name="l_out" Type="DateTime" Precision="0" />
+          <Property Name="l_id_id" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="manager">
+          <Key>
+            <PropertyRef Name="mg_id" />
+          </Key>
+          <Property Name="mg_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="mg_name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mg_phone" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mg_mail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="mg_job_title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="ReviewPlatformModelStoreContainer" CdmEntityContainer="ReviewPlatformEntities">
-          <EntitySetMapping Name="industry">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.industry">
-              <MappingFragment StoreEntitySet="industry">
-                <ScalarProperty Name="id_mg_id_association" ColumnName="id_mg_id_association" />
-                <ScalarProperty Name="id_owner_email" ColumnName="id_owner_email" />
-                <ScalarProperty Name="id_bank_name" ColumnName="id_bank_name" />
-                <ScalarProperty Name="id_area_code" ColumnName="id_area_code" />
-                <ScalarProperty Name="id_postal_code" ColumnName="id_postal_code" />
-                <ScalarProperty Name="id_city" ColumnName="id_city" />
-                <ScalarProperty Name="id_review" ColumnName="id_review" />
-                <ScalarProperty Name="id_mg_id_snd" ColumnName="id_mg_id_snd" />
-                <ScalarProperty Name="id_mg_id_fst" ColumnName="id_mg_id_fst" />
-                <ScalarProperty Name="id_passbook_name" ColumnName="id_passbook_name" />
-                <ScalarProperty Name="id_passbook" ColumnName="id_passbook" />
-                <ScalarProperty Name="id_bank_acct_name" ColumnName="id_bank_acct_name" />
-                <ScalarProperty Name="id_bank_acct" ColumnName="id_bank_acct" />
-                <ScalarProperty Name="id_bank_code" ColumnName="id_bank_code" />
-                <ScalarProperty Name="id_email" ColumnName="id_email" />
-                <ScalarProperty Name="id_register_name" ColumnName="id_register_name" />
-                <ScalarProperty Name="id_register" ColumnName="id_register" />
-                <ScalarProperty Name="id_license_name" ColumnName="id_license_name" />
-                <ScalarProperty Name="id_license" ColumnName="id_license" />
-                <ScalarProperty Name="id_last_time" ColumnName="id_last_time" />
-                <ScalarProperty Name="id_room" ColumnName="id_room" />
-                <ScalarProperty Name="id_owner_phone" ColumnName="id_owner_phone" />
-                <ScalarProperty Name="id_extension" ColumnName="id_extension" />
-                <ScalarProperty Name="id_tel_owner" ColumnName="id_tel_owner" />
-                <ScalarProperty Name="id_owner_area_code" ColumnName="id_owner_area_code" />
-                <ScalarProperty Name="id_owner" ColumnName="id_owner" />
-                <ScalarProperty Name="id_tax_id" ColumnName="id_tax_id" />
-                <ScalarProperty Name="id_company" ColumnName="id_company" />
-                <ScalarProperty Name="id_fax" ColumnName="id_fax" />
-                <ScalarProperty Name="id_tel" ColumnName="id_tel" />
-                <ScalarProperty Name="id_address" ColumnName="id_address" />
-                <ScalarProperty Name="id_name" ColumnName="id_name" />
-                <ScalarProperty Name="id_it_id" ColumnName="id_it_id" />
-                <ScalarProperty Name="id_id" ColumnName="id_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="information">
             <EntityTypeMapping TypeName="ReviewPlatformModel.information">
               <MappingFragment StoreEntitySet="information">
@@ -621,27 +599,6 @@
               <MappingFragment StoreEntitySet="information_group">
                 <ScalarProperty Name="ig_name" ColumnName="ig_name" />
                 <ScalarProperty Name="ig_id" ColumnName="ig_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="login_out">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.login_out">
-              <MappingFragment StoreEntitySet="login_out">
-                <ScalarProperty Name="l_id_id" ColumnName="l_id_id" />
-                <ScalarProperty Name="l_out" ColumnName="l_out" />
-                <ScalarProperty Name="l_in" ColumnName="l_in" />
-                <ScalarProperty Name="l_id" ColumnName="l_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="manager">
-            <EntityTypeMapping TypeName="ReviewPlatformModel.manager">
-              <MappingFragment StoreEntitySet="manager">
-                <ScalarProperty Name="mg_job_title" ColumnName="mg_job_title" />
-                <ScalarProperty Name="mg_mail" ColumnName="mg_mail" />
-                <ScalarProperty Name="mg_phone" ColumnName="mg_phone" />
-                <ScalarProperty Name="mg_name" ColumnName="mg_name" />
-                <ScalarProperty Name="mg_id" ColumnName="mg_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -815,6 +772,70 @@
                 <ScalarProperty Name="sr_date" ColumnName="sr_date" />
                 <ScalarProperty Name="sr_s_id" ColumnName="sr_s_id" />
                 <ScalarProperty Name="sr_id" ColumnName="sr_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="industry">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.industry">
+              <MappingFragment StoreEntitySet="industry">
+                <ScalarProperty Name="id_review_register" ColumnName="id_review_register" />
+                <ScalarProperty Name="id_register_name" ColumnName="id_register_name" />
+                <ScalarProperty Name="id_register" ColumnName="id_register" />
+                <ScalarProperty Name="id_review_license" ColumnName="id_review_license" />
+                <ScalarProperty Name="id_license_name" ColumnName="id_license_name" />
+                <ScalarProperty Name="id_license" ColumnName="id_license" />
+                <ScalarProperty Name="id_review_passbook" ColumnName="id_review_passbook" />
+                <ScalarProperty Name="id_passbook_name" ColumnName="id_passbook_name" />
+                <ScalarProperty Name="id_passbook" ColumnName="id_passbook" />
+                <ScalarProperty Name="id_owner_email" ColumnName="id_owner_email" />
+                <ScalarProperty Name="id_bank_name" ColumnName="id_bank_name" />
+                <ScalarProperty Name="id_area_code" ColumnName="id_area_code" />
+                <ScalarProperty Name="id_postal_code" ColumnName="id_postal_code" />
+                <ScalarProperty Name="id_city" ColumnName="id_city" />
+                <ScalarProperty Name="id_review" ColumnName="id_review" />
+                <ScalarProperty Name="id_mg_id_association" ColumnName="id_mg_id_association" />
+                <ScalarProperty Name="id_mg_id_snd" ColumnName="id_mg_id_snd" />
+                <ScalarProperty Name="id_mg_id_fst" ColumnName="id_mg_id_fst" />
+                <ScalarProperty Name="id_bank_acct_name" ColumnName="id_bank_acct_name" />
+                <ScalarProperty Name="id_bank_acct" ColumnName="id_bank_acct" />
+                <ScalarProperty Name="id_bank_code" ColumnName="id_bank_code" />
+                <ScalarProperty Name="id_email" ColumnName="id_email" />
+                <ScalarProperty Name="id_last_time" ColumnName="id_last_time" />
+                <ScalarProperty Name="id_room" ColumnName="id_room" />
+                <ScalarProperty Name="id_owner_phone" ColumnName="id_owner_phone" />
+                <ScalarProperty Name="id_extension" ColumnName="id_extension" />
+                <ScalarProperty Name="id_tel_owner" ColumnName="id_tel_owner" />
+                <ScalarProperty Name="id_owner_area_code" ColumnName="id_owner_area_code" />
+                <ScalarProperty Name="id_owner" ColumnName="id_owner" />
+                <ScalarProperty Name="id_tax_id" ColumnName="id_tax_id" />
+                <ScalarProperty Name="id_company" ColumnName="id_company" />
+                <ScalarProperty Name="id_fax" ColumnName="id_fax" />
+                <ScalarProperty Name="id_tel" ColumnName="id_tel" />
+                <ScalarProperty Name="id_address" ColumnName="id_address" />
+                <ScalarProperty Name="id_name" ColumnName="id_name" />
+                <ScalarProperty Name="id_it_id" ColumnName="id_it_id" />
+                <ScalarProperty Name="id_id" ColumnName="id_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="login_out">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.login_out">
+              <MappingFragment StoreEntitySet="login_out">
+                <ScalarProperty Name="l_id_id" ColumnName="l_id_id" />
+                <ScalarProperty Name="l_out" ColumnName="l_out" />
+                <ScalarProperty Name="l_in" ColumnName="l_in" />
+                <ScalarProperty Name="l_id" ColumnName="l_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="manager">
+            <EntityTypeMapping TypeName="ReviewPlatformModel.manager">
+              <MappingFragment StoreEntitySet="manager">
+                <ScalarProperty Name="mg_job_title" ColumnName="mg_job_title" />
+                <ScalarProperty Name="mg_mail" ColumnName="mg_mail" />
+                <ScalarProperty Name="mg_phone" ColumnName="mg_phone" />
+                <ScalarProperty Name="mg_name" ColumnName="mg_name" />
+                <ScalarProperty Name="mg_id" ColumnName="mg_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -1,6 +1,5 @@
 ﻿using PagedList;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebApplication1.Models;
@@ -309,9 +308,9 @@ namespace WebApplication1.Controllers
             return View(data);
         }
 
-        public ActionResult Edit_Manager(int subMemberID)
+        public ActionResult Edit_Manager(int subMemberID, bool viewMode)
         {
-            var data = GetSubsidyMemberData(subMemberID);
+            var data = GetSubsidyMemberData(subMemberID,  viewMode);
 
             return View(data);
         }
@@ -411,10 +410,10 @@ namespace WebApplication1.Controllers
                 Session["msg"] = "存檔成功";
             }
 
-            return View(GetSubsidyMemberData(data.Subsidy_Member.sm_id));
+            return View(GetSubsidyMemberData(data.Subsidy_Member.sm_id,data.ViewMode));
         }
 
-        private SubsidyMemberData GetSubsidyMemberData(int subMemberID)
+        private SubsidyMemberData GetSubsidyMemberData(int subMemberID,bool viewMode)
         {
             var data = new SubsidyMemberData();
 
@@ -442,7 +441,7 @@ namespace WebApplication1.Controllers
 
                 if (enterMonth == 0)
                 {
-                    data.Subsidy_Member.sm_qualifications= false;
+                    data.Subsidy_Member.sm_qualifications = false;
                     data.Subsidy_Member.sm_calculation = 0;
                 }
                 else
@@ -454,6 +453,7 @@ namespace WebApplication1.Controllers
                 }
             }
 
+            data.ViewMode = viewMode;
             return data;
         }
 
@@ -520,7 +520,7 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Subsidy");
         }
 
-        public ActionResult ReviewList(int subMemberID, int? page)
+        public ActionResult ReviewList(int subMemberID, int? page,string title)
         {
             var data = new SubsidyMemberData();
             int pageNum = page ?? 1;
@@ -533,6 +533,8 @@ namespace WebApplication1.Controllers
                 .OrderByDescending(x => x.smr_date)
                 .ThenByDescending(x => x.smr_time)
                 .ToPagedList(pageNum, 10);
+
+            ViewBag.Title=title+ ">補助人員審核記錄";
 
             return View(data);
         }

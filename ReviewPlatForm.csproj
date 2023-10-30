@@ -139,6 +139,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AjaxsController.cs" />
+    <Compile Include="Controllers\CaseQueryController.cs" />
     <Compile Include="Controllers\DownloadController.cs" />
     <Compile Include="Controllers\EmploymentInsuranceController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -160,15 +161,18 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="HtmlHelpers\DateInput.cs" />
+    <Compile Include="Models\CaseQueryViewModel.cs" />
     <Compile Include="Models\CommonViewModel.cs" />
     <Compile Include="Models\employment_insurance.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\IndustryModelView.cs" />
+    <Compile Include="Models\IndustryLoginViewModel.cs" />
+    <Compile Include="Models\IndustryViewModel.cs" />
     <Compile Include="Models\InsurListEdit.cs" />
     <Compile Include="Models\IsLogin.cs" />
+    <Compile Include="Models\LoginViewModel.cs" />
+    <Compile Include="Models\ManagerViewModel.cs" />
     <Compile Include="Models\Members.cs" />
-    <Compile Include="Models\SubMemberList.cs" />
     <Compile Include="Models\SubMembersEdit.cs" />
     <Compile Include="Models\Download\DownloadEdit.cs" />
     <Compile Include="Models\industry.cs">
@@ -212,7 +216,7 @@
     <Compile Include="Models\subsidy.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\SubsidyData.cs" />
+    <Compile Include="Models\SubsidyViewModel.cs" />
     <Compile Include="Models\SubsidyEdit.cs" />
     <Compile Include="Models\SubsidyIndustry.cs" />
     <Compile Include="Models\SubsidyMemberData.cs" />
@@ -230,6 +234,7 @@
     </Compile>
     <Compile Include="OpenXmlExcel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="assets\css\fontawesome\brands.css" />
@@ -477,7 +482,6 @@
     <Content Include="Views\Subsidy\Index.cshtml" />
     <Content Include="Views\Subsidy\Create.cshtml" />
     <Content Include="Views\Subsidy\Edit.cshtml" />
-    <Content Include="Views\Manager\Index.cshtml" />
     <Content Include="Views\Industry\Index.cshtml" />
     <Content Include="Views\Industry\Create.cshtml" />
     <Content Include="Views\Industry\Edit.cshtml" />
@@ -518,6 +522,12 @@
     <Content Include="Views\SubMembers\ReviewList.cshtml" />
     <Content Include="Views\EmploymentInsurance\Index.cshtml" />
     <Content Include="Views\Industry\Edit_Manager.cshtml" />
+    <Content Include="Views\Shared\Search.cshtml" />
+    <Content Include="Views\Login\ResetPassword.cshtml" />
+    <Content Include="Views\Manager\Index.cshtml" />
+    <Content Include="Views\Manager\CreateAndEdit.cshtml" />
+    <Content Include="Views\CaseQuery\Index.cshtml" />
+    <Content Include="Views\CaseQuery\RequestPaymentList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/Layout.cshtml";
 
-    int perm = Session["perm"] != null ? (int)Session["perm"] : 3;
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
     // 1. 無登入-1
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3

@@ -20,7 +20,8 @@
     var filePath = Url.Content("~/assets/upload/Industry/");
 }
 
-@model WebApplication1.Models.IndustryModelView.Edit_Manager
+@model WebApplication1.Models.IndustryViewModel.Edit_Manager
+@using WebApplication1.HtmlHelpers
 
 <main class="container-wrap">
     <div class="container-main">
@@ -28,13 +29,17 @@
             <div class="tool-item left">
                 <h3>首頁＞基本資料＞詳細資料</h3>
             </div>
-            <div class="tool-btn">
-                <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPwd", "Login", new {id=Model.Industry.id_id})'">修改密碼</button>
-            </div>
+
+            @if (perm == 0 || perm == 1)
+            {
+                <div class="tool-btn">
+                    <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("ResetPassword", "Login", new { industryID = Model.Industry.id_id, perm = 3 })'">修改密碼</button>
+                </div>
+            }
         </div>
 
         <div class="form-wrap">
-            @using (Html.BeginForm("Edit", "Industry", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            @using (Html.BeginForm("Edit_Manager", "Industry", FormMethod.Post, new { enctype = "multipart/form-data" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -190,28 +195,36 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <a href="@(filePath+Model.Industry.id_passbook)" target="_blank">銀行存摺</a>
+                                        <label>銀行存摺</label>
 
                                         @if (perm == 0 || perm == 1)
                                         {
                                             <div class="input file">
-                                                @*todo 測試檔案修改*@
+                                                @Html.HiddenFor(x => x.Industry.id_passbook)
                                                 @Html.TextBoxFor(x => x.PassBookFile, new { @type = "file" })
+
                                                 <span>@Model.Industry.id_passbook_name</span>
+
                                                 <button class="onfile" type="button">上傳檔案</button>
+												
                                             </div>
                                         }
+
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Industry.id_review_passbook, Model.ReviewOptions, "審核狀態")
+                                        </div>
                                     </div>
 
                                     <div class="form-input">
-                                        <a href="@(filePath+Model.Industry.id_register)" target="_blank">商業登記或稅籍證明</a>
+                                        <label>商業登記或稅籍證明</label>
 
                                         @if (perm == 0 || perm == 1)
                                         {
                                             <div class="input file">
+                                                @Html.HiddenFor(x => x.Industry.id_register)
                                                 @Html.TextBoxFor(x => x.RegisterFile, new { @type = "file" })
 
-                                                <span>@Model.Industry.id_passbook_name</span>
+                                                <span>@Model.Industry.id_register_name</span>
 
                                                 <button class="onfile" type="button">上傳檔案</button>
 
@@ -220,6 +233,10 @@
                                                 </div>
                                             </div>
                                         }
+
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Industry.id_review_register, Model.ReviewOptions, "審核狀態")
+                                        </div>
                                     </div>
                                 </div>
 
@@ -234,7 +251,8 @@
                                     <div class="form-input">
                                         <label class="required">銀行代碼(7碼)</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.Industry.id_bank_code, new { @required = "required", @minlength = "7", @maxlength = "7", @onkeydown = "return onlyNumber(event)", @readonly = readonlyAttribute })
+                                            @Html.TextBoxForWithReadonly(x => x.Industry.id_bank_code,perm==2, new { @minlength = "7", @maxlength = "7", @oninput = "this.value = this.value.replace(/[^0-9]/g, '').slice(0, this.maxLength)"})
+
                                             <a href="https://www.fisc.com.tw/TC/Service?Caid=51254999-5d15-4ddf-8e54-4b2cdb2a8399&CaStyleId=16%E6%9F%A5%E8%A9%A2" target="_blank">銀行代碼查詢</a>
                                         </div>
                                     </div>
@@ -242,21 +260,28 @@
                                     <div class="form-input">
                                         <label class="required">銀行帳號</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.Industry.id_bank_acct, new { @required = "required", @onkeydown = "return onlyNumber(event)", @readonly = readonlyAttribute })
+                                            @Html.TextBoxForWithReadonly(x => x.Industry.id_bank_acct,perm==2, new { @type="number"})
                                         </div>
                                     </div>
 
                                     <div class="form-input">
-                                        <a href="@(filePath+Model.Industry.id_passbook)" target="_blank">營業執照或登記證</a>
+                                        <label>營業執照或登記證</label>
 
                                         @if (perm == 0 || perm == 1)
                                         {
                                             <div class="input file">
-                                                @Html.TextBoxFor(x => x.License, new { @type = "file" })
+                                                @Html.HiddenFor(x => x.Industry.id_license)
+                                                @Html.TextBoxFor(x => x.LicenseFile, new { @type = "file" })
+
                                                 <span>@Model.Industry.id_license_name</span>
+
                                                 <button class="onfile" type="button">上傳檔案</button>
                                             </div>
                                         }
+
+                                        <div>
+                                            @Html.DropDownListFor(x => x.Industry.id_review_license, Model.ReviewOptions, "審核狀態")
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -266,28 +291,32 @@
                                     <div class="form-input">
                                         <label for="">初審人員</label>
                                         <div class="input">
-                                            <input value="@Model.InitialReviewer.mg_name" readonly />
+                                            <input value="@(Model.InitialReviewer?.mg_name)" readonly />
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="form-col">
-                                    <div class="form-input">
-                                        <label for="">複審人員</label>
-                                        <div class="input">
-                                            <input value="@Model.SecondaryReviewer.mg_name" readonly />
+                                @if (perm == 0 || perm == 1)
+                                {
+                                    <div class="form-col">
+                                        <div class="form-input">
+                                            <label for="">複審人員</label>
+                                            <div class="input">
+                                                <input value="@(Model.SecondaryReviewer?.mg_name)" readonly />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <div class="form-col">
-                                    <div class="form-input">
-                                        <label for="">協會審查</label>
-                                        <div class="input">
-                                            <input value="@Model.AssociationReviewer.mg_name" readonly />
+                                    <div class="form-col">
+                                        <div class="form-input">
+                                            <label for="">協會審查</label>
+                                            <div class="input">
+                                                <input value="@(Model.AssociationReviewer?.mg_name)" readonly />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
+
                             </div>
 
                             <div class="form-btn">
@@ -318,15 +347,4 @@
             $(this).parents('.popup-wrap.img').toggle();
         })
     })
-
-    function onlyNumber(evt) {
-        var e = event || evt;
-        var keyCode = e.keyCode || e.which;
-        if ((keyCode >= 48 && keyCode <= 57) || (keyCode >= 96 && keyCode <= 105) || keyCode == 8 || keyCode == 46 || keyCode == 37 || keyCode == 39) {
-            return true;
-        } else {
-            e.preventDefault();
-            return false;
-        }
-    }
 </script>

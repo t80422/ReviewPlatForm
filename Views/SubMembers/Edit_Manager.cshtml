@@ -1,4 +1,7 @@
-﻿@{
+﻿@model WebApplication1.Models.SubsidyMemberData
+@using WebApplication1.HtmlHelpers
+
+@{
     Layout = "~/Views/Shared/Layout.cshtml";
 
     int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
@@ -9,7 +12,7 @@
     var attribute = new Dictionary<string, object>();
     var disable = new Dictionary<string, object>();
 
-    if (perm == 2)
+    if (perm == 2 || Model.ViewMode)
     {
         attribute["readonly"] = "readonly";
         disable["disabled"] = "disabled";
@@ -17,9 +20,6 @@
 
     var filePath = Url.Content("~/assets/upload/Members/");
 }
-
-@model WebApplication1.Models.SubsidyMemberData
-@using WebApplication1.HtmlHelpers
 
 @functions{
     public Dictionary<string, object> AddTempAttribute(Dictionary<string, object> attribute, string key, object value)
@@ -39,6 +39,7 @@
                 @Html.HiddenFor(x => x.Subsidy_Member.sm_s_id)
                 @Html.HiddenFor(x => x.Subsidy_Member.sm_id)
                 @Html.HiddenFor(x => x.Subsidy_Member.sm_mb_id)
+                @Html.HiddenFor(x => x.ViewMode)
 
                 <div class="form-main">
                     <div class="form-title">
@@ -101,7 +102,7 @@
                                     <div class="form-input">
                                         <label for="">加保日期</label>
                                         <div class="input">
-                                            @if (perm == 2)
+                                            @if (perm == 2 || Model.ViewMode)
                                             {
                                                 <input value="@(Model.Member.mb_add_insur_date?.ToString("yyyy/MM/dd"))" readonly />
                                             }
@@ -115,7 +116,7 @@
                                     <div class="form-input">
                                         <label for="">退保日期</label>
                                         <div class="input">
-                                            @if (perm == 2)
+                                            @if (perm == 2 || Model.ViewMode)
                                             {
                                                 <input value="@(Model.Member.mb_surrender_date?.ToString("yyyy/MM/dd"))" readonly />
                                             }
@@ -136,7 +137,7 @@
                                     <div class="form-input">
                                         <label for="">到職轉正日期</label>
                                         <div class="input">
-                                            @if (perm == 2)
+                                            @if (perm == 2 || Model.ViewMode)
                                             {
                                                 <input value="@(Model.Member.mb_full_time_date?.ToString("yyyy/MM/dd"))" readonly />
                                             }
@@ -153,12 +154,19 @@
                                         <a href="@(filePath+Model.Member.mb_contract)" download>下載</a>
 
                                         <div class="input">
-                                            @Html.DropDownListFor(x => x.Member.mb_review_contract, Model.FileReviewOptions)
+                                            @if (Model.ViewMode)
+                                            {
+                                                @Html.DropDownListFor(x => x.Member.mb_review_contract, Model.FileReviewOptions, "審核狀態", new { @disabled= "disabled" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(x => x.Member.mb_review_contract, Model.FileReviewOptions, "審核狀態")
+                                            }
                                         </div>
                                     </div>
 
 
-                                    @if (perm < 2 && perm >= 0)
+                                    @if (perm < 2 && perm >= 0 && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -183,12 +191,18 @@
                                         <a href="@(filePath+Model.Subsidy_Member.sm_income_certificate)" download>下載</a>
 
                                         <div class="input">
-                                            @Html.DropDownListFor(x => x.Subsidy_Member.sm_review_income_certificate, Model.FileReviewOptions)
+                                            @if (Model.ViewMode)
+                                            {
+                                                @Html.DropDownListFor(x => x.Subsidy_Member.sm_review_income_certificate, Model.FileReviewOptions, "審核狀態", new { @disabled = "disabled" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(x => x.Subsidy_Member.sm_review_income_certificate, Model.FileReviewOptions, "審核狀態")
+                                            }
                                         </div>
                                     </div>
 
-
-                                    @if (perm < 2 && perm >= 0)
+                                    @if (perm < 2 && perm >= 0 && !Model.ViewMode)
                                     {
                                         <div class="form-input">
                                             <div class="input file">
@@ -223,7 +237,7 @@
                                     <div class="form-input">
                                         <label>符合申請(起)</label>
                                         <div class="input">
-                                            @if (perm == 2)
+                                            @if (perm == 2 || Model.ViewMode)
                                             {
                                                 <input value="@(Model.Subsidy_Member.sm_agree_start?.ToString("yyyy/MM/dd"))" readonly />
                                             }
@@ -237,7 +251,7 @@
                                     <div class="form-input">
                                         <label>符合申請(迄)</label>
                                         <div class="input">
-                                            @if (perm == 2)
+                                            @if (perm == 2 || Model.ViewMode)
                                             {
                                                 <input value="@(Model.Subsidy_Member.sm_agree_end?.ToString("yyyy/MM/dd"))" readonly />
                                             }
@@ -251,7 +265,7 @@
                                     <div class="form-input">
                                         <label>申請金額</label>
                                         <div class="input">
-                                            @if (perm == 2)
+                                            @if (perm == 2 || Model.ViewMode)
                                             {
                                                 @Html.TextBoxFor(x => x.Subsidy_Member.sm_advance_money, new { @required = "required", @readonly = "readonly", @type = "number" })
                                             }
@@ -273,7 +287,14 @@
                                     <div class="form-input">
                                         <label>審核狀態</label>
                                         <div class="input select">
-                                            @Html.DropDownListFor(x => x.Subsidy_Member.sm_review, Model.ReviewOptions, "審核狀態")
+                                            @if (Model.ViewMode)
+                                            {
+                                                @Html.DropDownListFor(x => x.Subsidy_Member.sm_review, Model.ReviewOptions, "審核狀態", new { @disabled = "disabled" })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(x => x.Subsidy_Member.sm_review, Model.ReviewOptions, "審核狀態")
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -289,8 +310,7 @@
                                     <div class="form-input">
                                         <label>系統試算</label>
                                         <div class="input">
-                                            @*<input value="@Model.Calculation" readonly />*@
-                                            @Html.TextBoxFor(x => x.Subsidy_Member.sm_calculation, perm == 2)
+                                            @Html.TextBoxForWithReadonly(x => x.Subsidy_Member.sm_calculation, perm == 2||Model.ViewMode)
                                         </div>
                                     </div>
                                 </div>

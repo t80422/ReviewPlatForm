@@ -9,7 +9,8 @@
     <div class="container-main">
         <div class="tool-wrap">
             <div class="tool-item left">
-                <h3>首頁>補助申請>補助申請人員審核記錄</h3>
+                @*<h3>首頁>補助申請>補助申請人員審核記錄</h3>*@
+                <h3>@ViewBag.Title</h3>
             </div>
         </div>
 
@@ -17,7 +18,6 @@
             <div class="form-title">
                 <h3>補助申請人員審核記錄 案號 @Model.Subsidy.s_no @Model.Member.mb_name</h3>
             </div>
-            <!--todo 模組化列表View-->
             <div class="list-overflow">
                 <div class="list-main">
                     <div class="list-title pr-2 pl-2">
@@ -47,7 +47,7 @@
         </div>
 
         <div class="pages-wrap">
-            @Html.PagedListPager(Model.ReviewList, page => Url.Action("ReviewList", new { page }), new PagedListRenderOptions()
+            @Html.PagedListPager(Model.ReviewList, page => Url.Action("ReviewList", new { page,title=ViewBag.Title }), new PagedListRenderOptions()
             {
                 DisplayLinkToFirstPage = PagedListDisplayMode.Always,
                 DisplayLinkToLastPage = PagedListDisplayMode.Always,

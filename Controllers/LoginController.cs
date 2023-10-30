@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using WebApplication1.Models;
+using WebApplication1.Models.Industry;
 
 namespace WebApplication1.Controllers
 {
@@ -9,6 +11,13 @@ namespace WebApplication1.Controllers
     {
         private ReviewPlatformEntities db = new ReviewPlatformEntities();
         private AjaxsController ajax = new AjaxsController();
+
+        private enum LogInOut
+        {
+            Login,
+            Logout,
+        }
+
 
         // GET: Login
         public ActionResult Index()
@@ -20,7 +29,7 @@ namespace WebApplication1.Controllers
         public ActionResult HomePage()
         {
             return Redirect("index.html");
-            
+
         }
 
 
@@ -32,7 +41,6 @@ namespace WebApplication1.Controllers
             {
                 var hasPassowrd = ajax.ConvertToSHA256(password);
                 var user = db.user_accounts.Where(x => x.ua_acct == account && x.ua_psw == hasPassowrd).FirstOrDefault();
-
 
                 if (user != null)
                 {
@@ -64,6 +72,8 @@ namespace WebApplication1.Controllers
                         int userID = (int)Session["UserID"];
                         var taxID = db.industry.Find(userID).id_tax_id;
 
+                        LogLogInOutTime((int)user.ua_user_id, LogInOut.Login);
+
                         if (password == taxID)
                         {
                             Session["First"] = "Y";
@@ -75,6 +85,13 @@ namespace WebApplication1.Controllers
                             return RedirectToAction("Index", "Subsidy");
                         }
                     }
+
+                    if ((int)Session["perm"] == 4)
+                    {
+                        Session["ResetPW"] = "N";
+                        return RedirectToAction("Index", "CaseQuery");
+                    }
+
                     Session["ResetPW"] = "N";
                     return RedirectToAction("Index", "Industry");
                 }
@@ -93,11 +110,14 @@ namespace WebApplication1.Controllers
 
         public ActionResult Logout()
         {
-            Session["user_id"] = null;
+            if ((int)Session["perm"] == 3) LogLogInOutTime((int)Session["UserID"], LogInOut.Logout);
+
+            Session["UserID"] = null;
             Session["perm"] = null;
             Session["acct"] = null;
             Session["msg"] = "登出成功";
             Session["logintime"] = null;
+
             return RedirectToAction("Index");
         }
 
@@ -107,43 +127,7 @@ namespace WebApplication1.Controllers
             Session["ResetPW"] = "Y";
             return View(id);
         }
-        //modify by v0.8
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult ResetPwd(string oldPassword, string newPassword, string confirmPassword, int id)
-        //{
-        //    if (newPassword == confirmPassword)
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-        //            var update = db.user_accounts.Where(x => x.ua_user_id == id).First();
-        //            if ((int)Session["perm"] < 3 || update.ua_psw == ajax.ConvertToSHA256(oldPassword))
-        //            {
-        //                update.ua_psw = ajax.ConvertToSHA256(newPassword);
 
-        //                db.SaveChanges();
-
-        //                //modify by v0.8
-        //                //return RedirectToAction("Index");
-        //                //==============
-        //                Session["ResetPW"] = "N";
-        //                return RedirectToAction("Index","Subsidy");
-        //                //modify by v0.8
-        //            }
-        //            else
-        //            {
-        //                ViewBag.Message = "舊密碼輸入錯誤";
-        //            }
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ViewBag.Message = "新密碼與確認密碼不相符";
-        //    }
-
-        //    return View(id);
-        //}
-        //==============        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ResetPwd(string oldPassword, string newPassword, string confirmPassword, int id)
@@ -187,6 +171,76 @@ namespace WebApplication1.Controllers
 
             return View(id);
         }
-        //modify by v0.8
+
+        public ActionResult ResetPassword(int industryID, int perm)
+        {
+            return View(GetLoginData(industryID, perm));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResetPassword(LoginViewModel data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(GetLoginData((int)data.User_Accounts.ua_user_id, (int)data.User_Accounts.ua_perm));
+            }
+
+            if (data.NewPassword != data.CheckNewPassword)
+            {
+                Session["msg"] = "新密碼 與 確認密碼 不相同!";
+                return View(GetLoginData((int)data.User_Accounts.ua_user_id, (int)data.User_Accounts.ua_perm));
+            }
+
+            var update = db.user_accounts.Find(data.User_Accounts.ua_id);
+
+            update.ua_psw = ajax.ConvertToSHA256(data.NewPassword);
+
+            db.SaveChanges();
+            Session["msg"] = "儲存成功";
+
+            return RedirectToAction("Edit_Manager", "Industry", new { industryID = data.User_Accounts.ua_user_id });
+        }
+
+        private LoginViewModel GetLoginData(int industryID, int perm)
+        {
+            var data = new LoginViewModel();
+            data.User_Accounts = db.user_accounts.First(x => x.ua_user_id == industryID && x.ua_perm == perm);
+
+            return data;
+        }
+
+        private void LogLogInOutTime(int industryID, LogInOut logInOut)
+        {
+
+            switch (logInOut)
+            {
+                case LogInOut.Login:
+                    var insert = new login_out();
+
+                    insert.l_id_id = industryID;
+                    insert.l_in = DateTime.Now;
+
+                    db.login_out.Add(insert);
+                    db.SaveChanges();
+
+                    Session["LogTimeID"] = insert.l_id;
+
+                    break;
+
+                case LogInOut.Logout:
+                    var id = (int)Session["LogTimeID"];
+                    var update = db.login_out.First(x => x.l_id == id);
+
+                    update.l_out = DateTime.Now;
+
+                    db.SaveChanges();
+
+                    break;
+
+                default:
+                    break;
+            }
+        }
     }
 }

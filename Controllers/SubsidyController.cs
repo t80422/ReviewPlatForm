@@ -1,7 +1,6 @@
 ﻿using PagedList;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web.Mvc;
 using WebApplication1.Models;
@@ -166,7 +165,7 @@ namespace WebApplication1.Controllers
                 {
                     s_id_id = data.id_id,
                     s_empcount = data.EmpCount,
-                    s_date_time = data.Date,
+                    s_date_time = DateTime.Now,
                     s_money = data.Money ?? 0,
                     s_last_time = DateTime.Now,
                     s_application = Application,
@@ -512,66 +511,57 @@ namespace WebApplication1.Controllers
             return View(data);
         }
 
-        public ActionResult Edit_Manager(int subsidyID)
-        {
-            var subsidy = db.subsidy.Find(subsidyID);
-            var industry = db.industry.First(x => x.id_id == subsidy.s_id_id);
-            var initialReviewer = db.manager.Find(subsidy.s_mg_id_fst);
-            var secondaryReviewer = db.manager.Find(subsidy.s_mg_id_snd);
-            var associationReviewer = db.manager.Find(subsidy.s_mg_id_association);
+        public ActionResult Edit_Manager(int subsidyID,bool isView,int title)
+        {           
+            var model = new SubsidyViewModel.Edit_Mangager();
 
-            var fileReviewOptions = new List<SelectListItem>
-            {
-                new SelectListItem{Text="待補件",Value="待補件"},
-                new SelectListItem{Text="審核中",Value="審核中"},
-                new SelectListItem{Text="通過",Value="通過"},
-            };
-            var reviewOptions = new List<SelectListItem>
-            {
-                new SelectListItem{Text="待審核",Value="待審核"},
-                new SelectListItem{Text="審核中",Value="審核中"},
-                new SelectListItem{Text="待補件",Value="待補件"},
-                new SelectListItem{Text="退件",Value="退件"},
-                new SelectListItem{Text="審核完成",Value="審核完成"},
-            };
-
-            var subsidyData = new Subsidy_EditManager
-            {
-                Subsidy = subsidy,
-                Industry = industry,
-                ReviewOptions = reviewOptions,
-                FileReviewOptions = new SelectList(fileReviewOptions, "Value", "Text", string.Empty),
-                InitialReviewer = initialReviewer,
-                SecondaryReviewer = secondaryReviewer,
-                AssociationReviewer = associationReviewer,
-                SubMemberList = db.subsidy_member.
+            model.Subsidy = db.subsidy.Find(subsidyID);
+            model.Industry = db.industry.First(x => x.id_id == model.Subsidy.s_id_id);
+            model.InitialReviewer = db.manager.Find(model.Subsidy.s_mg_id_fst);
+            model.SecondaryReviewer = db.manager.Find(model.Subsidy.s_mg_id_snd);
+            model.AssociationReviewer = db.manager.Find(model.Subsidy.s_mg_id_association);
+            model.SubMemberList = db.subsidy_member.
                     Where(x => x.sm_s_id == subsidyID).
-                    Join(db.member, x => x.sm_mb_id, y => y.mb_id, (x, y) => new SubMemberList
+                    Join(db.member, x => x.sm_mb_id, y => y.mb_id, (x, y) => new SubsidyViewModel.SubMemberList
                     {
                         Subsidy_Member = x,
                         Member = y
-                    }).ToList()
-            };
+                    }).ToList();
 
-            int sumAdvanceMoney = subsidyData.SubMemberList
+            model.TrialAmount = model.SubMemberList
                 .Where(x => x.Member.mb_review == "通過")
-                .Sum(x => x.Subsidy_Member.sm_advance_money.Value);
+                .Sum(x => x.Subsidy_Member.sm_advance_money.Value); ;
 
-            subsidyData.TrialAmount = sumAdvanceMoney;
-
-            double room = industry?.id_room ?? 0;
+            double room = model.Industry?.id_room ?? 0;
             double maxMember = Math.Ceiling(room / 8);
             ViewBag.Maxmember = maxMember;
 
             if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
-            ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == industry.id_id).Count();
+            ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == model.Industry.id_id).Count();
 
-            return View(subsidyData);
+            //判斷是否觀看模式
+            if(isView) model.ViewMode = true;
+
+            switch (title)
+            {
+                case 1:
+                    ViewBag.Title = "首頁＞補助申請＞補助申請詳細資料";
+                    break;
+
+                case 2:
+                    ViewBag.Title = "首頁＞案件查詢＞詳細資料";
+                    break;
+
+                default:
+                    break;
+            }
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit_Manager(Subsidy_EditManager data)
+        public ActionResult Edit_Manager(SubsidyViewModel.Edit_Mangager data)
         {
             if (!ModelState.IsValid)
             {
@@ -795,19 +785,34 @@ namespace WebApplication1.Controllers
             return View(data);
         }
 
-        public ActionResult ReviewList(int subsidyID, int? page)
+        public ActionResult ReviewList(int subsidyID, int title, int? page = 1)
         {
             var data = new Subsidy_ReviewIndex();
-            int pageNum = page ?? 1;
 
             data.Subsidy = db.subsidy.Find(subsidyID);
             data.Subsidy_ReviewList = db.subsidy_review
                 .Where(x => x.sr_s_id == subsidyID)
                 .OrderByDescending(x => x.sr_date)
                 .ThenByDescending(x => x.sr_time)
-                .ToPagedList(pageNum, 10);
+                .ToPagedList((int)page, 10);
+
+            //Title設定
+            switch (title)
+            {
+                case 1:
+                    ViewBag.Title = "首頁＞補助申請>審核紀錄";
+                    break;
+
+                case 2:
+                    ViewBag.Title = "首頁＞案件查詢>審核紀錄";
+                    break;
+
+                default:
+                    break;
+            }
 
             return View(data);
         }
+
     }
 }

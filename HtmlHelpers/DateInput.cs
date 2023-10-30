@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
@@ -53,5 +54,30 @@ namespace WebApplication1.HtmlHelpers
             return htmlHelper.TextBoxFor(expression, "{0:yyyy-MM}", attributes);
         }
 
+        public static MvcHtmlString TextBoxForWithReadonly<TModel,TProperty>(
+            this HtmlHelper<TModel> htmlHelper,
+            Expression<Func<TModel,TProperty>> expression,
+            bool isReadOnly, 
+            object htmlAttributes = null) 
+        {
+            var attributes=new Dictionary<string,object>();
+
+            if (isReadOnly)
+            {
+                attributes["readonly"] = "readonly";
+            }
+
+            if(htmlAttributes != null)
+            {
+                var additionalAttributes = HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+
+                foreach (var attribute in additionalAttributes)
+                {
+                    attributes[attribute.Key] = attribute.Value;
+                }
+            }
+
+            return htmlHelper.TextBoxFor(expression, attributes);
+        }
     }
 }

@@ -1,0 +1,93 @@
+﻿@model WebApplication1.Models.ManagerViewModel.CreateOrEdit
+
+@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
+    string createOrEdit = Model.Manager?.mg_id == null ? "Create" : "Edit";
+}
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁＞帳號管理＞操作</h3>
+            </div>
+        </div>
+
+        <div class="form-wrap">
+            @using (Html.BeginForm(createOrEdit))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                if (createOrEdit == "Edit")
+                {
+                    @Html.HiddenFor(x => x.Manager.mg_id)
+                    @Html.HiddenFor(x=>x.User_Accounts.ua_id)
+                }
+
+                <div class="form-main">
+                    <div class="form-title">
+                        <h3>帳號管理 新增及修改</h3>
+                    </div>
+
+                    <div class="form-content">
+                        <div class="form-flex">
+                            <div class="form-group">
+                                <div class="form-col">
+                                    <div class="form-input">
+                                        <label>姓名</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Manager.mg_name)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>手機</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Manager.mg_phone)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>Email</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Manager.mg_mail)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>職稱</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.Manager.mg_job_title)
+                                        </div>
+                                    </div>
+
+                                    @if (perm == 0)
+                                    {
+                                        <div class="form-input">
+                                            <label>權限</label>
+                                            <div class="input select">
+                                                @Html.DropDownListFor(x => x.User_Accounts.ua_perm, Model.PermissionsOptions as IEnumerable<SelectListItem>, "--請選擇--")
+                                            </div>
+                                        </div>
+                                    }
+
+                                </div>
+                            </div>
+
+                            <div class="form-btn">
+                                <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
+                                <button class="btn-submit" type="submit" onclick="">儲存</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</main>

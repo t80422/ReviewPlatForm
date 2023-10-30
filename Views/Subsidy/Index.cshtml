@@ -112,7 +112,7 @@
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("Edit","Industry",new {id=data.id_id})" target="_blank">@data.id_name</a>
+                                        <a href="@Url.Action("Edit_Manager","Industry",new {industryID=data.id_id})" target="_blank">@data.id_name</a>
                                     }
                                 </div>
                             }
@@ -143,7 +143,7 @@
                                 </div>
 
                                 <div class="f-1">
-                                    @if (data.s_review == "退件" || data.s_review == "待補件"  || data.s_review == "待審核")
+                                    @if (data.s_review == "退件" || data.s_review == "待補件" || data.s_review == "待審核")
                                     {
                                         <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "Subsidy", new {id=data.s_id})';event.stopPropagation();"></button>
                                     }
@@ -159,21 +159,20 @@
                             else if (perm >= 0)
                             {
                                 <div class="f-1">
-                                    <button class="btn-edit" onclick="location.href='@Url.Action("Edit_Manager", new { subsidyID = data.s_id })'"></button>
+                                    <button class="btn-edit" onclick="location.href='@Url.Action("Edit_Manager", new { subsidyID = data.s_id,isView=false,title=1})'"></button>
                                 </div>
 
                                 <div class="f-1">
-                                    <button class="btn-details" onclick="location.href='@Url.Action("ReviewList", new {subsidyID=data.s_id})'"></button>
+                                    <button class="btn-details" onclick="location.href='@Url.Action("ReviewList", new {subsidyID=data.s_id,title=1})'"></button>
                                 </div>
                             }
 
                             @if (perm == 0 || perm == 1)
                             {
                                 <div class="f-1">
-                                    @Html.DropDownList("Review"+data.s_id, ViewBag.Reviewers as IEnumerable<SelectListItem>, new { onchange = "changePerson(this.name,this.value)" })
+                                    @Html.DropDownList("Review" + data.s_id, ViewBag.Reviewers as IEnumerable<SelectListItem>, new { onchange = "changePerson(this.name,this.value)" })
                                 </div>
                                 <script>
-                                    //alert("Review" + @data.s_id);
                                     showPerson( @data.s_id, @data.s_mg_id_fst.ToString());
                                 </script>
                             }
@@ -184,13 +183,13 @@
         </div>
 
         <div class="pages-wrap">
-            @Html.PagedListPager(Model.Subsidies, page => Url.Action("Index", "Subsidy", new { page }), new PagedListRenderOptions()
-       {
-           DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-           DisplayLinkToLastPage = PagedListDisplayMode.Always,
-           DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-           DisplayLinkToNextPage = PagedListDisplayMode.Always
-       })
+            @Html.PagedListPager(Model.Subsidies, page => Url.Action("Index", "Subsidy", new { page, key = Request.QueryString["key"], review = Request.QueryString["review"] }), new PagedListRenderOptions()
+            {
+                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always
+            })
         </div>
     </div>
 
@@ -207,7 +206,7 @@
                 }
             });
         }
-        
+
         function openPopup(id, type) {
             let popupClass, actionUrl;
 

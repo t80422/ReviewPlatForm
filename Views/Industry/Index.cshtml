@@ -3,9 +3,14 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
 }
 
-@model WebApplication1.Models.IndustryModelView.Index
+@model WebApplication1.Models.IndustryViewModel.Index
 @using PagedList.Mvc;
 @using PagedList;
 
@@ -20,44 +25,49 @@
                 <button class="btn-add" onclick="location.href='@Url.Action("Create")'">新增</button>
                 <!--mark by v0.9-->
                 @*<button class="btn-add" onClick="export_file.click()">匯入</button>
-            <input type="file" name="export_file" style="display:none;" id="export_file" accept=".xlsx " />*@
+                    <input type="file" name="export_file" style="display:none;" id="export_file" accept=".xlsx " />*@
             </div>
 
-            <div class="tool-search">
-                <input type="text" placeholder="請輸入關鍵字搜尋">
-            </div>
+            <form action="@Url.Action("Index")" method="get">
+                <div class="tool-btn">
+                    <input name="key" type="text" placeholder="請輸入關鍵字搜尋">
+                    <button class="btn-add" type="submit">搜尋</button>
+                </div>
+            </form>
         </div>
 
         <div class="list-wrap">
-            <div class="form-title">
-                <h3>旅宿業者</h3>
-            </div>
-
             <div class="list-overflow">
                 <div class="list-main">
+                    <div class="form-title">
+                        <h3>旅宿業者</h3>
+                    </div>
+
                     <div class="list-title pr-2 pl-2">
-                        <div class="f-1 ta-left ml-6">旅宿名稱</div>
-                        <div class="f-1 ta-left">公司名稱</div>
-                        <div class="f-1">承辦人</div>
-                        <div class="f-1">承辦人手機</div>
-                        <div class="f-1">統編</div>
-                        <div class="f-1">審核狀態</div>
-                        <div class="f-1">操作</div>
+                        <div class="f-3">旅宿名稱</div>
+                        <div class="f-3">公司名稱</div>
+                        <div class="f-3">承辦人</div>
+                        <div class="f-3">承辦人手機</div>
+                        <div class="f-3">統編</div>
+                        <div class="f-3">審核狀態</div>
+                        <div class="f-1">詳細資料</div>
+                        <div class="f-1">審核紀錄</div>
                     </div>
 
                     @foreach (var data in Model.Industries)
                     {
                         <div class="list-row pr-2 pl-2">
-                            <div class="f-1 ta-left ml-6">@data.id_name</div>
-                            <div class="f-1 ta-left">@data.id_company</div>
-                            <div class="f-1">@data.id_owner </div>
-                            <div class="f-1">@data.id_owner_phone</div>
-                            <div class="f-1">@data.id_tax_id</div>
-                            <div class="f-1">@data.id_review</div>
+                            <div class="f-3">@data.id_name</div>
+                            <div class="f-3">@data.id_company</div>
+                            <div class="f-3">@data.id_owner </div>
+                            <div class="f-3">@data.id_owner_phone</div>
+                            <div class="f-3">@data.id_tax_id</div>
+                            <div class="f-3">@data.id_review</div>
                             <div class="f-1">
-                                <button class="btn-details" onClick="location.href='@Url.Action("Detail", new {id=@data.id_id})'"></button>
-                                <button class="btn-members" onClick="location.href='@Url.Action("Index","Members")'"></button>
-                                <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "Industry", new {id=data.id_id})'"></button>
+                                <button class="btn-edit" onClick="location.href='@Url.Action("Edit_Manager", "Industry", new { industryID = data.id_id })'"></button>
+                            </div>
+                            <div class="f-1">
+                                <button class="btn-details" onClick="location.href='@Url.Action()'"></button>
                             </div>
                         </div>
                     }
@@ -65,43 +75,45 @@
             </div>
         </div>
 
-        <!-- pages -->
         <div class="pages-wrap">
-            @Html.PagedListPager(Model.Industries, page => Url.Action("Index", new { page }), new PagedListRenderOptions()
-       {
-           DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-           DisplayLinkToLastPage = PagedListDisplayMode.Always,
-           DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-           DisplayLinkToNextPage = PagedListDisplayMode.Always
-       })
+            @Html.PagedListPager(Model.Industries, page => Url.Action("Index", new { page, key = Request.QueryString["key"]}), new PagedListRenderOptions()
+            {
+                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always
+            })
         </div>
     </div>
 </main>
 
-
-<script>
-    $('#export_file').on('change', function (e) {
-        let file = e.target.files[0];
-        if (file) {
-            var data = new FormData();
-            data.append("file", file);
-            fetch('@Url.Action("Import","Industry")', {
-                method: 'POST',
-                body: data,
-            })
-            .then(res => res.text())
-            .then(data => {
-                var res = JSON.parse(data);
-                alert(res);
-                //if (res.success == "1") {
-                //    alert("匯入成功");
-                //} else {
-                //    alert("匯入失敗");
-                //}
-            })
-        }
-        else {
-            alert("沒有檔案");
-        }
-    })
-</script>
+<!--modify by v0.10-->
+@*<script>
+        $('#export_file').on('change', function (e) {
+            let file = e.target.files[0];
+            if (file) {
+                var data = new FormData();
+                data.append("file", file);
+                fetch('@Url.Action("Import","Industry")', {
+                    method: 'POST',
+                    body: data,
+                })
+                .then(res => res.text())
+                .then(data => {
+                    var res = JSON.parse(data);
+                    alert(res);
+                    //if (res.success == "1") {
+                    //    alert("匯入成功");
+                    //} else {
+                    //    alert("匯入失敗");
+                    //}
+                })
+            }
+            else {
+                alert("沒有檔案");
+            }
+        })
+    </script>*@
+<!---->
+<script src="~/Scripts/common.js"></script>
+<!--modify by v0.10-->

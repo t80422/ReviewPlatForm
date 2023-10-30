@@ -1,78 +1,89 @@
-﻿
+﻿@*只有管理者使用*@
+
 @{
-    ViewBag.Title = "Index";
-    Layout = "";
+    Layout = "~/Views/Shared/Layout.cshtml";
+
+    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+    // 1. 無登入-1
+    // 2. 管理者0、PM1、工讀生2
+    // 3. 業者3
 }
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>@Session["title"]</title>
-    <link href="image/favico.ico" rel="shortcut icon">
-    <link rel="stylesheet" href="~/assets/css/style.css">
-    <link rel="stylesheet" href="~/assets/css/style2.css">
-    <script src="~/assets/js/jquery-2.1.4.min.js"></script>
+@model WebApplication1.Models.ManagerViewModel.Index
+@using PagedList.Mvc;
 
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁＞帳號管理</h3>
+            </div>
 
-</head>
-<body>
-    <article id="wrap" class="is-login">
-        <main class="login-wrap">
-            <div class="login-main">
-                <figure class="login-logo">
-                    <img src="~/assets/image/logo.png">
-                    <h2 class="login-h2">交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助-管理者登入</h2>
-                </figure>
-                @using (Html.BeginForm("Login", "Login", FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="login-form">
-                        <div class="login-input is-account">
-                            <input type="text" placeholder="帳號" required name="account">
-                        </div>
-                        <div class="login-input is-password">
-                            <input type="password" placeholder="密碼" required name="password">
-                        </div>
-                        <div class="login-btn">
-                            <button class="btn-login" type="submit">登入</button>
-                        </div>
+            <div class="tool-btn">
+                <button class="btn-add" onclick="location.href='@Url.Action("Create")'">新增</button>
+            </div>
+        </div>
+
+        <div class="list-wrap">
+            <div class="form-title">
+                <h3>帳號管理</h3>
+            </div>
+
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-3">姓名</div>
+                        <div class="f-3">帳號</div>
+                        <div class="f-3">權限</div>
+                        <div class="f-3">操作</div>
                     </div>
-                }
+
+                    @foreach (var data in Model.ManagerAccounts)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-1">@data.Manager.mg_name</div>
+                            <div class="f-1">@data.User_Accounts.ua_acct</div>
+                            <div class="f-1">@data.PermissionsText</div>
+                            <div class="f-1">
+                                <button class="btn-edit" onClick="location.href='@Url.Action("Edit", new {managerID=data.Manager.mg_id,permission=data.User_Accounts.ua_perm})'"></button>
+                                <button class="btn-del" onClick='openPopup("@data.Manager.mg_id","@data.User_Accounts.ua_perm","delete")'></button>
+
+                            </div>
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="login-bg">
-                <img src="~/assets/image/bg.png" alt="">
-            </div>
-        </main>
-    </article>
-</body>
-<style>
-    .login-logo {
-        margin-bottom: 0;
-    }
+        </div>
 
-    .login-h3 {
-        color: var(--c1);
-        text-align: center;
-        font-size: 0.8vw;
-    }
-
-    .login-logo img {
-        max-width: 55% !important;
-    }
-</style>
-
-@if (Session["msg"] != null && !String.IsNullOrEmpty(Session["msg"].ToString()))
-{
-    <script>
-            $(function () {
-                alert("@Session["msg"].ToString()");
+        <div class="pages-wrap">
+            @Html.PagedListPager(Model.ManagerAccounts, page => Url.Action("Index", new { page}), new PagedListRenderOptions()
+            {
+                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always
             })
-    </script>
-    { Session["msg"] = null; }
-}
-</html>
+        </div>
+    </div>
+</main>
 
+<script>
+    function openPopup(managerID, permission, type) {
+    let popupClass, actionUrl;
+
+    //刪除視窗
+    if (type == 'delete') {
+        popupClass = '.js-del-popup';
+        actionUrl = '@Url.Action("Delete")' + "?managerID=" + managerID + "&permission=" + permission;
+    }
+
+    $(".popup-overlay," + popupClass).fadeIn();
+    $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+    $(".popup-overlay, " + popupClass + " .popup-btn .btn-cancel").on('click', function () {
+        $(".popup-overlay, " + popupClass).fadeOut();
+    });
+    $(popupClass + ' .popup-btn .btn-submit').on('click', function () {
+        window.location.href = actionUrl;
+    });
+}
+</script>
