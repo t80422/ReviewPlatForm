@@ -92,6 +92,12 @@ public partial class industry
 
     public string id_review_register { get; set; }
 
+    public Nullable<int> id_division_case { get; set; }
+
+    public bool id_business_status { get; set; }
+
+    public string id_operator { get; set; }
+
 }
 
 }

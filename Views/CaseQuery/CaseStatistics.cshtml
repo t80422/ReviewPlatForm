@@ -1,0 +1,96 @@
+﻿@*只有管理者使用*@
+
+@{
+    Layout = "~/Views/Shared/Layout.cshtml";
+}
+
+@model WebApplication1.Models.CaseQueryViewModel.Index
+@using PagedList.Mvc;
+
+<main class="container-wrap">
+    <div class="container-main">
+        <div class="tool-wrap">
+            <div class="tool-item left">
+                <h3>首頁＞案件統計</h3>
+            </div>
+
+            <div class="tool-btn">
+                <form action="@Url.Action("Index")" method="get">
+                    <label>審核狀態</label>
+                    <select name="review" style="margin-left:20px">
+                        <option value="">全部</option>
+                        <option value="待審核">待審核</option>
+                        <option value="審核中">審核中</option>
+                        <option value="待補件">待補件</option>
+                        <option value="退件">退件</option>
+                        <option value="審核完成">審核完成</option>
+                    </select>
+                    <label>申請日期</label>
+                    <input name="startDay" type="date" />
+                    <label>~</label>
+                    <input name="endDay" type="date" />
+                    <button class="btn-add" type="submit">查詢</button>
+                </form>
+                <button class="btn-add" type="button">excel 下載</button>
+            </div>
+        </div>
+
+        <div class="container-nav">
+            <a href="@Url.Action("Index")" >案件查詢</a>
+            <a href="@Url.Action("CaseStatistics")" class="is-active">案件統計</a>
+        </div>
+
+        <div class="list-wrap">
+            <div class="list-overflow">
+                <div class="list-main">
+                    <div class="list-title pr-2 pl-2">
+                        <div class="f-3">序號</div>
+                        <div class="f-3">旅宿業名稱</div>
+                        <div class="f-3">可申請人數</div>
+                        <div class="f-3">已提出申請人數</div>
+                        <div class="f-3">6個月</div>
+                        <div class="f-3">7個月</div>
+                        <div class="f-3">8個月</div>
+                        <div class="f-3">9個月</div>
+                        <div class="f-3">10個月</div>
+                        <div class="f-3">11個月</div>
+                        <div class="f-3">12個月</div>
+                        <div class="f-3">申請金額</div>
+                        <div class="f-3">撥款金額</div>
+                        <div class="f-3">審核狀態/補件說明</div>
+                    </div>
+
+                    @*@foreach (var data in Model.caseQueryList)
+                    {
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-3">@data.Subsidy.s_no</div>
+                            <div class="f-3">@data.Industry.id_name</div>
+                            <div class="f-3">@data.EligibleApplicants</div>
+                            <div class="f-3">@data.CurrentApplicants</div>
+                            <div class="f-3">@data.ApprovedApplicants</div>
+                            <div class="f-3">@data.Subsidy.s_money</div>
+                            <div class="f-3">@(data.Subsidy.s_grant_date?.ToString("yyyy/MM/dd"))</div>
+                            <div class="f-3">@data.Subsidy.s_review_fst</div>
+                            <div class="f-1">
+                                <button class="btn-edit" onClick="location.href='@Url.Action("Edit_Manager","Subsidy", new { subsidyID = data.Subsidy.s_id,isView=true,title=2})'"></button>
+                            </div>
+                            <div class="f-1">
+                                <button class="btn-details" onClick="location.href='@Url.Action("ReviewList", "Subsidy", new {subsidyID=data.Subsidy.s_id,title=2})'"></button>
+                            </div>
+                        </div>
+                    }*@
+                </div>
+            </div>
+        </div>
+
+        @*<div class="pages-wrap">
+            @Html.PagedListPager(Model.caseQueryList, page => Url.Action("Index", new { page, key = Request.QueryString["key"], review = Request.QueryString["review"] }), new PagedListRenderOptions()
+            {
+               DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+               DisplayLinkToLastPage = PagedListDisplayMode.Always,
+               DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+               DisplayLinkToNextPage = PagedListDisplayMode.Always
+            })
+        </div>*@
+    </div>
+</main>

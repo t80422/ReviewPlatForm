@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.SubsidyEdit
+﻿@model WebApplication1.Models.SubsidyViewModel.SubsidyDetails
 
 @{
     Layout = "~/Views/Shared/Layout.cshtml";
@@ -7,7 +7,6 @@
     // 1. 無登入-1
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
-    var MemberList = (List<WebApplication1.Models.SubMembersEdit>)ViewBag.SubMemberList;
 }
 
 <main class="container-wrap">
@@ -17,8 +16,9 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                @Html.HiddenFor(x => x.s_id)
-                @Html.HiddenFor(x => x.id_id)
+                @Html.HiddenFor(x => x.Subsidy.s_id)
+                @Html.HiddenFor(x => x.Industry.id_id)
+                @Html.HiddenFor(x => x.Industry.id_name)
 
                 <div class="form-main">
                     <div class="form-title">
@@ -32,10 +32,10 @@
                                     <div class="form-input">
                                         <label class="required">申請文件</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.Application, new { @type = "file", @accept = ".pdf" })
-
-                                            <span>@Model.ApplicationName</span>
-
+                                            @Html.TextBoxFor(x => x.ApplicationFile, new { @type = "file", @accept = ".pdf", @onchange = "validateFileInput(this)" })
+                                            @Html.HiddenFor(x => x.Subsidy.s_application_name)
+                                            @Html.HiddenFor(x => x.Subsidy.s_application)
+                                            <span>@Model.Subsidy.s_application_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
 
                                             <div class="red-text">
@@ -51,8 +51,10 @@
                                     <div class="form-input">
                                         <label class="required">全公司勞保明細</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.Labor, new { @type = "file", @accept = ".pdf" })
-                                            <span>@Model.LaborName</span>
+                                            @Html.TextBoxFor(x => x.InsurMemberFile, new { @type = "file", @accept = ".pdf", @onchange = "validateFileInput(this)" })
+                                            @Html.HiddenFor(x => x.Subsidy.s_insur_member_name)
+                                            @Html.HiddenFor(x => x.Subsidy.s_insur_member)
+                                            <span>@Model.Subsidy.s_insur_member_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
                                                 <p>*說明:請傳pdf或jpg圖檔，每次上傳限制為5M以內<p>
@@ -67,8 +69,10 @@
                                     <div class="form-input">
                                         <label class="required">建立全公司勞保清冊</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.EmployeeList, new { @type = "file", @accept = ".xlsx" })
-                                            <span>@Model.EmployeeListName</span>
+                                            @Html.TextBoxFor(x => x.EmpListFile, new { @type = "file", @accept = ".xlsx,.xls", @onchange = "validateFileInput(this)" })
+                                            @Html.HiddenFor(x => x.Subsidy.s_emp_lst_name)
+                                            @Html.HiddenFor(x => x.Subsidy.s_emp_lst)
+                                            <span>@Model.Subsidy.s_emp_lst_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
                                                 <p>*說明:本欄位請依範例上傳EXCEL<p>
@@ -92,12 +96,13 @@
                                     <div class="form-input">
                                         <label class="required">申請補助人員清冊</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.ApplicantsList, new { @type = "file", @accept = ".xlsx" })
-                                            <span>@Model.ApplicantsListName</span>
+                                            @Html.TextBoxFor(x => x.ApplicantsFile, new { @type = "file", @accept = ".xlsx,.xls", @onchange = "validateFileInput(this)" })
+                                            @Html.HiddenFor(x => x.Subsidy.s_applicants_name)
+                                            @Html.HiddenFor(x => x.Subsidy.s_applicants)
+                                            <span>@Model.Subsidy.s_applicants_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
                                                 <p>*說明:申請補助人員清冊請務必按照範本檔提供之格式登打，確定存成xlsx格式再上傳<p>
-                                                
                                             </div>
                                         </div>
 
@@ -105,14 +110,13 @@
                                             <a href="~/assets/sample/申請人員清冊(範本檔).xlsx" download>範本檔</a>
                                         </label>
                                     </div>
-
                                 </div>
 
                                 <div class="form-col">
                                     <div class="form-input">
                                         <label class="required">申請金額</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.Money, new { @type = "number", @required = "required" })
+                                            @Html.TextBoxFor(x => x.Subsidy.s_money, new { @type = "number", @required = "required" })
                                         </div>
                                     </div>
 
@@ -125,9 +129,12 @@
                                     <div class="form-input">
                                         <label class="required">申請人數</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.EmpCount, new { @type = "number", @required = "required" })
+                                            @Html.TextBoxFor(x => x.Subsidy.s_empcount, new { @type = "number", @required = "required" })
                                         </div>
-                                        <label>可申請人數：@(ViewBag.Maxmember-ViewBag.SubMemberCount) </label>
+                                    </div>
+
+                                    <div style="padding-left:65px;margin-bottom:32px;">
+                                        <p>已申請成功者@(ViewBag.SubMemberCount)/尚可申請人數@(ViewBag.Remaining) </p>
                                     </div>
 
                                     <div class="form-input">
@@ -136,21 +143,43 @@
                                         </div>
                                     </div>
 
+                                    <div class="form-input">
+                                        <label>員工清冊</label>
+
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory)
+                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory_name)
+                                            @Html.TextBoxFor(x => x.EmployeeInventoryFile, new { @type = "file", @accept = ".xlsx,.xls" })
+
+                                            <span>@Model.Subsidy.s_employee_inventory_name</span>
+
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+
+                                        <label class="demo-file">
+                                            <a href="~/assets/sample/員工清冊(範本檔).xlsx" download>範本檔</a>
+                                        </label>
+                                    </div>
 
                                     <div class="form-input">
                                         <label for="file5">補件資料1</label>
 
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.OtherFile, new { @type = "file", @accept = "" })
-                                            <span>@Model.OtherFileName</span>
+                                            @Html.TextBoxFor(x => x.ElseOneFile, new { @type = "file", @accept = "" })
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_name)
+                                            @Html.HiddenFor(x => x.Subsidy.s_else)
+                                            <span>@Model.Subsidy.s_else_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                         </div>
                                     </div>
+
                                     <div class="form-input">
                                         <label for="file5">補件資料2</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.s_else_two, new { @type = "file", @accept = "" })
-                                            <span>@Model.s_else_two_name</span>
+                                            @Html.TextBoxFor(x => x.ElseTwoFile, new { @type = "file", @accept = "" })
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_two_name)
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_two)
+                                            <span>@Model.Subsidy.s_else_two_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                         </div>
                                     </div>
@@ -158,62 +187,22 @@
                                     <div class="form-input">
                                         <label for="file5">補件資料3</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.s_else_three, new { @type = "file", @accept = "" })
-                                            <span>@Model.s_else_three_name</span>
+                                            @Html.TextBoxFor(x => x.ElseThreeFile, new { @type = "file", @accept = "" })
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_three_name)
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_three)
+                                            <span>@Model.Subsidy.s_else_three_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>說明</label>
+                                        <div class="input">
+                                            @Html.TextAreaFor(x => x.Subsidy.s_memo, new { @style ="width:100%"})
                                         </div>
                                     </div>
                                 </div>
                             </div>
-
-                            @if ((int)Session["perm"] < 3)
-                            {
-                                <div class="form-group">
-                                    <div class="form-col">
-                                        <!-- 初審人員 -->
-                                        <div class="form-input">
-                                            <label for="">初審人員</label>
-                                            <div class="input">
-                                                <input type="text" readonly>
-                                            </div>
-                                        </div>
-
-                                        <!-- 複審人員 -->
-                                        <div class="form-input">
-                                            <label for="">複審人員</label>
-                                            <div class="input">
-                                                <input type="text" readonly>
-                                            </div>
-                                        </div>
-
-                                        <!-- 協會審查 -->
-                                        <div class="form-input">
-                                            <label for="">協會審查</label>
-                                            <div class="input">
-                                                <input type="text" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-col">
-                                        <!-- 審核狀態 -->
-                                        <div class="form-input">
-                                            <label for="">審核狀態</label>
-                                            <div class="input">
-                                                <input type="text" readonly value="通過">
-                                            </div>
-                                        </div>
-
-                                        <!-- 最後修改時間 -->
-                                        <div class="form-input">
-                                            <label for="">最後修改時間</label>
-                                            <div class="input">
-                                                <input type="text" readonly value="2023/08/18">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
 
                             <div class="form-hgroup">
                                 <div class="form-head">
@@ -225,9 +214,7 @@
                                         <div class="list-overflow">
                                             <div class="list-main order-view maxheight-none">
                                                 <div class="list-title">
-                                                    <div class="f-1">
-                                                        合格
-                                                    </div>
+                                                    <div class="f-1">審核狀態</div>
                                                     <div class="f-1 ta-left ml-6">人員名稱</div>
                                                     <div class="f-1">身分證</div>
                                                     <div class="f-1">出生年</div>
@@ -238,36 +225,27 @@
                                                     <div class="f-1 ta-left ml-6">備註</div>
                                                 </div>
 
-                                                @if (MemberList != null && MemberList.Count() > 0)
+                                                @foreach (var data in Model.SubMemberList)
                                                 {
-                                                    foreach (var member in MemberList)
-                                                    {
-                                                        <div class="list-cont people-list">
-                                                            <div class="list-row">
-                                                                <div class="f-1">
-                                                                    <div class="checkbox-wrap pr-0">
-                                                                        <input type="checkbox" name="" id="p1" onclick="return false">
-                                                                        <label for="p1" class="btn-correct notyet"></label>
-                                                                    </div>
-                                                                </div>
-
-                                                                <div class="f-1 ta-left ml-6">@member.mb_name</div>
-                                                                <div class="f-1">@member.mb_id_card</div>
-                                                                <div class="f-1">@member.mb_birthday</div>
-                                                                <div class="f-1">
-                                                                    @if (member.mb_add_insur_date != null)
-                                                                    {@Html.Raw(((DateTime)member.mb_add_insur_date).ToString("yyyy/MM/dd"))}
-                                                                </div>
-                                                                <div class="f-1">
-                                                                    @if (member.mb_surrender_date != null)
-                                                                    {@Html.Raw(((DateTime)member.mb_surrender_date).ToString("yyyy/MM/dd"))}
-                                                                </div>
-                                                                <div class="f-1"></div>
-                                                                <div class="f-1 ta-right">@member.mb_insur_salary</div>
-                                                                <div class="f-1 ta-left ml-6">@member.mb_memo</div>
+                                                    <div class="list-cont people-list">
+                                                        <div class="list-row">
+                                                            <div class="f-1">@data.Subsidy_Member.sm_review</div>
+                                                            <div class="f-1 ta-left ml-6">@data.Member.mb_name</div>
+                                                            <div class="f-1">@data.Member.mb_id_card</div>
+                                                            <div class="f-1">@data.Member.mb_birthday</div>
+                                                            <div class="f-1">
+                                                                @if (data.Member.mb_add_insur_date != null)
+                                                                {@Html.Raw(((DateTime)data.Member.mb_add_insur_date).ToString("yyyy/MM/dd"))}
                                                             </div>
+                                                            <div class="f-1">
+                                                                @if (data.Member.mb_surrender_date != null)
+                                                                {@Html.Raw(((DateTime)data.Member.mb_surrender_date).ToString("yyyy/MM/dd"))}
+                                                            </div>
+                                                            <div class="f-1"></div>
+                                                            <div class="f-1 ta-right">@data.Member.mb_insur_salary</div>
+                                                            <div class="f-1 ta-left ml-6">@data.Member.mb_memo</div>
                                                         </div>
-                                                    }
+                                                    </div>
                                                 }
                                             </div>
                                         </div>
@@ -277,17 +255,10 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="form-btn">
-                    <button class="btn-cancel" type="button" onclick="history.back()">返回</button>
-                    @if (perm >= 0 && perm <= 2)
-                    {
-                        <button class="btn-submit" type="button">初審</button>
-                        <button class="btn-submit" type="button">複審</button>
-                    }
-                    else
-                    {
-                        <button class="btn-submit" type="submit">儲存</button>
-                    }
+                    <button class="btn-cancel" type="button" onclick="location.href='@Url.Action("Index")'">返回</button>
+                    <button class="btn-submit" type="submit">儲存</button>
                 </div>
             }
         </div>
@@ -295,55 +266,30 @@
 </main>
 
 <script>
-    $(function () {
-        $('.checkbox-wrap input[type="checkbox"]').on('change', function () {
-            $(this).siblings('.btn-correct').toggleClass('correct').toggleClass('notyet')
-        })
-    })
-</script>
-<script>
-    /*20231003 add by kevin*/
-    $('#Application').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#Application').val('');
-        }
+    $(document).ready(function () {
+        checkFileSize('#ApplicationFile');
+        checkFileSize('#InsurMemberFile');
+        checkFileSize('#EmpListFile');
+        checkFileSize('#ApplicantsFile');
+        checkFileSize('#ElseOneFile');
+        checkFileSize('#ElseTwoFile');
+        checkFileSize('#ElseThreeFile');
     });
-    $('#Labor').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#Labor').val('');
+
+    function validateFileInput(input) {
+        var file = input.files[0];
+        if (file) {
+            var fileName = file.name;
+            var fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
+            var acceptedExtensions = input.getAttribute('accept').split(',').map(function (ext) {
+                return ext.trim().substring(1);  // 去除點和空格
+            });
+
+            if (acceptedExtensions.indexOf(fileExtension) === -1) {
+                alert('只能上傳以下類型的文件: ' + input.getAttribute('accept'));
+                input.value = '';  // 清除選擇的文件
+            }
         }
-    });
-    $('#EmployeeList').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#EmployeeList').val('');
-        }
-    });
-    $('#ApplicantsList').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#ApplicantsList').val('');
-        }
-    });
-    $('#OtherFile').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#OtherFile').val('');
-        }
-    });
-    $('#s_else_two').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#s_else_two').val('');
-        }
-    });
-    $('#s_else_three').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#s_else_three').val('');
-        }
-    });
+    }
 </script>
 

@@ -23,9 +23,6 @@
 
             <div class="tool-btn">
                 <button class="btn-add" onclick="location.href='@Url.Action("Create")'">新增</button>
-                <!--mark by v0.9-->
-                @*<button class="btn-add" onClick="export_file.click()">匯入</button>
-                    <input type="file" name="export_file" style="display:none;" id="export_file" accept=".xlsx " />*@
             </div>
 
             <form action="@Url.Action("Index")" method="get">
@@ -46,6 +43,8 @@
                     <div class="list-title pr-2 pl-2">
                         <div class="f-3">旅宿名稱</div>
                         <div class="f-3">公司名稱</div>
+                        <div class="f-3">經營者姓名</div>
+                        <div class="f-3">房間數</div>
                         <div class="f-3">承辦人</div>
                         <div class="f-3">承辦人手機</div>
                         <div class="f-3">統編</div>
@@ -59,6 +58,8 @@
                         <div class="list-row pr-2 pl-2">
                             <div class="f-3">@data.id_name</div>
                             <div class="f-3">@data.id_company</div>
+                            <div class="f-3">@data.id_operator</div>
+                            <div class="f-3">@data.id_room</div>
                             <div class="f-3">@data.id_owner </div>
                             <div class="f-3">@data.id_owner_phone</div>
                             <div class="f-3">@data.id_tax_id</div>

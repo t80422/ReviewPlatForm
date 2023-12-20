@@ -20,7 +20,7 @@
     var filePath = Url.Content("~/assets/upload/Industry/");
 }
 
-@model WebApplication1.Models.IndustryViewModel.Edit_Manager
+@model WebApplication1.Models.IndustryViewModel.IndustryModel
 @using WebApplication1.HtmlHelpers
 
 <main class="container-wrap">
@@ -86,9 +86,7 @@
 
                                     <div class="form-input">
                                         <label for="">旅宿別</label>
-                                        <div class="input">
-                                            @Html.DropDownListFor(x => x.Industry.id_it_id, Model.IndustryTypeOptions, "旅宿別", disable)
-                                        </div>
+                                        <div class="dropdown-padding">@Html.DropDownListFor(x => x.Industry.id_it_id, Model.IndustryTypeOptions, "旅宿別", disable)</div>
                                     </div>
 
                                     <div class="form-input">
@@ -197,45 +195,104 @@
                                     <div class="form-input">
                                         <label>銀行存摺</label>
 
-                                        @if (perm == 0 || perm == 1)
+                                        <div class="dropdown-padding">@Html.DropDownListFor(x => x.Industry.id_review_passbook, Model.ReviewOptions, "審核狀態")</div>
+
+                                        @*@if (!string.IsNullOrEmpty(Model.Industry.id_passbook))
+                                            {
+                                                <a href="@filePath@Model.Industry.id_passbook" target="_blank">
+                                                    <img src="@filePath@Model.Industry.id_passbook" alt="尚未上傳" style="height:50px; width:100px;" />
+                                                </a>
+                                            }*@
+
+                                        @if (!string.IsNullOrEmpty(Model.Industry.id_passbook))
                                         {
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Industry.id_passbook)
-                                                @Html.TextBoxFor(x => x.PassBookFile, new { @type = "file" })
+                                            var fileExtension = Path.GetExtension(Model.Industry.id_passbook).ToLower();
+                                            var imagePath = "";
 
-                                                <span>@Model.Industry.id_passbook_name</span>
+                                            if (fileExtension == ".png" || fileExtension == ".jpg")
+                                            {
+                                                imagePath = @filePath + Model.Industry.id_passbook;
+                                            }
+                                            else if (fileExtension == ".pdf")
+                                            {
+                                                imagePath = @Url.Content("~/assets/img/PDF縮圖.png");
+                                            }
 
-                                                <button class="onfile" type="button">上傳檔案</button>
-												
-                                            </div>
+                                            if (!string.IsNullOrEmpty(imagePath))
+                                            {
+                                                <a href="@filePath@Model.Industry.id_passbook" target="_blank">
+                                                    <img src="@imagePath" alt="尚未上傳" style="height:50px; width:100px;" />
+                                                </a>
+                                            }
                                         }
 
-                                        <div>
-                                            @Html.DropDownListFor(x => x.Industry.id_review_passbook, Model.ReviewOptions, "審核狀態")
+
+                                    </div>
+
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Industry.id_passbook)
+                                            @Html.HiddenFor(x => x.Industry.id_passbook_name)
+
+                                            @if (perm == 0 || perm == 1)
+                                            {
+                                                @Html.TextBoxFor(x => x.PassBookFile, new { @type = "file" })
+                                                <span>@Model.Industry.id_passbook_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            }
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label>商業登記或稅籍證明</label>
 
-                                        @if (perm == 0 || perm == 1)
+                                        <div class="dropdown-padding">@Html.DropDownListFor(x => x.Industry.id_review_register, Model.ReviewOptions, "審核狀態")</div>
+
+                                        @*@if (!string.IsNullOrEmpty(Model.Industry.id_register))
+                                            {
+                                                <a href="@filePath@Model.Industry.id_register" target="_blank">
+                                                    <img src="~/assets/img/PDF縮圖.png" alt="尚未上傳" style="height:50px; width:100px;" />
+                                                </a>
+                                            }*@
+
+                                        @if (!string.IsNullOrEmpty(Model.Industry.id_register))
                                         {
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Industry.id_register)
+                                            var fileExtension = Path.GetExtension(Model.Industry.id_register).ToLower();
+                                            var imagePath = "";
+
+                                            if (fileExtension == ".png" || fileExtension == ".jpg")
+                                            {
+                                                imagePath = @filePath + Model.Industry.id_register;
+                                            }
+                                            else if (fileExtension == ".pdf")
+                                            {
+                                                imagePath = @Url.Content("~/assets/img/PDF縮圖.png");
+                                            }
+
+                                            if (!string.IsNullOrEmpty(imagePath))
+                                            {
+                                                <a href="@filePath@Model.Industry.id_register" target="_blank">
+                                                    <img src="@imagePath" alt="尚未上傳" style="height:50px; width:100px;" />
+                                                </a>
+                                            }
+                                        }
+
+                                    </div>
+
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Industry.id_register)
+                                            @Html.HiddenFor(x => x.Industry.id_register_name)
+
+                                            @if (perm == 0 || perm == 1)
+                                            {
                                                 @Html.TextBoxFor(x => x.RegisterFile, new { @type = "file" })
-
                                                 <span>@Model.Industry.id_register_name</span>
-
                                                 <button class="onfile" type="button">上傳檔案</button>
-
                                                 <div class="red-text">
                                                     <p>*說明:僅民宿業者須上傳<p>
                                                 </div>
-                                            </div>
-                                        }
-
-                                        <div>
-                                            @Html.DropDownListFor(x => x.Industry.id_review_register, Model.ReviewOptions, "審核狀態")
+                                            }
                                         </div>
                                     </div>
                                 </div>
@@ -251,7 +308,7 @@
                                     <div class="form-input">
                                         <label class="required">銀行代碼(7碼)</label>
                                         <div class="input">
-                                            @Html.TextBoxForWithReadonly(x => x.Industry.id_bank_code,perm==2, new { @minlength = "7", @maxlength = "7", @oninput = "this.value = this.value.replace(/[^0-9]/g, '').slice(0, this.maxLength)"})
+                                            @Html.TextBoxForWithReadonly(x => x.Industry.id_bank_code, perm == 2, new { @minlength = "7", @maxlength = "7", @oninput = "this.value = this.value.replace(/[^0-9]/g, '').slice(0, this.maxLength)" })
 
                                             <a href="https://www.fisc.com.tw/TC/Service?Caid=51254999-5d15-4ddf-8e54-4b2cdb2a8399&CaStyleId=16%E6%9F%A5%E8%A9%A2" target="_blank">銀行代碼查詢</a>
                                         </div>
@@ -260,28 +317,67 @@
                                     <div class="form-input">
                                         <label class="required">銀行帳號</label>
                                         <div class="input">
-                                            @Html.TextBoxForWithReadonly(x => x.Industry.id_bank_acct,perm==2, new { @type="number"})
+                                            @Html.TextBoxForWithReadonly(x => x.Industry.id_bank_acct, perm == 2, new { @type = "number" })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label>營業執照或登記證</label>
 
-                                        @if (perm == 0 || perm == 1)
+                                        <div class="dropdown-padding">@Html.DropDownListFor(x => x.Industry.id_review_license, Model.ReviewOptions, "審核狀態")</div>
+
+                                        @*@if (!string.IsNullOrEmpty(Model.Industry.id_license))
+                                            {
+                                                <a href="@filePath@Model.Industry.id_license" target="_blank">
+                                                    <img src="~/assets/img/PDF縮圖.png" alt="尚未上傳" style="height:50px; width:100px;" />
+                                                </a>
+                                            }*@
+
+                                        @if (!string.IsNullOrEmpty(Model.Industry.id_license))
                                         {
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Industry.id_license)
-                                                @Html.TextBoxFor(x => x.LicenseFile, new { @type = "file" })
+                                            var fileExtension = Path.GetExtension(Model.Industry.id_license).ToLower();
+                                            var imagePath = "";
 
-                                                <span>@Model.Industry.id_license_name</span>
+                                            if (fileExtension == ".png" || fileExtension == ".jpg")
+                                            {
+                                                imagePath = @filePath + Model.Industry.id_license;
+                                            }
+                                            else if (fileExtension == ".pdf")
+                                            {
+                                                imagePath = @Url.Content("~/assets/img/PDF縮圖.png");
+                                            }
 
-                                                <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            if (!string.IsNullOrEmpty(imagePath))
+                                            {
+                                                <a href="@filePath@Model.Industry.id_license" target="_blank">
+                                                    <img src="@imagePath" alt="尚未上傳" style="height:50px; width:100px;" />
+                                                </a>
+                                            }
                                         }
+                                    </div>
 
-                                        <div>
-                                            @Html.DropDownListFor(x => x.Industry.id_review_license, Model.ReviewOptions, "審核狀態")
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Industry.id_license)
+                                            @Html.HiddenFor(x => x.Industry.id_license_name)
+
+                                            @if (perm == 0 || perm == 1)
+                                            {
+                                                @Html.TextBoxFor(x => x.LicenseFile, new { @type = "file" })
+                                                <span>@Model.Industry.id_license_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            }
                                         </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>營業狀態</label>
+                                        <div class="dropdown-padding">@Html.DropDownListFor(x => x.Industry.id_business_status, Model.BusinessStatus)</div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>經營者</label>
+                                        <div class="dropdown-padding">@Html.TextBoxFor(x => x.Industry.id_operator)</div>
                                     </div>
                                 </div>
                             </div>
@@ -296,26 +392,31 @@
                                     </div>
                                 </div>
 
-                                @if (perm == 0 || perm == 1)
-                                {
-                                    <div class="form-col">
+
+                                <div class="form-col">
+                                    @if (perm == 0 || perm == 1)
+                                    {
                                         <div class="form-input">
                                             <label for="">複審人員</label>
                                             <div class="input">
                                                 <input value="@(Model.SecondaryReviewer?.mg_name)" readonly />
                                             </div>
                                         </div>
-                                    </div>
+                                    }
+                                </div>
 
-                                    <div class="form-col">
+                                <div class="form-col">
+                                    @if (perm == 0 || perm == 1)
+                                    {
                                         <div class="form-input">
                                             <label for="">協會審查</label>
                                             <div class="input">
                                                 <input value="@(Model.AssociationReviewer?.mg_name)" readonly />
                                             </div>
                                         </div>
-                                    </div>
-                                }
+                                    }
+                                </div>
+
 
                             </div>
 

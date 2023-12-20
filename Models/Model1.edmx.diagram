@@ -10,14 +10,14 @@
         <EntityTypeShape EntityType="ReviewPlatformModel.News" Width="1.5" PointX="6.75" PointY="3.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.subsidy_member" Width="2.125" PointX="6.75" PointY="6.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.user_accounts" Width="1.5" PointX="8.75" PointY="0.75" />
-        <EntityTypeShape EntityType="ReviewPlatformModel.member" Width="2.375" PointX="3.75" PointY="6.75" />
-        <EntityTypeShape EntityType="ReviewPlatformModel.subsidy" Width="2" PointX="0.75" PointY="8.75" />
-        <EntityTypeShape EntityType="ReviewPlatformModel.employment_insurance" Width="1.5" PointX="9.375" PointY="3.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.subsidy_member_review" Width="1.5" PointX="11.375" PointY="0.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.subsidy_review" Width="1.5" PointX="9.375" PointY="7.75" />
-        <EntityTypeShape EntityType="ReviewPlatformModel.industry" Width="1.5" PointX="11.375" PointY="4.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.login_out" Width="1.5" PointX="0.75" PointY="5.75" />
         <EntityTypeShape EntityType="ReviewPlatformModel.manager" Width="1.5" PointX="7.375" PointY="12.75" />
+        <EntityTypeShape EntityType="ReviewPlatformModel.member" Width="1.5" PointX="3.375" PointY="5.75" />
+        <EntityTypeShape EntityType="ReviewPlatformModel.employment_insurance" Width="1.5" PointX="3.375" PointY="11.75" />
+        <EntityTypeShape EntityType="ReviewPlatformModel.industry" Width="1.5" PointX="11.375" PointY="4.75" />
+        <EntityTypeShape EntityType="ReviewPlatformModel.subsidy" Width="1.5" PointX="0.75" PointY="8.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

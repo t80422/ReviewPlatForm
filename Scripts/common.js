@@ -1,8 +1,8 @@
 ﻿//檢查檔案大小
-function checkFileSize(inputElement, maxSize) {
+function checkFileSize(inputElement) {
     $(inputElement).change(function () {
-        if (this.files[0].size > maxSize) {
-            alert("檔案大小超過" + (maxSize / 1000000) + "MB");
+        if (this.files[0].size > 5000000) {
+            alert("檔案大小超過 5MB");
             $(this).val('');
         }
     });
@@ -34,21 +34,3 @@ $('#export_file').on('change', function (e) {
     }
 })
 
-//function openPopup(id, type) {
-//    let popupClass, actionUrl;
-
-//    //刪除視窗
-//    if (type == 'delete') {
-//        popupClass = '.js-del-popup';
-//        actionUrl = '@Url.Action("Delete")' + "?id=" + id;
-//    }
-
-//    $(".popup-overlay," + popupClass).fadeIn();
-//    $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
-//    $(".popup-overlay, " + popupClass + " .popup-btn .btn-cancel").on('click', function () {
-//        $(".popup-overlay, " + popupClass).fadeOut();
-//    });
-//    $(popupClass + ' .popup-btn .btn-submit').on('click', function () {
-//        window.location.href = actionUrl;
-//    });
-//}

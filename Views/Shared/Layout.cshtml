@@ -97,9 +97,12 @@
                                     <a href="@Url.Action("Index","IndustryLog")"><span>業者登入登出</span></a>
                                 </li>
 
-                                <li class="nav-item">
-                                    <a href="@Url.Action("Index","Manager")"><span>帳號管理</span></a>
-                                </li>
+                                if (perm == 0)
+                                {
+                                    <li class="nav-item">
+                                        <a href="@Url.Action("Index","Manager")"><span>帳號管理</span></a>
+                                    </li>
+                                }
 
                                 <li class="nav-item">
                                     <a href="@Url.Action("Index","CaseQuery")"><span>案件查詢</span></a>
@@ -120,7 +123,13 @@
                 </div>
 
                 <div class="aside-bottom">
+                    <div class="aside-time">
+                        <span>將於 <span id="countdown"></span> 後自動登出</span>
+                        <button class="btn-reset" id="resetCountdown">重新計算</button>
+                    </div>                    
+
                     <button class="btn-logout" onClick="window.location.href = '@Url.Action("Logout","Login")'">登出</button>
+
                     <div class="aside-time">
                         <span>登入時間</span>
                         <time>@loginTime</time>
@@ -173,5 +182,42 @@
     <!-- JS -->
     <script src="~/assets/js/script.js"></script>
     <script src="~/assets/js/script2.js"></script>
+    <script src="~/Scripts/common.js"></script>
+
+    <script>
+        var logoutTime = 30 * 60; // 30分鐘轉換為秒
+        var countdownElement = document.getElementById('countdown'); // 獲取顯示倒數的元素
+
+        function updateCountdown() {
+            var minutes = parseInt(logoutTime / 60, 10);
+            var seconds = parseInt(logoutTime % 60, 10);
+
+            // 確保分鐘和秒數始終是兩位數
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            // 更新倒數計時器的顯示
+            countdownElement.textContent = minutes + ":" + seconds;
+
+            // 當時間到達0時重置計時器或進行其他操作
+            if (logoutTime <= 0) {
+                clearInterval(intervalId);
+                // 可以在這裡執行登出操作
+                window.location.href = '@Url.Action("LogOut", "Login")';
+            }
+
+            logoutTime--; // 減少1秒
+        }
+
+        // 每秒更新倒數計時器
+        var intervalId = setInterval(updateCountdown, 1000);
+
+        document.getElementById('resetCountdown').addEventListener('click', function () {
+            // 重設倒數計時器時間
+            logoutTime = 30 * 60; // 重新設定為30分鐘
+            updateCountdown(); // 立即更新顯示
+        });
+    </script>
+
 </body>
 </html>

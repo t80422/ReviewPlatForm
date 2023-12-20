@@ -6,6 +6,8 @@ namespace WebApplication1.Models
 {
     public class SubsidyIndustry
     {
+        //分案
+        public Nullable<int> s_division_case { get; set; }
         public SelectList ReviewerList { get; set; }
         //申請月份(迄)
         public Nullable<System.DateTime> s_date_time_end { get; set; }

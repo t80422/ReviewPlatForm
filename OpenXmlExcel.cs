@@ -47,8 +47,10 @@ namespace WebApplication1
             _exl.Dispose();
         }
 
-        public string GetCellValue(string addressName)
+        public string GetCellValue(int rowIndex, int columnIndex)
         {
+            var addressName= GetCellAddress(rowIndex, columnIndex);
+
             if (!_cellDictionary.TryGetValue(addressName, out Cell cell))
             {
                 return null;
@@ -78,6 +80,30 @@ namespace WebApplication1
                 }
             }
             return value;
+        }
+
+        private string GetCellAddress(int rowIndex, int columnIndex)
+        {
+            // 將列索引轉換為字母
+            var columnName = ConvertColumnIndexToColumnName(columnIndex);
+            // 組合為完整地址
+            return $"{columnName}{rowIndex}";
+        }
+
+        private string ConvertColumnIndexToColumnName(int columnIndex)
+        {
+            int dividend = columnIndex;
+            string columnName = string.Empty;
+            int modulo;
+
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modulo).ToString() + columnName;
+                dividend = (dividend - modulo) / 26;
+            }
+
+            return columnName;
         }
     }
 }

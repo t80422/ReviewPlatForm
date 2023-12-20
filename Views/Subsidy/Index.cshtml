@@ -11,11 +11,13 @@
 @model WebApplication1.Models.SubsidyIndexViewModel
 @using PagedList.Mvc;
 @using PagedList;
+
 <script>
     function showPerson(id, person_id) {
         $("#Review" + id).val(person_id);
     }
 </script>
+
 <main class="container-wrap">
     <div class="container-main">
         <div class="tool-wrap">
@@ -26,7 +28,11 @@
             <div class="tool-item">
                 @if (perm == 3)
                 {
-                    <label>可申請人數餘額：<span>@ViewBag.MemberCount / @ViewBag.Maxmember</span> </label>
+                    @*<label>可申請人數餘額：<span>@ViewBag.MemberCount / @ViewBag.Maxmember</span> </label>*@
+                    <div style="padding-left:65px;margin-bottom:32px;">
+                        <p>已申請成功者@(ViewBag.SubMemberCount)/尚可申請人數@(ViewBag.Remaining) </p>
+                    </div>
+
                     <div class="tool-btn">
                         <button class="btn-add" onClick="window.location.href='@Url.Action("Create", "Subsidy", new {id_id=ViewBag.IndustryId})'">新增</button>
                     </div>
@@ -83,7 +89,6 @@
                             <div class="f-1">詳細</div>
                             <div class="f-1">人員</div>
                             <div class="f-1">修改</div>
-                            <div class="f-1">刪除</div>
                         }
                         else
                         {
@@ -93,7 +98,13 @@
 
                         @if (perm == 0 || perm == 1)
                         {
-                            <div class="f-1">分案</div>
+                            <div class="f-3">分案</div>
+
+                        }
+
+                        @if (perm != 2)
+                        {
+                            <div class="f-1">刪除</div>
                         }
 
                     </div>
@@ -101,80 +112,81 @@
                     @foreach (var data in Model.Subsidies)
                     {
                         <div class="list-row pr-2 pl-2">
-                            <div class="f-3">@data.s_no</div>
+                            <div class="f-3">@data.Subsidy.s_no</div>
 
                             @if (perm < 3)
                             {
                                 <div class="f-3">
-                                    @if (data.id_review == "通過")
+                                    @if (data.Industry.id_review == "通過")
                                     {
-                                        @(data.id_name+"(已審核)");
+                                        @(data.Industry.id_name+"(已審核)");
                                     }
                                     else
                                     {
-                                        <a href="@Url.Action("Edit_Manager","Industry",new {industryID=data.id_id})" target="_blank">@data.id_name</a>
+                                        <a href="@Url.Action("Edit_Manager","Industry",new {industryID=data.Industry.id_id})" target="_blank">@data.Industry.id_name</a>
                                     }
                                 </div>
                             }
 
-                            <div class="f-3">@data.id_owner</div>
-                            <div class="f-3">@data.s_money</div>
+                            <div class="f-3">@data.Industry.id_owner</div>
+                            <div class="f-3">@data.Subsidy.s_money</div>
                             <div class="f-3">
-                                @if (data.s_grant_date == null)
+                                @if (data.Subsidy.s_grant_date == null)
                                 {
                                     <span>無</span>
                                 }
                                 else
                                 {
-                                    <span>@(data.s_grant_date?.ToString("yyyy/MM/dd"))</span>
+                                    <span>@(data.Subsidy.s_grant_date?.ToString("yyyy/MM/dd"))</span>
                                 }
                             </div>
 
-
-                            <div class="f-3">@data.s_review</div>
+                            <div class="f-3">@data.Subsidy.s_review_fst</div>
 
                             @if (perm == 3)
                             {
                                 <div class="f-1">
-                                    <button class="btn-details" onClick="location.href='@Url.Action("Detail", "Subsidy", new {id=data.s_id})';event.stopPropagation();"></button>
+                                    <button class="btn-details" onClick="location.href='@Url.Action("Detail", "Subsidy", new {id=data.Subsidy.s_id})';event.stopPropagation();"></button>
                                 </div>
                                 <div class="f-1">
-                                    <button class="btn-members" onClick="location.href='@Url.Action("Index", "SubMembers", new {id=data.s_id})';event.stopPropagation();"></button>
-                                </div>
-
-                                <div class="f-1">
-                                    @if (data.s_review == "退件" || data.s_review == "待補件" || data.s_review == "待審核")
-                                    {
-                                        <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "Subsidy", new {id=data.s_id})';event.stopPropagation();"></button>
-                                    }
+                                    <button class="btn-members" onClick="location.href='@Url.Action("Index", "SubMembers", new {id=data.Subsidy.s_id})';event.stopPropagation();"></button>
                                 </div>
 
                                 <div class="f-1">
-                                    @if (data.s_review == "待補件" || data.s_review == "待審核")
+                                    @if (data.Subsidy.s_review_fst== "退件" || data.Subsidy.s_review_fst == "待補件" || data.Subsidy.s_review_fst == "待審核")
                                     {
-                                        <button class="btn-del" onClick="openPopup(@data.s_id,'delete')"></button>
+                                        <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "Subsidy", new {subsidyID=data.Subsidy.s_id})';event.stopPropagation();"></button>
                                     }
                                 </div>
                             }
                             else if (perm >= 0)
                             {
                                 <div class="f-1">
-                                    <button class="btn-edit" onclick="location.href='@Url.Action("Edit_Manager", new { subsidyID = data.s_id,isView=false,title=1})'"></button>
+                                    <button class="btn-edit" onclick="location.href='@Url.Action("Edit_Manager", new { subsidyID = data.Subsidy.s_id,isView=false,title=1})'"></button>
                                 </div>
 
                                 <div class="f-1">
-                                    <button class="btn-details" onclick="location.href='@Url.Action("ReviewList", new {subsidyID=data.s_id,title=1})'"></button>
+                                    <button class="btn-details" onclick="location.href='@Url.Action("ReviewList", new {subsidyID=data.Subsidy.s_id,title=1})'"></button>
                                 </div>
                             }
 
                             @if (perm == 0 || perm == 1)
                             {
-                                <div class="f-1">
-                                    @Html.DropDownList("Review" + data.s_id, ViewBag.Reviewers as IEnumerable<SelectListItem>, new { onchange = "changePerson(this.name,this.value)" })
+                                <div class="f-3">
+                                    @Html.DropDownList("Review" + data.Subsidy.s_id, ViewBag.Reviewers as IEnumerable<SelectListItem>,"請選擇", new { onchange = "changePerson(this.name,this.value)" })
                                 </div>
                                 <script>
-                                    showPerson( @data.s_id, @data.s_mg_id_fst.ToString());
+                                    showPerson( @data.Subsidy.s_id, @data.Subsidy.s_division_case.ToString());
                                 </script>
+                            }
+                            @if (perm != 2)
+                            {
+                                <div class="f-1">
+                                    @if ((perm == 3 && (data.Subsidy.s_review_fst == "待補件" || data.Subsidy.s_review_fst == "待審核")) || (perm == 0 || perm == 1))
+                                    {
+                                        <button class="btn-del" onClick="openPopup(@data.Subsidy.s_id,'delete')"></button>
+                                    }
+                                </div>
                             }
                         </div>
                     }
@@ -195,7 +207,6 @@
 
     <script>
         function changePerson(id,person_id) {
-            //alert(id);
             $.ajax({
                 url: '@Url.Action("ChangePerson")' + '/' + id  ,
                 dataType: "html",

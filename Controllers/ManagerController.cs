@@ -21,7 +21,7 @@ namespace WebApplication1.Controllers
             .OrderBy(x => x.Manager.mg_name)
             .ToPagedList((int)page, 10);
 
-            return View(new ManagerViewModel.Index { ManagerAccounts=managers});
+            return View(new ManagerViewModel.Index { ManagerAccounts = managers });
         }
 
         public ActionResult Create()
@@ -35,9 +35,14 @@ namespace WebApplication1.Controllers
         {
             if (!ModelState.IsValid) { return View("CreateAndEdit", data); }
 
-            UpdateDatabase(data, true);
-
-            return RedirectToAction("Index");
+            if (UpdateDatabase(data, true))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View("CreateAndEdit", data);
+            }
         }
 
         public ActionResult Edit(int managerID, int? permission)
@@ -54,14 +59,23 @@ namespace WebApplication1.Controllers
                 return View("CreateAndEdit", GetCreateOrEdit(data.Manager.mg_id, data.User_Accounts.ua_perm));
             }
 
-            UpdateDatabase(data, false);
-
-            return RedirectToAction("Index");
+            if (UpdateDatabase(data, false))
+            {
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View("CreateAndEdit", data);
+            }
         }
 
         public ActionResult Delete(int managerID, int? permission)
         {
             var manager = db.manager.Find(managerID);
+
+            if (manager == null)
+                return RedirectToAction("Index");
+
             var account = db.user_accounts.Where(x => x.ua_user_id == managerID && x.ua_perm == permission).FirstOrDefault();
 
             db.manager.Remove(manager);
@@ -78,12 +92,12 @@ namespace WebApplication1.Controllers
 
             return new ManagerViewModel.CreateOrEdit
             {
-                Manager=manager,
-                User_Accounts=account,
+                Manager = manager,
+                User_Accounts = account,
             };
         }
 
-        private void UpdateDatabase(ManagerViewModel.CreateOrEdit data, bool isCreating)
+        private bool UpdateDatabase(ManagerViewModel.CreateOrEdit data, bool isCreating)
         {
             manager manager;
             user_accounts userAccounts;
@@ -104,16 +118,28 @@ namespace WebApplication1.Controllers
             manager.mg_name = data.Manager.mg_name;
             manager.mg_phone = data.Manager.mg_phone;
             manager.mg_mail = data.Manager.mg_mail;
-            manager.mg_job_title=data.Manager.mg_job_title;
+            manager.mg_job_title = data.Manager.mg_job_title;
 
             db.SaveChanges();
 
-            userAccounts.ua_acct = data.Manager.mg_phone;
-            userAccounts.ua_psw = ajax.ConvertToSHA256(data.Manager.mg_phone);
+            userAccounts.ua_acct = data.User_Accounts.ua_acct;
+
+            if (userAccounts.ua_psw == null && data.User_Accounts.ua_psw == null)
+            {
+                Session["msg"] = "請設定密碼";
+                return false;
+            }
+            else if (data.User_Accounts.ua_psw != null)
+            {
+                userAccounts.ua_psw = ajax.ConvertToSHA256(data.User_Accounts.ua_psw);
+            }
+
             userAccounts.ua_perm = data.User_Accounts.ua_perm;
             userAccounts.ua_user_id = manager.mg_id;
 
             db.SaveChanges();
+
+            return true;
         }
     }
 }

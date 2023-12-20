@@ -18,26 +18,27 @@
         <div class="tool-wrap">
             @if (perm == 3 && ViewBag.SubsityID != null)
             {
-            <div class="tool-btn">
-                @if (ViewBag.s_review == "待補件") {
-                <button class="btn-red" style="background-color: #ff0000;" onClick="window.location.href = '@Url.Action("AllCaseSubmit", "SubMembers", new {id=ViewBag.SubsityID})'">案件送出</button>
-                }
-            </div>
+                <div class="tool-btn">
+                    @if (ViewBag.s_review == "待補件")
+                    {
+                        <button class="btn-red" style="background-color: #ff0000;" onClick="window.location.href = '@Url.Action("AllCaseSubmit", "SubMembers", new {id=ViewBag.SubsityID})'">案件送出</button>
+                    }
+                </div>
             }
         </div>
-        
+
         <div class="container-nav">
             <a href="@Url.Action("Index","Subsidy")">申請補助列表</a>
             <a href="@Url.Action("Index","SubMembers")" class="is-active">補助申請人員</a>
         </div>
-       
+
         <!-- list -->
         <div class="list-wrap">
             <div class="list-overflow">
                 <div class="list-main">
                     @if (ViewBag.SubNo != null)
                     {
-                        <p style="font-size: 30px; line-height: 50px; height: 50px; vertical-align: middle; font-weight:bold;">案號:@ViewBag.SubNo</p>  <span style="font-size:24px !important;color:red;text-align: right; display:block; margin-right:100px;">請點選"編緝"逐一上傳勞動契約及薪資証明</span>
+                        <p style="font-size: 30px; line-height: 50px; height: 50px; vertical-align: middle; font-weight:bold;">案號:@ViewBag.SubNo</p> <span style="font-size:24px !important;color:red;text-align: right; display:block; margin-right:100px;">請點選"編緝"逐一上傳勞動契約及薪資証明</span>
                     }
 
                     <br />
@@ -62,41 +63,41 @@
 
                     @foreach (var data in Model)
                     {
-                <div class="list-row pr-2 pl-2">
-                    <div class="f-3">@data.SubsidyNo</div>
-                    <div class="f-3">@data.mb_name</div>
-                    <div class="f-3 ">@data.sm_advance_money</div>
-                    <div class="f-3">@((data.sm_agree_start.HasValue) ? data.sm_agree_start.Value.ToString("yyyy/MM/dd") : "N/A")</div>
-                    <div class="f-3">@((data.sm_agree_end.HasValue) ? data.sm_agree_end.Value.ToString("yyyy/MM/dd") : "N/A")</div>
-                    <div class="f-3">@data.sm_review</div>
-                    <div class="f-1">@((data.mb_contract_name != null)?"是":"否")</div>
-                    <div class="f-1">@((data.sm_income_certificate_name != null)?"是":"否")</div>
-                    <div class="f-1">
-                        <button class="btn-details" onClick="location.href='@Url.Action("Detail", "SubMembers", new { id = data.sm_id })'"></button>
-                    </div>
+                        <div class="list-row pr-2 pl-2">
+                            <div class="f-3">@data.SubsidyNo</div>
+                            <div class="f-3">@data.mb_name</div>
+                            <div class="f-3 ">@data.sm_advance_money</div>
+                            <div class="f-3">@((data.sm_agree_start.HasValue) ? data.sm_agree_start.Value.ToString("yyyy/MM/dd") : "N/A")</div>
+                            <div class="f-3">@((data.sm_agree_end.HasValue) ? data.sm_agree_end.Value.ToString("yyyy/MM/dd") : "N/A")</div>
+                            <div class="f-3">@data.sm_review</div>
+                            <div class="f-1">@((data.mb_contract_name != null)?"是":"否")</div>
+                            <div class="f-1">@((data.sm_income_certificate_name != null)?"是":"否")</div>
+                            <div class="f-1">
+                                <button class="btn-details" onClick="location.href='@Url.Action("Detail", "SubMembers", new { id = data.sm_id })'"></button>
+                            </div>
 
-                    <div class="f-1">
-                        @if (perm == 3)
-                        {
-                            <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "SubMembers", new { id = data.sm_id })'"></button>
-                        }
-                    </div>
+                            <div class="f-1">
+                                @if (perm == 3)
+                                {
+                                    <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "SubMembers", new { id = data.sm_id })'"></button>
+                                }
+                            </div>
 
-                    <div class="f-1">
-                        @if (perm == 3)
-                        {
-                            <button class="btn-del" onClick="del(@data.sm_id)"></button>
-                        }
-                    </div>
-                    @if (perm >= 0 && perm < 3)
-                    {
-                        <div class="f-1">
-                            <button class="btn-details" onClick="location.href='@Url.Action("Edit", "SubMembers")'"></button>
+                            <div class="f-1">
+                                @if (perm == 3)
+                                {
+                                    <button class="btn-del" onClick="del(@data.sm_id,@data.sm_s_id)"></button>
+                                }
+                            </div>
+                            @if (perm >= 0 && perm < 3)
+                            {
+                                <div class="f-1">
+                                    <button class="btn-details" onClick="location.href='@Url.Action("Edit", "SubMembers")'"></button>
+                                </div>
+                            }
                         </div>
                     }
                 </div>
-                            }
-                        </div>
             </div>
         </div>
     </div>
@@ -114,15 +115,15 @@
     <script>
    let itemID;
    // 刪除跳出視窗
-   function del(id){
-       itemID = id;
+   function del(subMemberID,subID){
+       itemID = subMemberID;
        $(".popup-overlay, .js-del-popup").fadeIn();
        $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
        $(".popup-overlay,.js-del-popup .popup-btn .btn-cancel").on('click', function () {
            $(".popup-overlay, .js-del-popup").fadeOut();
        });
        $('.js-del-popup .popup-btn .btn-submit').on('click', function () {
-           window.location.href = '@Url.Action("Delete")'+"?id="+ id;
+           window.location.href = '@Url.Action("Delete")' + "?subMemberID=" + subMemberID+"&subID="+subID;
        })
    }
    // 送件

@@ -1,12 +1,11 @@
-﻿@{
+﻿@model WebApplication1.Models.SubsidyViewModel.SubsidyDetails
+@{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/Layout.cshtml";
 
-    string filePath = Url.Content("~/assets/upload/Subsidy/" + Model.id_name + "_" + Model.id_id + "/");
+    string filePath = Url.Content("~/assets/upload/Subsidy/" + Model.Industry.id_name + "_" + Model.Industry.id_id + "/");
 
 }
-@model WebApplication1.Models.SubsidyEdit
-
 <main class="container-wrap">
     <div class="container-main">
         <div class="form-wrap">
@@ -23,52 +22,76 @@
                                     <div class="form-input">
                                         <label>申請日期</label>
                                         <div class="input date">
-                                            <p>@Model.Date</p>
+                                            <p>@(Model.Subsidy.s_date_time.ToString("yyyy/MM/dd"))</p>
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label>申請文件</label>
-                                        <a target="_blank" href=@filePath@Model.ApplicationFile>@Model.ApplicationName</a>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_application>@Model.Subsidy.s_application_name</a>
                                     </div>
 
                                     <div class="form-input">
-                                        <label>勞保人員名冊</label>
-                                        <a target="_blank" href=@filePath@Model.LaborFile>@Model.LaborName</a>
+                                        <label>全公司勞保明細</label>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_insur_member>@Model.Subsidy.s_insur_member_name</a>
                                     </div>
 
                                     <div class="form-input">
-                                        <label>申請金額</label>
-                                        <div class="input">
-                                            <p>@Model.Money</p>
+                                        <label>建立全公司勞保清冊</label>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_emp_lst>@Model.Subsidy.s_emp_lst_name</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>申請補助人員清冊</label>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_applicants>@Model.Subsidy.s_applicants_name</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>員工清冊</label>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_employee_inventory>@Model.Subsidy.s_employee_inventory_name</a>
+                                    </div>
+
+                                    <div class="form-col">
+                                        <div class="form-input">
+                                            <label style="margin=10">審核狀態</label>
+                                            <div class="input">@Model.Subsidy.s_review_fst</div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="form-col">
                                     <div class="form-input">
-                                        <label>申請人員清冊</label>
-                                        <a target="_blank" href=@filePath@Model.ApplicantsListFile>@Model.ApplicantsListName</a>
-                                    </div>
-                                    <div class="form-input">
-                                        <label for="file5">補件資料</label>
-                                        <a target="_blank" href=@filePath@Model.OtherFileFile>@Model.OtherFileName</a>
+                                        <label>申請金額</label>
+                                        <div class="input">
+                                            <p>@Model.Subsidy.s_money</p>
+                                        </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label>申請人數</label>
                                         <div class="input">
-                                            <p>@Model.EmpCount</p>
+                                            <p>@Model.Subsidy.s_empcount</p>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="form-group">
-                                <div class="form-col">
                                     <div class="form-input">
-                                        <label for="">審核狀態</label>
-                                        <div class="input">@Model.Review</div>
+                                        <label>補件資料1</label>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_else>@Model.Subsidy.s_else_name</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>補件資料2</label>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_else_two>@Model.Subsidy.s_else_two_name</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>補件資料3</label>
+                                        <a target="_blank" href=@filePath@Model.Subsidy.s_else_three>@Model.Subsidy.s_else_three_name</a>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>說明</label>
+                                        <p>@Model.Subsidy.s_memo</p>
                                     </div>
                                 </div>
                             </div>

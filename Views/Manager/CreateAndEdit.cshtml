@@ -40,6 +40,20 @@
                             <div class="form-group">
                                 <div class="form-col">
                                     <div class="form-input">
+                                        <label>帳號</label>
+                                        <div class="input">
+                                            @Html.TextBoxFor(x => x.User_Accounts.ua_acct)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>密碼</label>
+                                        <div class="input">
+                                            @Html.PasswordFor(x => x.User_Accounts.ua_psw)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-input">
                                         <label>姓名</label>
                                         <div class="input">
                                             @Html.TextBoxFor(x => x.Manager.mg_name)

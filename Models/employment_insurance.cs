@@ -38,6 +38,12 @@ public partial class employment_insurance
 
     public Nullable<int> ei_enter_month { get; set; }
 
+    public int ei_id_id { get; set; }
+
+    public Nullable<int> ei_salary { get; set; }
+
+    public string ei_subsidy_no { get; set; }
+
 }
 
 }

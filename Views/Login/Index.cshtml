@@ -54,11 +54,11 @@
         <main class="login-wrap">
             <div class="login-main">
                 <figure class="login-logo">
-                    <img src="~/assets/image/logo_2.svg"><br/>
-                    <h2 class="login-h2">交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助-旅宿業者登入</h2>
+                    <img src="~/assets/image/logo_2.svg"><br />
+                    <h2 class="login-h2">@Session["title"]</h2>
                 </figure>
 
-                @using (Html.BeginForm("Login", "Login", FormMethod.Post))
+                @using (Html.BeginForm((string)ViewBag.Action, "Login", FormMethod.Post))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -75,7 +75,6 @@
                             <button class="btn-login" type="submit">登入</button>
 
                             <button class="btn-login" type="button" onclick="window.location.href='~/'">回首頁</button>
-                            @*<button class="login-btn" type="button" onclick="location.href='@Url.Action("Create","Industry")'">新建帳號</button>*@
                         </div>
                     </div>
                 }

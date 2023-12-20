@@ -1,5 +1,6 @@
 ﻿using PagedList;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using WebApplication1.Models;
@@ -71,7 +72,7 @@ namespace WebApplication1.Controllers
                     sm_s_id = (int)joined.SubMember.sm_s_id,
                     sm_id = joined.SubMember.sm_id,
                     SubsidyNo = s.s_no,
-                    mb_income_certificate_name = joined.Member.mb_income_certificate_name,
+                    mb_income_certificate_name = joined.SubMember.sm_income_certificate_name,
                     mb_contract_name = joined.Member.mb_contract_name,
                     sm_id_id = joined.SubMember.sm_id_id
                 });
@@ -149,175 +150,67 @@ namespace WebApplication1.Controllers
 
         public ActionResult Edit(int id)
         {
-            //string path = Server.MapPath("~/assets/upload/Members");
-
-            var data = db.subsidy_member.Where(a => a.sm_id == id).Join(db.member, a => a.sm_mb_id, b => b.mb_id, (a, b) => new SubMembersEdit
+            var model = db.subsidy_member.Where(sm => sm.sm_id == id).Join(db.member, sm => sm.sm_mb_id, mb => mb.mb_id, (sm, mb) => new SubsidyMemberViewModel
             {
-                sm_agree_start = a.sm_agree_start,
-                sm_agree_end = a.sm_agree_end,
-                sm_advance_money = a.sm_advance_money,
-                sm_mb_id = a.sm_mb_id,
-                sm_id = id,
-                sm_s_id = (int)a.sm_s_id,
-                mb_name = b.mb_name,
-                mb_id_card = b.mb_id_card,
-                mb_birthday = b.mb_birthday,
-                mb_insur_salary = (int)b.mb_insur_salary,
-                mb_add_insur = b.mb_add_insur,
-                mb_add_insur_date = b.mb_add_insur_date,
-                mb_surrender_date = b.mb_surrender_date,
-                mb_memo = b.mb_memo,
-                mb_last_time = (DateTime)b.mb_last_time,
-                mb_contractFile = b.mb_contract,
-                mb_contract_name = b.mb_contract_name,
-                sm_income_certificateFile = a.sm_income_certificate,
-                sm_income_certificate_name = a.sm_income_certificate_name,
-                mb_insurance_id = b.mb_insurance_id,
-                mb_full_time_date = b.mb_full_time_date,
-                mb_full_time_or_not = (bool)b.mb_full_time_or_not,
-                mb_arrive_date = (DateTime)b.mb_arrive_date,
-                mb_position = b.mb_position,
+                Subsidy_Member = sm,
+                Member = mb
             }).FirstOrDefault();
 
-            if (data == null)
-            {
-                return HttpNotFound();
-            }
-
-            switch (int.Parse("0" + data.mb_add_insur))
-            {
-                case 1:
-                    ViewBag.mb_add_insur = "加保";
-                    break;
-                case 2:
-                    ViewBag.mb_add_insur = "退保";
-                    break;
-                case 3:
-                    ViewBag.mb_add_insur = "調薪";
-                    break;
-                case 4:
-
-                default:
-                    ViewBag.mb_add_insur = "加保";
-                    break;
-            }
-
-            return View(data);
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(SubMembersEdit data)
+        public ActionResult Edit(SubsidyMemberViewModel data)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(data);
+
+            var updateData = db.subsidy_member.Find(data.Subsidy_Member.sm_id);
+            var updateMember = db.member.Find(data.Subsidy_Member.sm_mb_id);
+
+            if (updateData != null && updateMember != null)
             {
-                #region 必填
+                updateData.sm_agree_start = data.Subsidy_Member.sm_agree_start;
+                updateData.sm_agree_end = data.Subsidy_Member.sm_agree_end;
+                updateData.sm_advance_money = data.Subsidy_Member.sm_advance_money;
 
-                var reloadMember = db.member.Find(data.sm_mb_id);
-                var reloadSubMember = db.subsidy_member.Find(data.sm_id);
+                string path = Server.MapPath("~/assets/upload/Members");
 
-                if (string.IsNullOrEmpty(reloadMember.mb_contract) && data.mb_contract == null)
-                {
-                    switch (int.Parse("0" + data.mb_add_insur))
-                    {
-                        case 1:
-                            ViewBag.mb_add_insur = "加保";
-                            break;
-                        case 2:
-                            ViewBag.mb_add_insur = "退保";
-                            break;
-                        case 3:
-                            ViewBag.mb_add_insur = "調薪";
-                            break;
-                        case 4:
+                updateMember.mb_contract = Utility.UploadAndDeleteFile(data.ContractFile, data.Member.mb_contract, path);
+                updateMember.mb_contract_name = data.ContractFile != null ? data.ContractFile.FileName : updateMember.mb_contract_name;
+                updateData.sm_income_certificate = Utility.UploadAndDeleteFile(data.IncomeCertificateFile, data.Subsidy_Member.sm_income_certificate, path);
+                updateData.sm_income_certificate_name = data.IncomeCertificateFile != null ? data.IncomeCertificateFile.FileName : updateData.sm_income_certificate_name;
 
-                        default:
-                            ViewBag.mb_add_insur = "加保";
-                            break;
-                    }
+                db.SaveChanges();
+                Session["msg"] = "修改成功";
 
-                    data.mb_contract_name = reloadMember.mb_contract_name;
-                    data.mb_contractFile = reloadMember.mb_contract;
-                    data.sm_income_certificate_name = reloadSubMember.sm_income_certificate_name;
-                    data.sm_income_certificateFile = reloadSubMember.sm_income_certificate;
-
-                    Session["msg"] = "請上傳勞動契約";
-
-                    return View(data);
-                }
-
-                if (string.IsNullOrEmpty(data.sm_income_certificateFile) && data.sm_income_certificate == null)
-                {
-                    switch (int.Parse("0" + data.mb_add_insur))
-                    {
-                        case 1:
-                            ViewBag.mb_add_insur = "加保";
-                            break;
-                        case 2:
-                            ViewBag.mb_add_insur = "退保";
-                            break;
-                        case 3:
-                            ViewBag.mb_add_insur = "調薪";
-                            break;
-                        case 4:
-
-                        default:
-                            ViewBag.mb_add_insur = "加保";
-                            break;
-                    }
-
-                    data.mb_contract_name = reloadMember.mb_contract_name;
-                    data.mb_contractFile = reloadMember.mb_contract;
-                    data.sm_income_certificate_name = reloadSubMember.sm_income_certificate_name;
-                    data.sm_income_certificateFile = reloadSubMember.sm_income_certificate;
-
-                    Session["msg"] = "請上傳薪資證明";
-                    return View(data);
-                }
-
-                #endregion
-
-                var updateData = db.subsidy_member.Find(data.sm_id);
-                var updateMember = db.member.Find(data.sm_mb_id);
-
-                if (updateData != null && updateMember != null)
-                {
-                    updateData.sm_agree_start = data.sm_agree_start;
-                    updateData.sm_agree_end = data.sm_agree_end;
-                    updateData.sm_advance_money = data.sm_advance_money;
-
-                    string path = Server.MapPath("~/assets/upload/Members");
-
-                    var contract = ajax.UploadFile(data.mb_contract, path);
-                    var incom = ajax.UploadFile(data.sm_income_certificate, path);
-
-                    if (!string.IsNullOrEmpty(contract)) ajax.DeleteFile($"{path}/{updateMember.mb_contract}");
-                    if (!string.IsNullOrEmpty(incom)) ajax.DeleteFile($"{path}/{updateData.sm_income_certificate}");
-
-                    updateMember.mb_contract = contract ?? updateMember.mb_contract;
-                    updateMember.mb_contract_name = data.mb_contract != null ? data.mb_contract.FileName : updateMember.mb_contract_name;
-                    updateData.sm_income_certificate = incom ?? updateData.sm_income_certificate;
-                    updateData.sm_income_certificate_name = data.sm_income_certificate != null ? data.sm_income_certificate.FileName : updateData.sm_income_certificate_name;
-
-                    db.SaveChanges();
-                    Session["msg"] = "修改成功";
-                    var industryID = db.subsidy.Find(data.sm_s_id).s_id;
-                    return RedirectToAction("Index", new { id = industryID });
-                }
+                return RedirectToAction("Index", new { id = data.Subsidy_Member.sm_s_id });
             }
+
             return View(data);
         }
 
         public ActionResult Edit_Manager(int subMemberID, bool viewMode)
         {
-            var data = GetSubsidyMemberData(subMemberID,  viewMode);
+            var data = GetSubsidyMemberData(subMemberID, viewMode);
+            data.FullTimeOrNotString = data.Member.mb_full_time_or_not.Value ? "1" : "0";
+            var memberIdCard = db.member.Find(data.Subsidy_Member.sm_mb_id)?.mb_id_card;
+
+            if (memberIdCard != null)
+            {
+                data.OtherCompany = db.member
+                                     .Where(x => x.mb_id_card == memberIdCard)
+                                     .Select(x => x.mb_id_id)
+                                     .Distinct()
+                                     .Count() > 1 ? "是" : "否";
+            }
 
             return View(data);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit_Manager(SubsidyMemberData data)
+        public ActionResult Edit_Manager(SubsidyMemberViewModel data)
         {
             if (ModelState.IsValid)
             {
@@ -338,7 +231,7 @@ namespace WebApplication1.Controllers
                 updateMember.mb_contract_name = data.ContractFile != null ? data.ContractFile.FileName : updateMember.mb_contract_name;
                 updateSubMember.sm_income_certificate = incom ?? updateSubMember.sm_income_certificate;
                 updateSubMember.sm_income_certificate_name =
-                    data.IncomeCertificateFile != null ? data.IncomeCertificateFile.FileName : updateSubMember.sm_income_certificate_name;
+                data.IncomeCertificateFile != null ? data.IncomeCertificateFile.FileName : updateSubMember.sm_income_certificate_name;
 
                 #endregion
 
@@ -355,11 +248,14 @@ namespace WebApplication1.Controllers
                 updateMember.mb_surrender_date = data.Member.mb_surrender_date;
                 updateMember.mb_full_time_or_not = data.FullTimeOrNot;
                 updateMember.mb_full_time_date = data.Member.mb_full_time_date;
+                updateMember.mb_review_contract = data.Member.mb_review_contract;
                 updateSubMember.sm_agree_start = data.Subsidy_Member.sm_agree_start;
                 updateSubMember.sm_agree_end = data.Subsidy_Member.sm_agree_end;
                 updateSubMember.sm_advance_money = data.Subsidy_Member.sm_advance_money;
                 updateSubMember.sm_review = data.Subsidy_Member.sm_review;
                 updateSubMember.sm_approved_amount = data.Subsidy_Member.sm_approved_amount;
+                updateSubMember.sm_review_income_certificate = data.Subsidy_Member.sm_review_income_certificate;
+                updateSubMember.sm_qualifications = data.Subsidy_Member.sm_qualifications;
 
                 #endregion
 
@@ -410,102 +306,45 @@ namespace WebApplication1.Controllers
                 Session["msg"] = "存檔成功";
             }
 
-            return View(GetSubsidyMemberData(data.Subsidy_Member.sm_id,data.ViewMode));
-        }
-
-        private SubsidyMemberData GetSubsidyMemberData(int subMemberID,bool viewMode)
-        {
-            var data = new SubsidyMemberData();
-
-            data.Subsidy_Member = db.subsidy_member.Find(subMemberID);
-            data.Member = db.member.Find(data.Subsidy_Member.sm_mb_id);
-            data.InitialReviewer = db.manager.Find(data.Subsidy_Member.sm_mg_id_fst);
-            data.SecondaryReviewer = db.manager.Find(data.Subsidy_Member.sm_mg_id_snd);
-            data.AssociationReviewer = db.manager.Find(data.Subsidy_Member.sm_mg_id_association);
-
-            //計算在職月份
-            var lastData = db.employment_insurance
-                .Where(x => x.ei_id_card == data.Member.mb_id_card)
-                .OrderByDescending(x => x.ei_year)
-                .ThenByDescending(x => x.ei_month)
-                .FirstOrDefault();
-
-            if (lastData != null)
-            {
-                var lastChangeDate = lastData.ei_last_change_date;
-
-                ROCDateToACDate(lastChangeDate, out DateTime acChangeDate);
-
-                //公式 異動日期+已匯入總月份-1天,比對最近日期要大於6個月
-                int enterMonth = lastData.ei_enter_month ?? 0;
-
-                if (enterMonth == 0)
-                {
-                    data.Subsidy_Member.sm_qualifications = false;
-                    data.Subsidy_Member.sm_calculation = 0;
-                }
-                else
-                {
-                    var diffMonth = GetMonthDiff(acChangeDate.AddMonths(enterMonth).AddDays(-1));
-
-                    data.Subsidy_Member.sm_qualifications = diffMonth > 6;
-                    data.Subsidy_Member.sm_calculation = (bool)data.Subsidy_Member.sm_qualifications ? diffMonth * 5000 : 0;
-                }
-            }
-
-            data.ViewMode = viewMode;
-            return data;
+            return RedirectToAction("Edit_Manager", new { subMemberID = data.Subsidy_Member.sm_id, viewMode = data.ViewMode });
         }
 
         public ActionResult Detail(int id)
         {
-            var data = db.subsidy_member.Where(a => a.sm_id == id).Join(db.member, a => a.sm_mb_id, b => b.mb_id, (a, b) => new SubMembersEdit
+            var model = db.subsidy_member.Where(sm => sm.sm_id == id).Join(db.member, sm => sm.sm_mb_id, mb => mb.mb_id, (sm, mb) => new SubsidyMemberViewModel
             {
-                sm_agree_start = a.sm_agree_start,
-                sm_agree_end = a.sm_agree_end,
-                sm_advance_money = a.sm_advance_money,
-                sm_mb_id = a.sm_mb_id,
-                sm_id = id,
-                sm_s_id = (int)a.sm_s_id,
-                mb_name = b.mb_name,
-                mb_id_card = b.mb_id_card,
-                mb_birthday = b.mb_birthday,
-                mb_insur_salary = (int)b.mb_insur_salary,
-                mb_add_insur = b.mb_add_insur,
-                mb_add_insur_date = b.mb_add_insur_date,
-                mb_surrender_date = b.mb_surrender_date,
-                mb_memo = b.mb_memo,
-                mb_last_time = (DateTime)b.mb_last_time,
-                mb_contract_name = b.mb_contract_name,
-                mb_insurance_id = b.mb_insurance_id,
-                mb_full_time_date = b.mb_full_time_date,
-                mb_income_certificate_name = b.mb_income_certificate_name,
-                mb_full_time_or_not = (bool)b.mb_full_time_or_not,
-                mb_arrive_date = (DateTime)b.mb_arrive_date,
-                mb_position = b.mb_position,
-                mb_contractFile = b.mb_contract,
-                mb_income_certificateFile = b.mb_income_certificate,
+                Subsidy_Member = sm,
+                Member = mb
             }).FirstOrDefault();
 
-            return View(data);
+            return View(model);
         }
 
-        public ActionResult Delete(int id)
+        public ActionResult Delete(int subMemberID, int subID, bool? fromSubsidy = false)
         {
-            if (id == 0)
+            if (subMemberID == 0)
             {
                 return HttpNotFound();
             }
 
-            var data = db.subsidy_member.Find(id);
-            var subID = data.sm_s_id;
+            var data = db.subsidy_member.Find(subMemberID);
+
             if (data == null)
             {
-                return HttpNotFound();
+                if ((bool)fromSubsidy)
+                {
+                    return RedirectToAction("Edit_Manager", "Subsidy", new { subsidyID = subID, isView = false, title = 1 });
+                }
+                return RedirectToAction("Index", new { id = subID });
             }
 
             db.subsidy_member.Remove(data);
             db.SaveChanges();
+
+            if ((bool)fromSubsidy)
+            {
+                return RedirectToAction("Edit_Manager", "Subsidy", new { subsidyID = subID, isView = false, title = 1 });
+            }
             return RedirectToAction("Index", new { id = subID });
         }
 
@@ -520,9 +359,9 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index", "Subsidy");
         }
 
-        public ActionResult ReviewList(int subMemberID, int? page,string title)
+        public ActionResult ReviewList(int subMemberID, int? page, string title)
         {
-            var data = new SubsidyMemberData();
+            var data = new SubsidyMemberViewModel();
             int pageNum = page ?? 1;
 
             data.Subsidy_Member = db.subsidy_member.Find(subMemberID);
@@ -534,55 +373,132 @@ namespace WebApplication1.Controllers
                 .ThenByDescending(x => x.smr_time)
                 .ToPagedList(pageNum, 10);
 
-            ViewBag.Title=title+ ">補助人員審核記錄";
+            ViewBag.Title = title + ">補助人員審核記錄";
 
             return View(data);
         }
 
-        /// <summary>
-        /// 民國日期轉換西元日期
-        /// </summary>
-        /// <param name="rocDate">格式:yyyMMdd</param>
-        /// <param name="acDate"></param>
-        /// <returns></returns>
-        private static bool ROCDateToACDate(string rocDate, out DateTime acDate)
+        private SubsidyMemberViewModel GetSubsidyMemberData(int subMemberID, bool viewMode)
         {
-            if (rocDate.Length != 7)
-            {
-                acDate = default;
-                return false;
-            }
+            var data = new SubsidyMemberViewModel();
 
-            //分解日期
-            int rocYear, month, day;
+            data.Subsidy_Member = db.subsidy_member.Find(subMemberID);
+            data.Member = db.member.Find(data.Subsidy_Member.sm_mb_id);
+            data.Industry = db.industry.Find(data.Subsidy_Member.sm_id_id);
+            data.InitialReviewer = db.manager.Find(data.Subsidy_Member.sm_mg_id_fst);
+            data.SecondaryReviewer = db.manager.Find(data.Subsidy_Member.sm_mg_id_snd);
+            data.AssociationReviewer = db.manager.Find(data.Subsidy_Member.sm_mg_id_association);
+            data.MemberApplyList = db.member.Where(x => x.mb_id_card == data.Member.mb_id_card)
+                  .Join(db.subsidy_member, mb => mb.mb_id, sm => sm.sm_mb_id, (mb, sm) => new { Member = mb, SubMember = sm })
+                  .Join(db.subsidy, joined => joined.SubMember.sm_s_id, s => s.s_id, (joined, s) => new SubsidyMemberViewModel.MemberApply()
+                  {
+                      Member = joined.Member,
+                      SubsidyNo = s.s_no,
+                      Subsidy_Member = joined.SubMember
+                  })
+                  .ToList();
 
-            if (!int.TryParse(rocDate.Substring(0, 3), out rocYear) ||
-                !int.TryParse(rocDate.Substring(3, 2), out month) ||
-                !int.TryParse(rocDate.Substring(5, 2), out day))
-            {
-                acDate = default;
-                return false;
-            }
+            //modify by 2次修改=====
 
-            //民國年轉換西元年
-            int acYear = rocYear + 1911;
+            ////計算在職月份
+            //var lastData = db.employment_insurance
+            //    .Where(x => x.ei_id_card == data.Member.mb_id_card && x.ei_id_id == data.Subsidy_Member.sm_id_id)
+            //    .OrderByDescending(x => x.ei_year)
+            //    .ThenByDescending(x => x.ei_month)
+            //    .FirstOrDefault();
 
-            try
-            {
-                acDate = new DateTime(acYear, month, day);
-                return true;
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                acDate = default;
-                return false;
-            }
+            ////系統試算資格
+            //if (lastData != null)
+            //{
+            //    var lastChangeDate = lastData.ei_last_change_date;
+
+            //    ROCDateToACDate(lastChangeDate, out DateTime acChangeDate);
+
+            //    var diffDate = acChangeDate.AddMonths(6);
+
+            //    data.SystemQualifications = diffDate < DateTime.Today ? "是" : "否";
+            //}
+            //else
+            //{
+            //    data.SystemQualifications = "否";
+            //}
+
+            //======================
+
+            data.SystemQualifications = EvaluateQualification(data);
+
+            //======================
+
+            //系統試算
+            data.Subsidy_Member.sm_calculation = data.Subsidy_Member.sm_review == "審核完成" ? data.Subsidy_Member.sm_advance_money : 0;
+
+            data.ViewMode = viewMode;
+
+            return data;
         }
 
-        private static int GetMonthDiff(DateTime date)
+        private string EvaluateQualification(SubsidyMemberViewModel data)
         {
-            var today = DateTime.Today;
-            return (today.Year - date.Year) * 12 + today.Month - date.Month;
+            var qualifyingPositions = new[] { "房務", "清潔" };
+            var startDate = new DateTime(2023, 4, 1);
+            var endDate = new DateTime(2024, 3, 31);
+            int limitMoney = GetSalaryLimit(data.Industry.id_city);
+
+            var eiRecords = db.employment_insurance
+                .Where(x => x.ei_id_card == data.Member.mb_id_card && x.ei_id_id == data.Industry.id_id)
+                .AsEnumerable()
+                .Select(x => new
+                {
+                    x.ei_type,
+                    x.ei_salary,
+                    ChangeDate = DateTime.TryParse(x.ei_last_change_date, out DateTime parsedDate) ? parsedDate : (DateTime?)null,
+                    Date = new DateTime(x.ei_year, x.ei_month, 1)
+                })
+                .Where(x => x.ChangeDate.HasValue && x.ChangeDate.Value >= startDate && x.ChangeDate.Value <= endDate)
+                .Where(x => qualifyingPositions.Contains(x.ei_type) && x.ei_salary >= limitMoney)
+                .ToList();
+
+            if (!eiRecords.Any())
+                return "否";
+
+            var dates = eiRecords.Select(x => x.Date).OrderBy(x => x);
+            return HasConsecutiveMonths(dates, 6) ? "是" : "否";
         }
+
+        private int GetSalaryLimit(string city)
+        {
+            var highCostCities = new[] { "臺北市", "台北市", "新北市", "基隆市", "桃園市", "新竹縣", "新竹市" };
+            return highCostCities.Contains(city) ? 33000 : 31000;
+        }
+
+        private bool HasConsecutiveMonths(IEnumerable<DateTime> dates, int requiredConsecutiveMonths)
+        {
+            var orderedDates = dates.OrderBy(x => x).ToList();
+            int consecutiveMonths = 1;
+            DateTime previousDate = orderedDates.First();
+
+            for (int i = 1; i < orderedDates.Count; i++)
+            {
+                DateTime currentDate = orderedDates[i];
+                if (currentDate.Year == previousDate.Year && currentDate.Month == previousDate.Month + 1 ||
+                    currentDate.Year == previousDate.Year + 1 && currentDate.Month == 1 && previousDate.Month == 12)
+                {
+                    consecutiveMonths++;
+                }
+                else
+                {
+                    consecutiveMonths = currentDate.Month == 1 && previousDate.Month == 12 ? 2 : 1;
+                }
+
+                if (consecutiveMonths >= requiredConsecutiveMonths)
+                    return true;
+
+                previousDate = currentDate;
+            }
+
+            return false;
+        }
+
+        //父置chat
     }
 }

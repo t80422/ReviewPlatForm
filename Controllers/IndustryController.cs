@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Razor.Parser;
 using WebApplication1.Models;
 using WebApplication1.Models.Industry;
 
@@ -26,21 +27,20 @@ namespace WebApplication1.Controllers
         public ActionResult Index(string key, int? page = 1)
         {
             var query = db.industry.AsEnumerable();
-            var perm = (int)Session["perm"];
-            var userID = (int)Session["UserID"];
 
-            if (perm == 2)
-            {
-                query = query.Where(x => x.id_mg_id_fst == userID);
-            }
+            #region 搜尋
 
-            //搜尋功能=====
-            //關鍵字搜尋
+            //if (!string.IsNullOrWhiteSpace(key))            
+            //    query = query.Where(x => x.id_name.Contains(key));
+            //    
             if (!string.IsNullOrWhiteSpace(key))
             {
-                query = query.Where(x => x.id_name.Contains(key));
+                query = query.Where(x => (x.id_name != null && x.id_name.Contains(key)) ||
+                                         (x.id_tax_id != null && x.id_tax_id.Contains(key)) ||
+                                         (x.id_company != null && x.id_company.Contains(key)));
             }
-            //=============
+
+            #endregion
 
             var data = new IndustryViewModel.Index();
             data.Industries = query.OrderByDescending(x => x.id_id).ToPagedList((int)page, 10);
@@ -50,89 +50,76 @@ namespace WebApplication1.Controllers
 
         public ActionResult Create()
         {
-            var result = new Industry();
+            //var result = new Industry();
 
-            ViewBag.it_id = new SelectList(GetIndustryTypes(), "Value", "Text", string.Empty);
+            //ViewBag.it_id = new SelectList(GetIndustryTypes(), "Value", "Text", string.Empty);
 
-            return View(result);
+            //return View(result);
+
+            var model = new IndustryViewModel.IndustryModel();
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Industry data)
+        public ActionResult Create(IndustryViewModel.IndustryModel data)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
+                return View(data);
+
+            var checkTaxID = db.industry.Where(x => x.id_tax_id == data.Industry.id_tax_id).FirstOrDefault();
+
+            if (checkTaxID != null)
             {
-                var checkTaxID = db.industry.Where(x => x.id_tax_id == data.id_tax_id).FirstOrDefault();
-
-                if (checkTaxID != null)
-                {
-                    Session["msg"] = data.id_tax_id + " 此統一編號已申請";
-                    ViewBag.it_id = new SelectList(GetIndustryTypes(), "Value", "Text", string.Empty);
-
-                    return View(data);
-                }
-
-                string path = Server.MapPath("~/assets/upload/Industry");
-
-                var passbook = ajax.UploadFile(data.id_passbook, path);
-                var lincense = ajax.UploadFile(data.id_license, path);
-                var register = ajax.UploadFile(data.id_register, path);
-
-                var insertData = new industry();
-
-                if (insertData != null)
-                {
-                    insertData.id_passbook = passbook ?? insertData.id_passbook;
-                    insertData.id_passbook_name = data.id_passbook != null ? data.id_passbook.FileName : insertData.id_passbook_name;
-                    insertData.id_license = lincense ?? insertData.id_license;
-                    insertData.id_license_name = data.id_license != null ? data.id_license.FileName : insertData.id_license_name;
-                    insertData.id_register = register ?? insertData.id_register;
-                    insertData.id_register_name = data.id_register != null ? data.id_register.FileName : insertData.id_register_name;
-
-                    insertData.id_name = data.id_name;
-                    insertData.id_tax_id = data.id_tax_id;
-                    insertData.id_room = data.id_room;
-                    insertData.id_company = data.id_company;
-                    insertData.id_it_id = data.id_it_id;
-                    insertData.id_email = data.id_email;
-                    insertData.id_postal_code = data.id_postal_code;
-                    insertData.id_city = data.id_city;
-                    insertData.id_address = data.id_address;
-                    insertData.id_tel = data.id_tel;
-                    insertData.id_fax = data.id_fax;
-                    insertData.id_owner = data.id_owner;
-                    insertData.id_tel_owner = data.id_tel_owner;
-                    insertData.id_owner_area_code = data.id_owner_area_code;
-                    insertData.id_extension = data.id_extension;
-                    insertData.id_owner_phone = data.id_owner_phone;
-                    insertData.id_bank_name = data.BankName;
-                    insertData.id_bank_acct_name = data.id_bank_acct_name;
-                    insertData.id_owner_email = data.OwnerEmail;
-                    insertData.id_bank_code = data.id_bank_code;
-                    insertData.id_bank_acct = data.id_bank_acct;
-
-                    db.industry.Add(insertData);
-                    db.SaveChanges();
-
-                    user_accounts User = new user_accounts()
-                    {
-                        ua_acct = insertData.id_tax_id,
-                        ua_psw = ajax.ConvertToSHA256(insertData.id_tax_id),
-                        ua_perm = 3,
-                        ua_user_id = insertData.id_id,
-                    };
-                    db.user_accounts.Add(User);
-                    db.SaveChanges();
-
-                    Session["msg"] = "新增成功";
-
-                    return RedirectToAction("Index");
-                }
+                Session["msg"] = data.Industry.id_tax_id + " 此統一編號已申請";
+                return View(data);
             }
-            ViewBag.it_id = new SelectList(GetIndustryTypes(), "Value", "Text", string.Empty);
+            
+            var insertData = new industry();
 
-            return View(data);
+            HandleFileUploads(data, insertData, Server.MapPath("~/assets/upload/Industry"));
+
+            insertData.id_name = data.Industry.id_name;
+            insertData.id_tax_id = data.Industry.id_tax_id;
+            insertData.id_room = data.Industry.id_room;
+            insertData.id_company = data.Industry.id_company;
+            insertData.id_it_id = data.Industry.id_it_id;
+            insertData.id_email = data.Industry.id_email;
+            insertData.id_postal_code = data.Industry.id_postal_code;
+            insertData.id_city = data.Industry.id_city;
+            insertData.id_address = data.Industry.id_address;
+            insertData.id_tel = data.Industry.id_tel;
+            insertData.id_fax = data.Industry.id_fax;
+            insertData.id_owner = data.Industry.id_owner;
+            insertData.id_tel_owner = data.Industry.id_tel_owner;
+            insertData.id_owner_area_code = data.Industry.id_owner_area_code;
+            insertData.id_extension = data.Industry.id_extension;
+            insertData.id_owner_phone = data.Industry.id_owner_phone;
+            insertData.id_bank_name = data.Industry.id_bank_name;
+            insertData.id_bank_acct_name = data.Industry.id_bank_acct_name;
+            insertData.id_owner_email = data.Industry.id_owner_email;
+            insertData.id_bank_code = data.Industry.id_bank_code;
+            insertData.id_bank_acct = data.Industry.id_bank_acct;
+            insertData.id_business_status = data.Industry.id_business_status;
+            insertData.id_operator = data.Industry.id_operator;
+
+            db.industry.Add(insertData);
+            db.SaveChanges();
+
+            user_accounts User = new user_accounts()
+            {
+                ua_acct = insertData.id_tax_id,
+                ua_psw = ajax.ConvertToSHA256(insertData.id_tax_id),
+                ua_perm = 3,
+                ua_user_id = insertData.id_id,
+            };
+            db.user_accounts.Add(User);
+            db.SaveChanges();
+
+            Session["msg"] = "新增成功";
+
+            return RedirectToAction("Index");
         }
 
         public ActionResult Edit(int? id)
@@ -149,138 +136,26 @@ namespace WebApplication1.Controllers
                 return HttpNotFound();
             }
 
-            var result = new Industry();
-            result.id_id = id.Value;
-            result.id_address = data.id_address;
-            result.id_tel = data.id_tel;
-            result.id_fax = data.id_fax;
-            result.id_company = data.id_company;
-            result.id_tax_id = data.id_tax_id;
-            result.id_owner = data.id_owner;
-            result.id_tel_owner = data.id_tel_owner;
-            result.id_extension = data.id_extension;
-            result.id_owner_phone = data.id_owner_phone;
-            result.id_room = data.id_room;
-            result.id_license_name = data.id_license_name;
-            result.id_register_name = data.id_register_name;
-            result.id_email = data.id_email;
-            result.id_bank_code = data.id_bank_code;
-            result.id_bank_acct = data.id_bank_acct;
-            result.id_bank_acct_name = data.id_bank_acct_name;
-            result.id_passbook_name = data.id_passbook_name;
-            result.id_review = data.id_review;
-            result.id_city = data.id_city;
-            result.id_it_id = data.id_it_id;
-            result.id_area_code = data.id_area_code;
-            result.id_postal_code = data.id_postal_code;
-            result.id_name = data.id_name;
-            result.id_owner_area_code = data.id_owner_area_code;
-            result.BankName = data.id_bank_name;
-            result.OwnerEmail = data.id_owner_email;
+            var result = new IndustryViewModel.IndustryModel();
+            result.Industry = data;
 
             return View(result);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Industry data)
+        public ActionResult Edit(IndustryViewModel.IndustryModel data)
         {
             if (!ModelState.IsValid)
             {
                 return View(data);
-            }
-
-            var updateData = db.industry.Find(data.id_id);
-
-            if (updateData == null)
-            {
-                return View(data);
-            }
-
-            #region 檔案管理
-
-            string path = Server.MapPath("~/assets/upload/Industry");
-
-            Func<HttpPostedFileBase, string, string> HandleFile = (file, existingFilePath) =>
-            {
-                if (file != null)
-                {
-                    if (!string.IsNullOrEmpty(existingFilePath))
-                    {
-                        ajax.DeleteFile($"{path}/{existingFilePath}");
-                    }
-                    return ajax.UploadFile(file, path);
-                }
-                return existingFilePath;
-            };
-
-            updateData.id_passbook = HandleFile(data.id_passbook, updateData.id_passbook);
-            updateData.id_passbook_name = data.id_passbook?.FileName ?? updateData.id_passbook_name;
-
-            updateData.id_license = HandleFile(data.id_license, updateData.id_license);
-            updateData.id_license_name = data.id_license?.FileName ?? updateData.id_license_name;
-
-            updateData.id_register = HandleFile(data.id_register, updateData.id_register);
-            updateData.id_register_name = data.id_register?.FileName ?? updateData.id_register_name;
-
-            #endregion
-
-            #region 必填檔案
-
-            if (string.IsNullOrEmpty(updateData.id_license))
-            {
-                Session["msg"] = "請上傳 營業執照或登記證";
-                return View(data);
-            }
-
-            if (string.IsNullOrEmpty(updateData.id_passbook))
-            {
-                Session["msg"] = "請上傳 銀行存摺";
-                return View(data);
-            }
-            #endregion
-
-            #region 資料上傳
-
-            updateData.id_bank_acct_name = data.id_bank_acct_name;
-            updateData.id_bank_code = data.id_bank_code;
-            updateData.id_owner = data.id_owner;
-            updateData.id_tel_owner = data.id_tel_owner;
-            updateData.id_extension = data.id_extension;
-            updateData.id_owner_phone = data.id_owner_phone;
-            updateData.id_tax_id = data.id_tax_id;
-            updateData.id_bank_acct = data.id_bank_acct;
-            updateData.id_owner_area_code = data.id_owner_area_code;
-            updateData.id_bank_name = data.BankName;
-            updateData.id_owner_email = data.OwnerEmail;
-
-            db.SaveChanges();
-            Session["msg"] = "修改成功";
-
-            #endregion
-
-            return (int)Session["perm"] < 3 ? RedirectToAction("Index") : RedirectToAction("Edit", new { id = data.id_id });
-        }
-
-        public ActionResult Edit_Manager(int industryID)
-        {
-            return View(GetIndustryData(industryID));
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit_Manager(IndustryViewModel.Edit_Manager data)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(GetIndustryData(data.Industry.id_id));
             }
 
             var updateData = db.industry.Find(data.Industry.id_id);
 
             if (updateData == null)
             {
-                return View(GetIndustryData(data.Industry.id_id));
+                return View(data);
             }
 
             #region 檔案管理
@@ -314,6 +189,55 @@ namespace WebApplication1.Controllers
 
             #region 資料上傳
 
+            updateData.id_bank_acct_name = data.Industry.id_bank_acct_name;
+            updateData.id_bank_code = data.Industry.id_bank_code;
+            updateData.id_owner = data.Industry.id_owner;
+            updateData.id_tel_owner = data.Industry.id_tel_owner;
+            updateData.id_extension = data.Industry.id_extension;
+            updateData.id_owner_phone = data.Industry.id_owner_phone;
+            updateData.id_tax_id = data.Industry.id_tax_id;
+            updateData.id_bank_acct = data.Industry.id_bank_acct;
+            updateData.id_owner_area_code = data.Industry.id_owner_area_code;
+            updateData.id_bank_name = data.Industry.id_bank_name;
+            updateData.id_owner_email = data.Industry.id_owner_email;
+            updateData.id_business_status = data.Industry.id_business_status;
+            updateData.id_operator = data.Industry.id_operator;
+
+            db.SaveChanges();
+            Session["msg"] = "修改成功";
+
+            #endregion
+
+            return (int)Session["perm"] < 3 ? RedirectToAction("Index") : RedirectToAction("Edit", new { id = data.Industry.id_id });
+        }
+
+        public ActionResult Edit_Manager(int industryID)
+        {
+            return View(GetIndustryData(industryID));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit_Manager(IndustryViewModel.IndustryModel data)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(GetIndustryData(data.Industry.id_id));
+            }
+
+            var updateData = db.industry.Find(data.Industry.id_id);
+
+            if (updateData == null)
+            {
+                return View(GetIndustryData(data.Industry.id_id));
+            }
+
+            string path = Server.MapPath("~/assets/upload/Industry");
+
+            HandleFileUploads(data, updateData, path);
+
+            #region 資料上傳
+
             updateData.id_name = data.Industry.id_name;
             updateData.id_tax_id = data.Industry.id_tax_id;
             updateData.id_room = data.Industry.id_room;
@@ -338,6 +262,58 @@ namespace WebApplication1.Controllers
             updateData.id_bank_acct_name = data.Industry.id_bank_acct_name;
             updateData.id_bank_code = data.Industry.id_bank_code;
             updateData.id_bank_acct = data.Industry.id_bank_acct;
+            updateData.id_business_status = data.Industry.id_business_status;
+            updateData.id_operator = data.Industry.id_operator;
+
+            #region 審核狀態
+
+            if (data.Industry.id_review_passbook == "退件" || data.Industry.id_review_register == "退件" || data.Industry.id_review_license == "退件")
+            {
+                updateData.id_review = "退件";
+            }
+            else if (data.Industry.id_review_passbook == "待補件" || data.Industry.id_review_register == "待補件" || data.Industry.id_review_license == "待補件")
+            {
+                updateData.id_review = "待補件";
+            }
+            else if (data.Industry.id_review_passbook == "審核中" || data.Industry.id_review_register == "審核中" || data.Industry.id_review_license == "審核中")
+            {
+                updateData.id_review = "審核中";
+            }
+            else if (data.Industry.id_review_passbook == "審核完成" && data.Industry.id_review_register == "審核完成" && data.Industry.id_review_license == "審核完成")
+            {
+                updateData.id_review = "審核完成";
+            }
+            else
+            {
+                updateData.id_review = "待審核";
+            }
+
+            #endregion
+
+            #region 更新審核人員
+
+            var perm = (int)Session["perm"];
+            var managerID = (int)Session["UserID"];
+
+            switch (perm)
+            {
+                case 0:
+                    updateData.id_mg_id_association = managerID;
+                    break;
+
+                case 1:
+                    updateData.id_mg_id_snd = managerID;
+                    break;
+
+                case 2:
+                    updateData.id_mg_id_fst = managerID;
+                    break;
+
+                default:
+                    break;
+            }
+
+            #endregion
 
             db.SaveChanges();
             Session["msg"] = "存檔成功";
@@ -561,9 +537,9 @@ namespace WebApplication1.Controllers
             };
         }
 
-        private IndustryViewModel.Edit_Manager GetIndustryData(int industryID)
+        private IndustryViewModel.IndustryModel GetIndustryData(int industryID)
         {
-            var data = new IndustryViewModel.Edit_Manager();
+            var data = new IndustryViewModel.IndustryModel();
 
             data.Industry = db.industry.Find(industryID);
             data.InitialReviewer = db.manager.Find(data.Industry.id_mg_id_fst);
@@ -571,6 +547,32 @@ namespace WebApplication1.Controllers
             data.AssociationReviewer = db.manager.Find(data.Industry.id_mg_id_association);
 
             return data;
+        }
+
+        private void HandleFileUploads(IndustryViewModel.IndustryModel data, industry updateData, string path)
+        {
+            Func<HttpPostedFileBase, string, string> HandleFile = (file, existingFilePath) =>
+            {
+                if (file != null)
+                {
+                    if (!string.IsNullOrEmpty(existingFilePath))
+                    {
+                        ajax.DeleteFile($"{path}/{existingFilePath}");
+                    }
+
+                    return ajax.UploadFile(file, path);
+                }
+                return existingFilePath;
+            };
+
+            updateData.id_passbook = HandleFile(data.PassBookFile, updateData.id_passbook);
+            updateData.id_passbook_name = data.PassBookFile?.FileName ?? updateData.id_passbook_name;
+
+            updateData.id_license = HandleFile(data.LicenseFile, updateData.id_license);
+            updateData.id_license_name = data.LicenseFile?.FileName ?? updateData.id_license_name;
+
+            updateData.id_register = HandleFile(data.RegisterFile, updateData.id_register);
+            updateData.id_register_name = data.RegisterFile?.FileName ?? updateData.id_register_name;
         }
     }
 }

@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
+using static WebApplication1.Models.SubsidyViewModel;
 
 namespace WebApplication1.Models
 {
     public class SubsidyViewModel
     {
-        public class Edit_Mangager:CommonViewModel.ReviewModelBase
+        public class SubsidyDetails : CommonViewModel.ReviewModelBase
         {
             public industry Industry { get; set; }
             public subsidy Subsidy { get; set; }
@@ -42,8 +43,13 @@ namespace WebApplication1.Models
             /// 補件資料3
             /// </summary>
             public HttpPostedFileBase ElseThreeFile { get; set; }
-            public bool ViewMode {  get; set; }
+            /// <summary>
+            /// 員工清冊
+            /// </summary>
+            public HttpPostedFileBase EmployeeInventoryFile { get; set; }
+            public bool ViewMode { get; set; }
         }
+
         public class SubMemberList
         {
             public subsidy_member Subsidy_Member { get; set; }
@@ -63,7 +69,7 @@ namespace WebApplication1.Models
 
     public class SubsidyIndexViewModel
     {
-        public IPagedList<SubsidyIndustry> Subsidies { get; set; }
+        public IPagedList<SubsidyDetails> Subsidies { get; set; }
         public List<ReviewerViewModel> Reviewers { get; set; }
     }
 
@@ -71,5 +77,11 @@ namespace WebApplication1.Models
     {
         public int? ID { get; set; }
         public string Name { get; set; }
+    }
+
+    public class SubsidyIndexQViewModel
+    {
+        public IPagedList<SubsidyDetails> Subsidies { get; set; }
+        public industry Industry { get; set; }
     }
 }

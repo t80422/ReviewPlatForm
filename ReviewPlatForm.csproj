@@ -163,6 +163,7 @@
     <Compile Include="HtmlHelpers\DateInput.cs" />
     <Compile Include="Models\CaseQueryViewModel.cs" />
     <Compile Include="Models\CommonViewModel.cs" />
+    <Compile Include="Models\EmploymentInsuranceViewModel.cs" />
     <Compile Include="Models\employment_insurance.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -219,7 +220,7 @@
     <Compile Include="Models\SubsidyViewModel.cs" />
     <Compile Include="Models\SubsidyEdit.cs" />
     <Compile Include="Models\SubsidyIndustry.cs" />
-    <Compile Include="Models\SubsidyMemberData.cs" />
+    <Compile Include="Models\SubsidyMemberViewModel.cs" />
     <Compile Include="Models\subsidy_member.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -258,6 +259,8 @@
     <Content Include="assets\image\password_icon.png" />
     <Content Include="assets\image\logo.jpg" />
     <Content Include="assets\img\logo.jpg" />
+    <Content Include="assets\img\PDF_IMG.png" />
+    <Content Include="assets\img\PDF縮圖.png" />
     <Content Include="assets\img\slide\slide-2.jpg" />
     <Content Include="assets\js\jquery-2.1.4.min.js" />
     <Content Include="assets\js\main.js" />
@@ -484,10 +487,8 @@
     <Content Include="Views\Subsidy\Edit.cshtml" />
     <Content Include="Views\Industry\Index.cshtml" />
     <Content Include="Views\Industry\Create.cshtml" />
-    <Content Include="Views\Industry\Edit.cshtml" />
     <Content Include="Views\SubMembers\Index.cshtml" />
     <Content Include="Views\SubMembers\Create.cshtml" />
-    <Content Include="Views\SubMembers\Edit.cshtml" />
     <Content Include="Views\IndustryLog\Index.cshtml" />
     <Content Include="Views\Video\Create.cshtml" />
     <Content Include="Views\Video\Edit.cshtml" />
@@ -501,15 +502,14 @@
     <Content Include="Views\MngAccount\Edit.cshtml" />
     <Content Include="Views\MngAccount\Index.cshtml" />
     <Content Include="Views\Industry\Detail.cshtml" />
-    <Content Include="Views\SubMembers\Detail.cshtml" />
-    <Content Include="Views\Subsidy\Detail.cshtml" />
+    <Content Include="Views\SubMembers\Detail_old.cshtml" />
+    <Content Include="Views\Subsidy\Detail_old.cshtml" />
     <Content Include="Views\Login\ResetPwd.cshtml" />
     <Content Include="Views\Subsidy\Report.cshtml" />
     <Content Include="Views\Members\Detail.cshtml" />
     <Content Include="Views\Subsidy\InsurList.cshtml" />
     <Content Include="Views\News\Detail.cshtml" />
     <Content Include="Views\SubsidyQ\Create.cshtml" />
-    <Content Include="Views\SubsidyQ\Detail.cshtml" />
     <Content Include="Views\SubsidyQ\Edit.cshtml" />
     <Content Include="Views\SubsidyQ\Index.cshtml" />
     <Content Include="Views\SubsidyQ\InsurList.cshtml" />
@@ -528,6 +528,11 @@
     <Content Include="Views\Manager\CreateAndEdit.cshtml" />
     <Content Include="Views\CaseQuery\Index.cshtml" />
     <Content Include="Views\CaseQuery\RequestPaymentList.cshtml" />
+    <Content Include="Views\Industry\Edit.cshtml" />
+    <Content Include="Views\SubMembers\Detail.cshtml" />
+    <Content Include="Views\SubMembers\Edit.cshtml" />
+    <Content Include="Views\Subsidy\Detail.cshtml" />
+    <Content Include="Views\CaseQuery\CaseStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

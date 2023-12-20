@@ -72,8 +72,6 @@ namespace WebApplication1.Controllers
                     mb_insurance_id = data.mb_insurance_id,
                     mb_contract = contract,
                     mb_contract_name = data.mb_contract != null ? data.mb_contract.FileName : "",
-                    mb_income_certificate = incom,
-                    mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate.FileName : "",
                     mb_birthday = data.mb_birthday,
                     mb_insur_salary = data.mb_insur_salary,
                     mb_add_insur_date = data.mb_add_insur_date,
@@ -116,7 +114,6 @@ namespace WebApplication1.Controllers
                 mb_memo = data.mb_memo,
                 mb_insurance_id = data.mb_insurance_id,
                 mb_contract_name = data.mb_contract != null ? data.mb_contract_name : "",
-                mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate_name : "",
                 mb_birthday = data.mb_birthday,
                 mb_insur_salary = data.mb_insur_salary,
                 mb_add_insur_date = data.mb_add_insur_date,
@@ -161,12 +158,9 @@ namespace WebApplication1.Controllers
                 if (updateData != null)
                 {
                     if (!string.IsNullOrEmpty(contract)) ajax.DeleteFile($"{path}/{updateData.mb_contract}");
-                    if (!string.IsNullOrEmpty(incom)) ajax.DeleteFile($"{path}/{updateData.mb_income_certificate}");
 
                     updateData.mb_contract = contract ?? updateData.mb_contract;
                     updateData.mb_contract_name = data.mb_contract != null ? data.mb_contract.FileName : updateData.mb_contract_name;
-                    updateData.mb_income_certificate = incom ?? updateData.mb_income_certificate;
-                    updateData.mb_income_certificate_name = data.mb_income_certificate != null ? data.mb_income_certificate.FileName : updateData.mb_income_certificate_name;
                     updateData.mb_name = data.mb_name;
                     updateData.mb_id_card = data.mb_id_card;
                     updateData.mb_add_insur = data.mb_add_insur;

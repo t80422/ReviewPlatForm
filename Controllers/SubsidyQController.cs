@@ -15,85 +15,24 @@ namespace WebApplication1.Controllers
         private ReviewPlatformEntities db = new ReviewPlatformEntities();
         private AjaxsController ajax = new AjaxsController();
 
-        // GET: Subsidy
         public ActionResult Index(int? page = 1)
         {
             int userID = Session["UserID"] != null ? (int)Session["UserID"] : 0;
             int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
+            var model = new SubsidyIndexQViewModel();
+            model.Industry = db.industry.Find(userID);
 
-            var joinQuery = db.subsidy.Join(db.industry, a => a.s_id_id, b => b.id_id, (a, b) => new SubsidyIndustry
+            var joined = db.subsidy.Where(x => x.s_id_id == userID).Join(db.industry, s => s.s_id_id, i => i.id_id, (s, i) => new SubsidyViewModel.SubsidyDetails
             {
-                s_no = a.s_no,
-                s_date_time = a.s_date_time,
-                id_owner = b.id_owner,
-                s_grant_date = a.s_grant_date,
-                s_money = (int)a.s_money,
-                s_review = a.s_review_fst,
-                id_name = b.id_name,
-                s_id = a.s_id,
-                id_id = b.id_id,
+                Subsidy = s,
+                Industry = i,
             });
 
-            var query = perm == 3 ? joinQuery.Where(c => c.id_id == userID) : joinQuery;
+            var list = joined.OrderByDescending(x => x.Subsidy.s_id).ToPagedList((int)page, 10);
 
-            var result = query.OrderByDescending(c => c.s_date_time).ToPagedList((int)page, 10);
+            model.Subsidies = list;
 
-            var industry = db.industry.Find(userID);
-            ViewBag.Name = industry?.id_name ?? "";
-            ViewBag.Maxmember = (industry?.id_room ?? 0) / 8;
-            if (ViewBag.Maxmember == 0) { ViewBag.Maxmember = 1; }
-            ViewBag.SubMemberCount = db.member.Count(x => x.mb_id_id == userID);
-            ViewBag.IndustryId = userID;
-
-            return View(result);
-
-            //List<SubsidyIndustry> query = new List<SubsidyIndustry>();
-
-            //#region 判斷是業者或是管理者
-            //// 業者
-            //if (perm == 3)
-            //{
-            //    query = db.subsidy.Join(db.industry, a => a.s_id_id, b => b.id_id, (a, b) => new SubsidyIndustry
-            //    {
-            //        id_room = b.id_room,
-            //        id_name = b.id_name,
-            //        s_date_time = a.s_date_time,
-            //        id_owner = b.id_owner,
-            //        s_id = a.s_id,
-            //        s_no = a.s_no,
-            //        s_review = a.s_review,
-            //        id_id = b.id_id,
-            //        s_submit = a.s_submit
-            //    }
-            //    ).Where(c => c.id_id == userID).OrderByDescending(c => c.s_date_time).ToList();
-            //}
-            //else
-            //{
-            //    query = db.subsidy.Join(db.industry, a => a.s_id_id, b => b.id_id, (a, b) => new SubsidyIndustry
-            //    {
-            //        id_room = b.id_room,
-            //        id_name = b.id_name,
-            //        s_date_time = a.s_date_time,
-            //        id_owner = b.id_owner,
-            //        s_id = a.s_id,
-            //        s_no = a.s_no,
-            //        s_review = a.s_review,
-            //        id_id = b.id_id,
-            //        s_submit = a.s_submit
-            //    }
-            //    ).OrderByDescending(c => c.s_date_time).ToList();
-
-            //#endregion 判斷是業者或是管理者
-
-            //var result = query.ToPagedList((int)page, 10);
-
-            //var industry = db.industry.Find(userID);
-            //ViewBag.Name = industry != null ? industry.id_name : "";
-            //ViewBag.Maxmember = (industry != null ? (int)industry.id_room : 0) / 8;
-            //ViewBag.SubMemberCount = db.member.Where(x => x.mb_id_id == userID).Count();
-            //ViewBag.IndustryId = userID;
-
-            //    return View(result);
+            return View(model);
         }
 
         public ActionResult Create(int? id_id)
@@ -154,14 +93,6 @@ namespace WebApplication1.Controllers
                 #region 上傳檔案
 
                 string path = Server.MapPath($"~/assets/upload/Subsidy/{IndustryData.id_name + "_" + IndustryData.id_id}");
-                //data.ApplicationName = ajax.UploadFile(data.Application, path) ?? "";
-                //data.LaborName = ajax.UploadFile(data.Labor, path) ?? "";
-                //data.ApplicantsListName = ajax.UploadFile(data.ApplicantsList, path) ?? "";
-                //data.AffidavitName = ajax.UploadFile(data.Affidavit, path) ?? "";
-                //data.ReceiptName = ajax.UploadFile(data.Receipt, path) ?? "";
-                //data.EmployeeListName = ajax.UploadFile(data.EmployeeList, path) ?? "";
-                //data.OtherFileName = ajax.UploadFile(data.OtherFile, path) ?? "";
-
                 var Application = ajax.UploadFile(data.Application, path) ?? "";
                 var Labor = ajax.UploadFile(data.Labor, path) ?? "";
                 var ApplicantsList = ajax.UploadFile(data.ApplicantsList, path) ?? "";
@@ -219,19 +150,6 @@ namespace WebApplication1.Controllers
                     for (var i = 1; i < sheet.Value.Count(); i++)
                     {
                         if (String.IsNullOrEmpty(sheet.Value[i][3])) continue;
-
-                        //string insur;
-                        //switch (sheet.Value[i][5])
-                        //{
-                        //    case "加保":
-                        //        insur = "1"; break;
-                        //    case "退保":
-                        //        insur = "2"; break;
-                        //    case "調薪":
-                        //        insur = "3"; break;
-                        //    default:
-                        //        insur = ""; break;
-                        //}
                         int hire;
                         switch (sheet.Value[i][10])
                         {
@@ -243,7 +161,7 @@ namespace WebApplication1.Controllers
                                 hire = 0; break;
                         }
                         string IDCard = sheet.Value[i][3] ?? "";
-                        if (IDCard!="")
+                        if (IDCard != "")
                         {
                             member memberData = db.member.Where(x => x.mb_id_card == IDCard).FirstOrDefault() ?? new member();
 
@@ -254,10 +172,8 @@ namespace WebApplication1.Controllers
                             memberData.mb_birthday = sheet.Value[i][2] ?? "";
                             memberData.mb_id_card = sheet.Value[i][3] ?? "";
                             memberData.mb_insur_salary = Convert.ToInt32(sheet.Value[i][4] ?? "0");
-                            //memberData.mb_add_insur = insur;
                             memberData.mb_add_insur_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][5] ?? ""));
                             memberData.mb_surrender_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][6] ?? ""));
-                            //memberData.mb_memo = sheet.Value[i][7] ?? "";
                             memberData.mb_full_time_or_not = sheet.Value[i][7] == "是";
                             memberData.mb_full_time_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][8] ?? ""));
                             memberData.mb_arrive_date = DateTime.FromOADate(Convert.ToDouble(sheet.Value[i][9] ?? ""));
@@ -508,36 +424,6 @@ namespace WebApplication1.Controllers
                 return RedirectToAction("Index");
 
             }
-            return View(data);
-        }
-
-        public ActionResult Detail(int id)
-        {
-            var data = db.subsidy.Where(x => x.s_id == id).Join(db.industry, x => x.s_id_id, y => y.id_id, (x, y) => new SubsidyEdit
-            {
-                s_id = id,
-                id_id = x.s_id_id,
-                EmpCount = x.s_empcount,
-                Money = x.s_money,
-                Date = x.s_date_time,
-                ApplicationFile = x.s_application,
-                ApplicationName = x.s_application_name,
-                LaborFile = x.s_insur_member,
-                LaborName = x.s_insur_member_name,
-                ApplicantsListFile = x.s_applicants,
-                ApplicantsListName = x.s_applicants_name,
-                AffidavitFile = x.s_affidavit,
-                AffidavitName = x.s_affidavit_name,
-                ReceiptFile = x.s_receipt,
-                ReceiptName = x.s_receipt_name,
-                EmployeeListFile = x.s_emp_lst,
-                EmployeeListName = x.s_emp_lst_name,
-                OtherFileFile = x.s_else,
-                OtherFileName = x.s_else_name,
-                id_name = y.id_name,
-                s_no = x.s_no
-            }).FirstOrDefault();
-
             return View(data);
         }
 

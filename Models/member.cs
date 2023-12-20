@@ -48,10 +48,6 @@ public partial class member
 
     public Nullable<System.DateTime> mb_full_time_date { get; set; }
 
-    public string mb_income_certificate { get; set; }
-
-    public string mb_income_certificate_name { get; set; }
-
     public Nullable<bool> mb_full_time_or_not { get; set; }
 
     public string mb_s_no { get; set; }
@@ -63,8 +59,6 @@ public partial class member
     public string mb_position { get; set; }
 
     public string mb_review_contract { get; set; }
-
-    public string mb_review_income_certificate { get; set; }
 
     public string mb_review { get; set; }
 

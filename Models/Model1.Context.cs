@@ -42,21 +42,21 @@ public partial class ReviewPlatformEntities : DbContext
 
     public virtual DbSet<user_accounts> user_accounts { get; set; }
 
-    public virtual DbSet<member> member { get; set; }
-
-    public virtual DbSet<subsidy> subsidy { get; set; }
-
-    public virtual DbSet<employment_insurance> employment_insurance { get; set; }
-
     public virtual DbSet<subsidy_member_review> subsidy_member_review { get; set; }
 
     public virtual DbSet<subsidy_review> subsidy_review { get; set; }
 
-    public virtual DbSet<industry> industry { get; set; }
-
     public virtual DbSet<login_out> login_out { get; set; }
 
     public virtual DbSet<manager> manager { get; set; }
+
+    public virtual DbSet<member> member { get; set; }
+
+    public virtual DbSet<employment_insurance> employment_insurance { get; set; }
+
+    public virtual DbSet<industry> industry { get; set; }
+
+    public virtual DbSet<subsidy> subsidy { get; set; }
 
 }
 

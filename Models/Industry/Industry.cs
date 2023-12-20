@@ -5,6 +5,8 @@ namespace WebApplication1.Models.Industry
 {
     public class Industry
     {
+        public string id_operator { get; set; }
+        public bool id_business_status { get; set; }
         //承辦人Email
         public string OwnerEmail { get; set; }
         //銀行名稱

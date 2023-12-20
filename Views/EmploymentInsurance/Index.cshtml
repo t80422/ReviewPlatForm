@@ -7,57 +7,71 @@
     // 3. 業者3
 }
 
-@using PagedList.Mvc;
-@using PagedList;
-
-@model IPagedList<WebApplication1.Models.employment_insurance>
+@model WebApplication1.Models.EmploymentInsuranceViewModel
 
 <main class="container-wrap">
     <div class="container-main">
-        <div class="list-wrap">          
+        <div class="list-wrap">
             <div class="list-overflow">
                 <div class="list-main">
                     <div class="form-title">申請補助人員勞保資料</div>
                     <div class="list-title pr-2 pl-2">
-                        <div class="f-1">年度</div>
-                        <div class="f-1">月份</div>
-                        <div class="f-1">序號</div>
-                        <div class="f-1">姓名</div>
-                        <div class="f-1">身份證號</div>
-                        <div class="f-1">出生日期</div>
-                        <div class="f-1">最近異動別</div>
-                        <div class="f-1">最近異動日期</div>
-                        <div class="f-1">特殊身份別</div>
+                        <div class="f-3">案號</div>
+                        <div class="f-3">年度</div>
+                        <div class="f-3">月份</div>
+                        <div class="f-3">序號</div>
+                        <div class="f-3">姓名</div>
+                        <div class="f-3">身份證號</div>
+                        <div class="f-3">職務內容</div>
+                        <div class="f-3">到職或轉為正職日期</div>
+                        <div class="f-3">薪資</div>
+                        @if (perm == 0 || perm == 1)
+                        {
+                            <div class="f-1">刪除</div>
+                        }
                     </div>
 
-                    @foreach (var data in Model)
+                    @foreach (var data in Model.Employments)
                     {
                         <div class="list-row pr-2 pl-2">
-                            <div class="f-1">@data.ei_year</div>
-                            <div class="f-1">@data.ei_month</div>
-                            <div class="f-1">@data.ei_no</div>
-                            <div class="f-1">@data.ei_name</div>
-                            <div class="f-1">@data.ei_id_card</div>
-                            <div class="f-1">@data.ei_birthday</div>
-                            <div class="f-1">@data.ei_type</div>
-                            <div class="f-1">@data.ei_last_change_date</div>
-                            <div class="f-1">@data.ei_memo</div>
+                            <div class="f-3">@data.ei_subsidy_no</div>
+                            <div class="f-3">@data.ei_year</div>
+                            <div class="f-3">@data.ei_month</div>
+                            <div class="f-3">@data.ei_no</div>
+                            <div class="f-3">@data.ei_name</div>
+                            <div class="f-3">@data.ei_id_card</div>
+                            <div class="f-3">@data.ei_type</div>
+                            <div class="f-3">@data.ei_last_change_date</div>
+                            <div class="f-3">@data.ei_salary</div>
+
+                            @if (perm == 0 || perm == 1)
+                            {
+                                <div class="f-1">
+                                    <button class="btn-del" onClick="openPopup(@data.ei_year,@data.ei_month,'@data.ei_id_card','@data.ei_id_id')"></button>
+                                </div>
+                            }
                         </div>
                     }
                 </div>
             </div>
         </div>
     </div>
-
-    <div class="pages-wrap">
-        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }), new PagedListRenderOptions()
-   {
-       DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-       DisplayLinkToLastPage = PagedListDisplayMode.Always,
-       DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-       DisplayLinkToNextPage = PagedListDisplayMode.Always
-   })
-    </div>
 </main>
 
+<script>
+    function openPopup(year, month, idCard, industryID) {
+        let popupClass, actionUrl;
 
+        popupClass = '.js-del-popup';
+        actionUrl = '@Url.Action("Delete")' + "?year=" + year + "&month=" + month + "&idCard=" + idCard + "&industryID=" + industryID;
+
+        $(".popup-overlay," + popupClass).fadeIn();
+        $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+        $(".popup-overlay, " + popupClass + " .popup-btn .btn-cancel").on('click', function () {
+            $(".popup-overlay, " + popupClass).fadeOut();
+        });
+        $(popupClass + ' .popup-btn .btn-submit').on('click', function () {
+            window.location.href = actionUrl;
+        });
+    }
+</script>

@@ -1,4 +1,4 @@
-﻿@model WebApplication1.Models.SubsidyViewModel.Edit_Mangager
+﻿@model WebApplication1.Models.SubsidyViewModel.SubsidyDetails
 
 @using WebApplication1.HtmlHelpers
 
@@ -9,7 +9,11 @@
     // 1. 無登入-1
     // 2. 管理者0、PM1、工讀生2
     // 3. 業者3
-    string filePath = Url.Content("~/assets/upload/Subsidy/" + Model.Industry.id_name + "_" + Model.Industry.id_id + "/");
+
+    string baseUrl = Request.Url.Scheme + "://" + Request.Url.Authority + Request.ApplicationPath.TrimEnd('/') + "/";
+    string filePath = baseUrl + "assets/upload/Subsidy/" + Model.Industry.id_name + "_" + Model.Industry.id_id + "/";
+
+    //string filePath = Url.Content("~/assets/upload/Subsidy/" + Model.Industry.id_name + "_" + Model.Industry.id_id + "/");
     var disable = new Dictionary<string, object>();
     var read = new Dictionary<string, object>();
     if (Model.ViewMode)
@@ -58,17 +62,20 @@
                                         </div>
                                     </div>
 
-                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
-                                    {
-                                        <div class="form-input">
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Subsidy.s_application)
-                                                @Html.TextBoxFor(x => x.ApplicationFile, new { @type = "file" })
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_application)
+                                            @Html.HiddenFor(x => x.Subsidy.s_application_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
+                                                @Html.TextBoxFor(x => x.ApplicationFile, new { @type = "file", @accept = ".pdf", @onchange = "validateFileInput(this)" })
                                                 <span>@Model.Subsidy.s_application_name</span>
                                                 <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
+
 
                                     <div class="form-input">
                                         <label>全公司勞保明細</label>
@@ -78,37 +85,44 @@
                                         </div>
                                     </div>
 
-                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
-                                    {
-                                        <div class="form-input">
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Subsidy.s_insur_member)
-                                                @Html.TextBoxFor(x => x.InsurMemberFile, new { @type = "file" })
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_insur_member)
+                                            @Html.HiddenFor(x => x.Subsidy.s_insur_member_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
+                                                @Html.TextBoxFor(x => x.InsurMemberFile, new { @type = "file", @accept = ".pdf", @onchange = "validateFileInput(this)" })
                                                 <span>@Model.Subsidy.s_insur_member_name</span>
                                                 <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
+
 
                                     <div class="form-input">
                                         <label>建立全公司勞保清冊</label>
-                                        <a href="@(filePath+Model.Subsidy.s_emp_lst)" target="_blank"> @Model.Subsidy.s_emp_lst_name</a>
+                                        <a href="ms-excel:ofv|u|@(filePath+Model.Subsidy.s_emp_lst)" target="_blank"> @Model.Subsidy.s_emp_lst_name</a>
                                         <div>
                                             @Html.DropDownListFor(x => x.Subsidy.s_review_emp_lst, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
-                                    {
-                                        <div class="form-input">
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Subsidy.s_emp_lst)
-                                                @Html.TextBoxFor(x => x.EmpListFile, new { @type = "file" })
+
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_emp_lst)
+                                            @Html.HiddenFor(x => x.Subsidy.s_emp_lst_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
+                                                @Html.TextBoxFor(x => x.EmpListFile, new { @type = "file", @accept = ".xlsx,.xls", @onchange = "validateFileInput(this)" })
                                                 <span>@Model.Subsidy.s_emp_lst_name</span>
                                                 <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
+
 
                                     <div class="form-input">
                                         <div class="red-text">
@@ -121,23 +135,26 @@
 
                                     <div class="form-input">
                                         <label>申請補助人員清冊</label>
-                                        <a href="@(filePath+Model.Subsidy.s_applicants)" target="_blank">@Model.Subsidy.s_applicants_name</a>
+                                        <a href="ms-excel:ofv|u|@(filePath+Model.Subsidy.s_applicants)" target="_blank">@Model.Subsidy.s_applicants_name</a>
                                         <div>
                                             @Html.DropDownListFor(x => x.Subsidy.s_review_applicants, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
-                                    {
-                                        <div class="form-input">
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Subsidy.s_applicants)
-                                                @Html.TextBoxFor(x => x.ApplicantsFile, new { @type = "file" })
+
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_applicants)
+                                            @Html.HiddenFor(x => x.Subsidy.s_applicants_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
+                                                @Html.TextBoxFor(x => x.ApplicantsFile, new { @type = "file", @accept = ".xlsx,.xls", @onchange = "validateFileInput(this)" })
                                                 <span>@Model.Subsidy.s_applicants_name</span>
                                                 <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
                                 </div>
 
                                 <div class="form-col">
@@ -163,28 +180,52 @@
                                         <div class="input">
                                             @Html.TextBoxForWithReadonly(x => x.Subsidy.s_empcount, Model.ViewMode, new { @type = "number", @required = "" })
                                         </div>
-                                        <label>可申請人數：@(ViewBag.Maxmember-ViewBag.SubMemberCount) </label>
+                                    </div>
+
+                                    <div style="padding-left:65px;margin-bottom:32px;">
+                                        <p>已申請成功者@(ViewBag.SubMemberCount)/尚可申請人數@(ViewBag.Remaining) </p>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>員工清冊</label>
+                                        <a href="ms-excel:ofv|u|@(filePath+Model.Subsidy.s_employee_inventory)" target="_blank">@Model.Subsidy.s_employee_inventory_name</a>                                        
+                                    </div>
+
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory)
+                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
+                                                @Html.TextBoxFor(x => x.EmployeeInventoryFile, new { @type = "file", @accept = ".xlsx,.xls" })
+                                                <span>@Model.Subsidy.s_employee_inventory_name</span>
+                                                <button class="onfile" type="button">上傳檔案</button>
+                                            }
+                                        </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label>補件資料1</label>
                                         <a href="@(filePath+Model.Subsidy.s_else)" target="_blank">@Model.Subsidy.s_else_name</a>
                                         <div>
-                                            @Html.DropDownListFor(x => x.Subsidy.s_else, Model.FileReviewOptions, "審核狀態", disable)
+                                            @Html.DropDownListFor(x => x.Subsidy.s_review_else, Model.FileReviewOptions, "審核狀態", disable)
                                         </div>
                                     </div>
 
-                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
-                                    {
-                                        <div class="form-input">
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Subsidy.s_else)
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_else)
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
                                                 @Html.TextBoxFor(x => x.ElseOneFile, new { @type = "file" })
                                                 <span>@Model.Subsidy.s_else_name</span>
                                                 <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
 
                                     <div class="form-input">
                                         <label>補件資料2</label>
@@ -194,17 +235,19 @@
                                         </div>
                                     </div>
 
-                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
-                                    {
-                                        <div class="form-input">
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Subsidy.s_else_two)
-                                                @Html.TextBoxFor(x => x.ElseOneFile, new { @type = "file" })
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_two)
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_two_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
+                                                @Html.TextBoxFor(x => x.ElseTwoFile, new { @type = "file" })
                                                 <span>@Model.Subsidy.s_else_two_name</span>
                                                 <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
 
                                     <div class="form-input">
                                         <label>補件資料3</label>
@@ -214,17 +257,27 @@
                                         </div>
                                     </div>
 
-                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
-                                    {
-                                        <div class="form-input">
-                                            <div class="input file">
-                                                @Html.HiddenFor(x => x.Subsidy.s_else_three)
+
+                                    <div class="form-input">
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_three)
+                                            @Html.HiddenFor(x => x.Subsidy.s_else_three_name)
+
+                                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                            {
                                                 @Html.TextBoxFor(x => x.ElseThreeFile, new { @type = "file" })
                                                 <span>@Model.Subsidy.s_else_three_name</span>
                                                 <button class="onfile" type="button">上傳檔案</button>
-                                            </div>
+                                            }
                                         </div>
-                                    }
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>說明</label>
+                                        <div class="input">
+                                            @Html.TextAreaFor(x => x.Subsidy.s_memo, new { @style = "width:100%" })
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -294,7 +347,7 @@
 
                             </div>
 
-                            @if ((perm == 0 || perm == 1)&& !Model.ViewMode)
+                            @if ((perm == 0 || perm == 1) && !Model.ViewMode)
                             {
                                 <div class="form-btn">
                                     <button class="btn-cancel" style="width:350px;flex: 0 1 200px" type="button" onclick="location.href='@Url.Action("Import", "EmploymentInsurance", new {subsidyID=Model.Subsidy.s_id})'">
@@ -323,6 +376,11 @@
                                                     <div class="f-3">申請金額</div>
                                                     <div class="f-1">詳細資料</div>
                                                     <div class="f-1">審核紀錄</div>
+
+                                                    @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                                    {
+                                                        <div class="f-1">刪除</div>
+                                                    }
                                                 </div>
 
                                                 @if (Model.SubMemberList != null && Model.SubMemberList.Count() > 0)
@@ -334,8 +392,8 @@
                                                                 <div class="f-3">@member.Subsidy_Member.sm_review</div>
                                                                 <div class="f-3">@member.Member.mb_name</div>
                                                                 <div class="f-3">@member.Member.mb_id_card</div>
-                                                                <div class="f-3">@(member.Member.mb_review_contract==null?"否":"是")</div>
-                                                                <div class="f-3">@(member.Subsidy_Member.sm_review_income_certificate==null?"否":"是")</div>
+                                                                <div class="f-3">@(member.Member.mb_review_contract)</div>
+                                                                <div class="f-3">@(member.Subsidy_Member.sm_review_income_certificate)</div>
                                                                 <div class="f-3">@(member.Subsidy_Member.sm_agree_start?.ToString("yyyy/MM/dd"))</div>
                                                                 <div class="f-3">@(member.Subsidy_Member.sm_agree_end?.ToString("yyyy/MM/dd"))</div>
                                                                 <div class="f-3">@member.Subsidy_Member.sm_advance_money</div>
@@ -346,6 +404,13 @@
                                                                 <div class="f-1">
                                                                     <button class="btn-details" type="button" onclick="location.href='@Url.Action("ReviewList", "SubMembers", new {subMemberID=member.Subsidy_Member.sm_id,title=title})'"></button>
                                                                 </div>
+
+                                                                @if ((perm == 0 || perm == 1) && !Model.ViewMode)
+                                                                {
+                                                                    <div class="f-1">
+                                                                        <button class="btn-del" type="button" onclick="openPopup('@Url.Action("Delete","SubMembers", new {subMemberID=member.Subsidy_Member.sm_id,subID=member.Subsidy_Member.sm_s_id,fromSubsidy=true})')"></button>
+                                                                    </div>
+                                                                }
                                                             </div>
                                                         </div>
                                                     }
@@ -378,4 +443,35 @@
             })
         })
     })
+
+    function openPopup(url) {
+        let popupClass;
+
+        popupClass = '.js-del-popup';
+
+        $(".popup-overlay," + popupClass).fadeIn();
+        $(".popup-overlay, .popup-btn .btn-cancel, .popup-btn .btn-submit").off('click');
+        $(".popup-overlay, " + popupClass + " .popup-btn .btn-cancel").on('click', function () {
+            $(".popup-overlay, " + popupClass).fadeOut();
+        });
+        $(popupClass + ' .popup-btn .btn-submit').on('click', function () {
+            window.location.href = url;
+        });
+    }
+
+    function validateFileInput(input) {
+        var file = input.files[0];
+        if (file) {
+            var fileName = file.name;
+            var fileExtension = fileName.substr(fileName.lastIndexOf('.') + 1).toLowerCase();
+            var acceptedExtensions = input.getAttribute('accept').split(',').map(function (ext) {
+                return ext.trim().substring(1);  // 去除點和空格
+            });
+
+            if (acceptedExtensions.indexOf(fileExtension) === -1) {
+                alert('只能上傳以下類型的文件: ' + input.getAttribute('accept'));
+                input.value = '';  // 清除選擇的文件
+            }
+        }
+    }
 </script>

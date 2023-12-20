@@ -18,12 +18,19 @@ namespace WebApplication1.Controllers
             Logout,
         }
 
-
-        // GET: Login
         public ActionResult Index()
         {
-            Session["title"] = "交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助-旅宿業者"; ;
+            Session["title"] = "交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助-旅宿業者";
+            ViewBag.Action = "Login";
+
             return View();
+        }
+
+        public ActionResult Index_Manager()
+        {
+            Session["title"] = "交通部觀光署協助審查旅宿業者申請穩定接待國際旅客服務量能補助-管理者";
+            ViewBag.Action = "Login_Manager";
+            return View("Index");
         }
 
         public ActionResult HomePage()
@@ -32,7 +39,6 @@ namespace WebApplication1.Controllers
 
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Login(string account, string password)
@@ -40,7 +46,7 @@ namespace WebApplication1.Controllers
             if (!string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(password))
             {
                 var hasPassowrd = ajax.ConvertToSHA256(password);
-                var user = db.user_accounts.Where(x => x.ua_acct == account && x.ua_psw == hasPassowrd).FirstOrDefault();
+                var user = db.user_accounts.Where(x => x.ua_perm == 3 && x.ua_acct == account && x.ua_psw == hasPassowrd).FirstOrDefault();
 
                 if (user != null)
                 {
@@ -49,42 +55,67 @@ namespace WebApplication1.Controllers
                     Session["perm"] = user.ua_perm;
                     Session["acct"] = user.ua_acct;
 
-                    if (user.ua_perm == 3)
+                    var review = db.industry.Find(user.ua_user_id);
+                    if (review != null)
                     {
-                        var review = db.industry.Find(user.ua_user_id);
-                        if (review != null)
-                        {
-                            Session["userReview"] = review.id_review;
-                        }
-                        else
-                        {
-                            Session["msg"] = "帳號不存在";
-                            return RedirectToAction("Index");
-                        }
+                        Session["userReview"] = review.id_review;
+                    }
+                    else
+                    {
+                        Session["msg"] = "帳號不存在";
+                        return RedirectToAction("Index");
                     }
 
                     Session["msg"] = "登入成功";
                     Session["logintime"] = DateTime.Now.ToString("yyyy/MM/dd");
 
-                    //perm=3,密碼與統編相同表示第一次登入,須將畫面導向"修改密碼"
-                    if ((int)Session["perm"] == 3)
+                    //密碼與統編相同表示第一次登入,須將畫面導向"修改密碼"
+                    int userID = (int)Session["UserID"];
+                    var taxID = db.industry.Find(userID).id_tax_id;
+
+                    LogLogInOutTime((int)user.ua_user_id, LogInOut.Login);
+
+                    if (password == taxID)
                     {
-                        int userID = (int)Session["UserID"];
-                        var taxID = db.industry.Find(userID).id_tax_id;
-
-                        LogLogInOutTime((int)user.ua_user_id, LogInOut.Login);
-
-                        if (password == taxID)
-                        {
-                            Session["First"] = "Y";
-                            return RedirectToAction("ResetPwd", new { id = userID });
-                        }
-                        else
-                        {
-                            Session["ResetPW"] = "N";
-                            return RedirectToAction("Index", "Subsidy");
-                        }
+                        Session["First"] = "Y";
+                        return RedirectToAction("ResetPwd", new { id = userID });
                     }
+                    else
+                    {
+                        Session["ResetPW"] = "N";
+                        return RedirectToAction("Index", "Subsidy");
+                    }
+                }
+                else
+                {
+                    Session["msg"] = "帳號或密碼錯誤";
+                }
+            }
+            else
+            {
+                Session["msg"] = "帳號或密碼不得為空";
+            }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login_Manager(string account, string password)
+        {
+            if (!string.IsNullOrEmpty(account) && !string.IsNullOrEmpty(password))
+            {
+                var hasPassowrd = ajax.ConvertToSHA256(password);
+                var user = db.user_accounts.Where(x => x.ua_perm != 3 && x.ua_acct == account && x.ua_psw == hasPassowrd).FirstOrDefault();
+
+                if (user != null)
+                {
+                    Session["ua_id"] = user.ua_id;
+                    Session["UserID"] = user.ua_user_id;
+                    Session["perm"] = user.ua_perm;
+                    Session["acct"] = user.ua_acct;
+                    Session["msg"] = "登入成功";
+                    Session["logintime"] = DateTime.Now.ToString("yyyy/MM/dd");
 
                     if ((int)Session["perm"] == 4)
                     {
@@ -105,18 +136,25 @@ namespace WebApplication1.Controllers
                 Session["msg"] = "帳號或密碼不得為空";
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index_Manager");
         }
 
+        [IsLogin]
         public ActionResult Logout()
         {
-            if ((int)Session["perm"] == 3) LogLogInOutTime((int)Session["UserID"], LogInOut.Logout);
+            var perm = (int)Session["perm"];
+            if (perm == 3) LogLogInOutTime((int)Session["UserID"], LogInOut.Logout);
 
             Session["UserID"] = null;
             Session["perm"] = null;
             Session["acct"] = null;
             Session["msg"] = "登出成功";
             Session["logintime"] = null;
+
+            if ((perm >= 0 && perm < 3) || perm == 4)
+            {
+                return RedirectToAction("Index_Manager");
+            }
 
             return RedirectToAction("Index");
         }

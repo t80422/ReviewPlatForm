@@ -1,13 +1,8 @@
 ﻿@{
     Layout = "~/Views/Shared/Layout.cshtml";
-
-    int perm = Session["perm"] != null ? (int)Session["perm"] : -1;
-    // 1. 無登入-1
-    // 2. 管理者0、PM1、工讀生2
-    // 3. 業者3
 }
 
-@model WebApplication1.Models.Industry.Industry
+@model WebApplication1.Models.IndustryViewModel.IndustryModel
 
 <main class="container-wrap">
     <div class="container-main">
@@ -29,21 +24,21 @@
                                     <div class="form-input">
                                         <label for="">旅宿名稱</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_name)
+                                            @Html.TextBoxFor(x => x.Industry.id_name)
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label class="required">統編</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_tax_id, new { @required = "required" })
+                                            @Html.TextBoxFor(x => x.Industry.id_tax_id, new { @required = "required" })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">房間數</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_room)
+                                            @Html.TextBoxFor(x => x.Industry.id_room)
                                         </div>
                                     </div>
                                 </div>
@@ -52,32 +47,21 @@
                                     <div class="form-input">
                                         <label for="">公司名稱</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_company)
+                                            @Html.TextBoxFor(x => x.Industry.id_company)
                                         </div>
                                     </div>
 
-                                    @*<div class="form-input">
-                                            <label for="">旅宿別</label>
-                                            <div class="input select">
-                                                <select name="id_it_id" id="id_it_id">
-                                                    <option value="" @if (Model.id_it_id == null || Model.id_it_id == 0) { @Html.Raw("selected") ; }>選擇旅宿別</option>
-                                                    <option value="1" @if (Model.id_it_id == 1) { @Html.Raw("selected") ; }>觀光旅館</option>
-                                                    <option value="2" @if (Model.id_it_id == 2) { @Html.Raw("selected") ; }>旅館</option>
-                                                    <option value="3" @if (Model.id_it_id == 3) { @Html.Raw("selected") ; }>民宿</option>
-                                                </select>
-                                            </div>
-                                        </div>*@
                                     <div class="form-input">
                                         <label class="required">旅宿別</label>
                                         <div class="input select">
-                                            @Html.DropDownListFor(x => x.id_it_id, ViewBag.it_id as IEnumerable<SelectListItem>, new { @required = "required" })
+                                            @Html.DropDownListFor(x => x.Industry.id_it_id, Model.IndustryTypeOptions, "旅宿別")
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label for="">Email</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_email)
+                                            @Html.TextBoxFor(x => x.Industry.id_email)
                                         </div>
                                     </div>
                                 </div>
@@ -90,13 +74,13 @@
                                         <div class="input" style="display:flex">
 
                                             <div style="width:100px;margin-right:15px;">
-                                                @Html.TextBoxFor(x => x.id_postal_code)
+                                                @Html.TextBoxFor(x => x.Industry.id_postal_code, new { @placeholder = "郵遞區號" })
                                             </div>
                                             <div style="width:100px;margin-right:15px;">
-                                                @Html.TextBoxFor(x => x.id_city)
+                                                @Html.TextBoxFor(x => x.Industry.id_city, new { @placeholder = "城市" })
                                             </div>
 
-                                            @Html.TextBoxFor(x => x.id_address)
+                                            @Html.TextBoxFor(x => x.Industry.id_address, new { @placeholder = "地址" })
                                         </div>
                                     </div>
                                 </div>
@@ -106,7 +90,7 @@
                                     <div class="form-input">
                                         <label for="">公司電話</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_tel)
+                                            @Html.TextBoxFor(x => x.Industry.id_tel)
                                         </div>
                                     </div>
                                 </div>
@@ -114,7 +98,7 @@
                                     <div class="form-input">
                                         <label for="">公司傳真</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_fax)
+                                            @Html.TextBoxFor(x => x.Industry.id_fax)
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +109,7 @@
                                     <div class="form-input">
                                         <label class="required">承辦人</label>
                                         <div class="input" style="display:flex">
-                                            @Html.TextBoxFor(x => x.id_owner, new {  })
+                                            @Html.TextBoxFor(x => x.Industry.id_owner, new { })
                                         </div>
                                     </div>
                                 </div>
@@ -135,9 +119,9 @@
                                         <label class="required">承辦人電話</label>
                                         <div class="input" style="display:flex">
                                             <div style="width:60px;margin-right:15px;">
-                                                @Html.TextBoxFor(x => x.id_owner_area_code, new {  @onkeydown = "return onlyNumber(event)" })
+                                                @Html.TextBoxFor(x => x.Industry.id_owner_area_code, new { @onkeydown = "return onlyNumber(event)" })
                                             </div>
-                                            @Html.TextBoxFor(x => x.id_tel_owner, new {  @onkeydown = "return onlyNumber(event)" })
+                                            @Html.TextBoxFor(x => x.Industry.id_tel_owner, new { @onkeydown = "return onlyNumber(event)" })
                                         </div>
                                     </div>
                                 </div>
@@ -146,7 +130,7 @@
                                     <div class="form-input">
                                         <label for="">承辦人分機</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_extension)
+                                            @Html.TextBoxFor(x => x.Industry.id_extension)
                                         </div>
                                     </div>
                                 </div>
@@ -157,28 +141,28 @@
                                     <div class="form-input">
                                         <label class="">承辦人手機</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_owner_phone, new { @onkeydown = "return onlyNumber(event)" })
+                                            @Html.TextBoxFor(x => x.Industry.id_owner_phone, new { @onkeydown = "return onlyNumber(event)" })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label class="required">銀行名稱/分行</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.BankName, new {  })
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_name, new { })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label class="required">銀行戶名</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_bank_acct_name, new {  })
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_acct_name, new { })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label class="required">銀行存摺</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.id_passbook, new { @type = "file" })
+                                            @Html.TextBoxFor(x => x.PassBookFile, new { @type = "file", @id = "id_passbook" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
@@ -189,7 +173,7 @@
                                     <div class="form-input">
                                         <label>商業登記或稅籍證明</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.id_register, new { @type = "file" })
+                                            @Html.TextBoxFor(x => x.RegisterFile, new { @type = "file", @id = "id_register" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
@@ -209,14 +193,14 @@
                                     <div class="form-input">
                                         <label class="required">承辦人Email</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.OwnerEmail, new {  })
+                                            @Html.TextBoxFor(x => x.Industry.id_owner_email, new { })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label class="required">銀行代碼(7碼)</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_bank_code, new { @minlength = "7", @maxlength = "7", @onkeydown = "return onlyNumber(event)" })
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_code, new { @minlength = "7", @maxlength = "7", @onkeydown = "return onlyNumber(event)" })
                                             <a href="https://www.fisc.com.tw/TC/Service?Caid=51254999-5d15-4ddf-8e54-4b2cdb2a8399&CaStyleId=16%E6%9F%A5%E8%A9%A2" target="_blank">銀行代碼查詢</a>
                                         </div>
                                     </div>
@@ -224,14 +208,14 @@
                                     <div class="form-input">
                                         <label class="required">銀行帳號</label>
                                         <div class="input">
-                                            @Html.TextBoxFor(x => x.id_bank_acct, new { @onkeydown = "return onlyNumber(event)" })
+                                            @Html.TextBoxFor(x => x.Industry.id_bank_acct, new { @onkeydown = "return onlyNumber(event)" })
                                         </div>
                                     </div>
 
                                     <div class="form-input">
                                         <label class="required">營業執照或登記證</label>
                                         <div class="input file">
-                                            @Html.TextBoxFor(x => x.id_license, new { @type = "file" })
+                                            @Html.TextBoxFor(x => x.LicenseFile, new { @type = "file", @id = "id_license" })
                                             <span></span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
@@ -239,6 +223,15 @@
                                         </div>
                                     </div>
 
+                                    <div class="form-input">
+                                        <label>營業狀態</label>
+                                        <div class="dropdown-padding">@Html.DropDownListFor(x => x.Industry.id_business_status, Model.BusinessStatus)</div>
+                                    </div>
+
+                                    <div class="form-input">
+                                        <label>經營者</label>
+                                        <div class="dropdown-padding">@Html.TextBoxFor(x => x.Industry.id_operator)</div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -252,7 +245,6 @@
             }
         </div>
     </div>
-
 </main>
 
 <div class="popup-wrap img">
@@ -265,25 +257,13 @@
 </div>
 
 <script>
-    $('#id_passbook').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#id_passbook').val('');
-        }
-    });
-    $('#id_license').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#id_license').val('');
-        }
-    });
-    $('#id_register').change(function () {
-        if (this.files[0].size > 5000000) {
-            alert("檔案大小超過5MB");
-            $('#id_register').val('');
-        }
+    $(document).ready(function () {
+        checkFileSize('#id_passbook');
+        checkFileSize('#id_license');
+        checkFileSize('#id_register');
     });
 </script>
+
 
 <script>
     $(document).ready(function () {

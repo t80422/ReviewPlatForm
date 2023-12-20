@@ -30,7 +30,6 @@
                         <div class="f-1">退保日期</div>
                         <div class="f-1 ta-right">投保薪資</div>
                         <div class="f-1">勞動契約</div>
-                        <div class="f-1">薪資證明</div>
                         <div class="f-1 ta-left ml-6">備註</div>
                         <div class="f-1">操作</div>
                     </div>
@@ -44,7 +43,6 @@
                             <div class="f-1">@(data.mb_surrender_date.HasValue?data.mb_surrender_date.Value.ToString("yyyy/MM/dd"):"N/A")</div>
                             <div class="f-1 ta-right">@data.mb_insur_salary</div>
                             <div class="f-1">@((data.mb_contract!=null)?"是":"否")</div>
-                            <div class="f-1">@((data.mb_income_certificate!=null)?"是":"否")</div>
                             <div class="f-1 ta-left ml-6">@data.mb_memo</div>
                             <div class="f-1">
                                 <button class="btn-details" onClick="location.href = '@Url.Action("Detail", "Members", new {id=data.mb_id})'; event.stopPropagation()"></button>
