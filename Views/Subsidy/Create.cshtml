@@ -92,7 +92,7 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label class="required">申請補助人員清冊</label>
+                                        <label class="required">人員清冊系統建檔</label>
 
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.ApplicantsFile, new { @type = "file", @required = "required", @accept = ".xlsx,.xls", @onchange = "validateFileInput(this)" })
@@ -105,9 +105,24 @@
                                         </div>
 
                                         <label class="demo-file">
-                                            <a href="~/assets/sample/申請人員清冊(範本檔).xlsx" download>範本檔</a>
+                                            <a href="~/assets/sample/人員清冊系統建檔(範本檔).xlsx" download>範本檔</a>
                                         </label>
                                     </div>
+									
+									<div class="form-input">
+                                        <label>申請補助員工清冊</label>
+
+                                        <div class="input file">
+                                            @Html.TextBoxFor(x => x.EmployeeInventoryFile, new { @type = "file", @accept = ".xlsx,.xls" })
+                                            <span></span>
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+
+                                        <label class="demo-file">
+                                            <a href="~/assets/sample/申請補助員工清冊(範本檔).xlsx" download>範本檔</a>
+                                        </label>
+                                    </div>
+									
                                 </div>
 
                                 <div class="form-col">
@@ -141,19 +156,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-input">
-                                        <label>員工清冊</label>
-
-                                        <div class="input file">
-                                            @Html.TextBoxFor(x => x.EmployeeInventoryFile, new { @type = "file", @accept = ".xlsx,.xls" })
-                                            <span></span>
-                                            <button class="onfile" type="button">上傳檔案</button>
-                                        </div>
-
-                                        <label class="demo-file">
-                                            <a href="~/assets/sample/員工清冊(範本檔).xlsx" download>範本檔</a>
-                                        </label>
-                                    </div>
+                                    
 
                                     <div class="form-input">
                                         <label for="file5">補件資料1</label>

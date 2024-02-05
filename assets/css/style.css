@@ -10417,7 +10417,8 @@ body {
 
 .tool-btn {
     display: flex;
-    flex: 0 0 auto;
+    flex-wrap:wrap;
+    /*flex: 0 0 auto;*/
     margin-left: 24px;
 }
 
@@ -12084,4 +12085,7 @@ body {
     }
 }
 
+.preserve-whitespace {
+    white-space: pre-wrap;
+}
 /*# sourceMappingURL=style.css.map */

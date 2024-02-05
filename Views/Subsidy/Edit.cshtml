@@ -94,7 +94,7 @@
                                     </div>
 
                                     <div class="form-input">
-                                        <label class="required">申請補助人員清冊</label>
+                                        <label class="required">人員清冊系統建檔</label>
                                         <div class="input file">
                                             @Html.TextBoxFor(x => x.ApplicantsFile, new { @type = "file", @accept = ".xlsx,.xls", @onchange = "validateFileInput(this)" })
                                             @Html.HiddenFor(x => x.Subsidy.s_applicants_name)
@@ -102,14 +102,33 @@
                                             <span>@Model.Subsidy.s_applicants_name</span>
                                             <button class="onfile" type="button">上傳檔案</button>
                                             <div class="red-text">
-                                                <p>*說明:申請補助人員清冊請務必按照範本檔提供之格式登打，確定存成xlsx格式再上傳<p>
+                                                <p>*說明:人員清冊系統建檔請務必按照範本檔提供之格式登打，確定存成xlsx格式再上傳<p>
                                             </div>
                                         </div>
 
                                         <label class="demo-file">
-                                            <a href="~/assets/sample/申請人員清冊(範本檔).xlsx" download>範本檔</a>
+                                            <a href="~/assets/sample/人員清冊系統建檔(範本檔).xlsx" download>範本檔</a>
                                         </label>
                                     </div>
+									
+									<div class="form-input">
+                                        <label>申請補助員工清冊</label>
+
+                                        <div class="input file">
+                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory)
+                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory_name)
+                                            @Html.TextBoxFor(x => x.EmployeeInventoryFile, new { @type = "file", @accept = ".xlsx,.xls" })
+
+                                            <span>@Model.Subsidy.s_employee_inventory_name</span>
+
+                                            <button class="onfile" type="button">上傳檔案</button>
+                                        </div>
+
+                                        <label class="demo-file">
+                                            <a href="https://hotelsubsidy.tad.gov.tw/assets/sample/%e7%94%b3%e8%ab%8b%e8%a3%9c%e5%8a%a9%e5%93%a1%e5%b7%a5%e6%b8%85%e5%86%8a(%e7%af%84%e6%9c%ac%e6%aa%94).xlsx" download>範本檔</a>
+                                        </label>
+                                    </div>
+									
                                 </div>
 
                                 <div class="form-col">
@@ -143,23 +162,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-input">
-                                        <label>員工清冊</label>
-
-                                        <div class="input file">
-                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory)
-                                            @Html.HiddenFor(x => x.Subsidy.s_employee_inventory_name)
-                                            @Html.TextBoxFor(x => x.EmployeeInventoryFile, new { @type = "file", @accept = ".xlsx,.xls" })
-
-                                            <span>@Model.Subsidy.s_employee_inventory_name</span>
-
-                                            <button class="onfile" type="button">上傳檔案</button>
-                                        </div>
-
-                                        <label class="demo-file">
-                                            <a href="~/assets/sample/員工清冊(範本檔).xlsx" download>範本檔</a>
-                                        </label>
-                                    </div>
+                                    
 
                                     <div class="form-input">
                                         <label for="file5">補件資料1</label>

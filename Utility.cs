@@ -68,11 +68,16 @@ namespace WebApplication1
         /// </summary>
         /// <param name="roomCount"></param>
         /// <returns></returns>
-        public static double GetEligibleApplicantCount(int roomCount)
+        public static double GetEligibleApplicantCount(int? roomCount)
         {
+            if (roomCount == null)
+                return 0;
+
             double maxMember = Math.Ceiling((double)roomCount / 8);
+
             if (maxMember == 0)
                 maxMember = 1;
+
             return maxMember;
         }
     }

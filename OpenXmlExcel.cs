@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Packaging;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
@@ -14,13 +15,19 @@ namespace WebApplication1
         private WorkbookPart _wbPart;
         private SharedStringTable _ssTable;
         private Worksheet _ws;
-        private Dictionary<string,Cell> _cellDictionary;
+        private Dictionary<string, Cell> _cellDictionary;
+        private List<List<string>> _data = new List<List<string>>();
 
-        public Worksheet Worksheet 
+        public Worksheet Worksheet
         {
-            get { return _ws; } 
+            get { return _ws; }
         }
 
+        /// <summary>
+        /// 讀取Excel
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="isEditable"></param>
         public OpenXmlExcel(Stream stream, bool isEditable)
         {
             if (stream == null) throw new ArgumentNullException(nameof(stream));
@@ -42,14 +49,62 @@ namespace WebApplication1
             }
         }
 
+        public OpenXmlExcel() { }
+
+        public void SaveToExcel(MemoryStream memoryStream)
+        {
+            // 使用 MemoryStream 創建 SpreadsheetDocument
+            using (_exl = SpreadsheetDocument.Create(memoryStream, SpreadsheetDocumentType.Workbook))
+            {
+                // 添加 WorkbookPart 和 Workbook
+                var workbookPart = _exl.AddWorkbookPart();
+                workbookPart.Workbook = new Workbook();
+
+                // 添加 WorksheetPart 和 Worksheet
+                var worksheetPart = workbookPart.AddNewPart<WorksheetPart>();
+                worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                // 添加 Sheets 和 Sheet
+                var sheets = workbookPart.Workbook.AppendChild(new Sheets());
+                var sheet = new Sheet()
+                {
+                    Id = _exl.WorkbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = "Sheet1"
+                };
+                sheets.Append(sheet);
+
+                // 将数据写入工作表
+                var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+                for (int i = 0; i < _data.Count; i++)
+                {
+                    var row = new Row { RowIndex = (uint)(i + 1) };
+                    sheetData.Append(row);
+
+                    for (int j = 0; j < _data[i].Count; j++)
+                    {
+                        var cell = new Cell { CellReference = GetCellAddress(i + 1, j + 1) };
+                        cell.CellValue = new CellValue(_data[i][j]);
+                        cell.DataType = CellValues.String;
+                        row.Append(cell);
+                    }
+                }
+
+                // 保存更改
+                worksheetPart.Worksheet.Save();
+                workbookPart.Workbook.Save();
+            }
+        }
+
         public void Dispose()
         {
-            _exl.Dispose();
+            if (_exl != null)
+                _exl.Dispose();
         }
 
         public string GetCellValue(int rowIndex, int columnIndex)
         {
-            var addressName= GetCellAddress(rowIndex, columnIndex);
+            var addressName = GetCellAddress(rowIndex, columnIndex);
 
             if (!_cellDictionary.TryGetValue(addressName, out Cell cell))
             {
@@ -80,6 +135,28 @@ namespace WebApplication1
                 }
             }
             return value;
+        }
+
+        /// <summary>
+        /// 寫入儲存格
+        /// </summary>
+        /// <param name="rowIndex"></param>
+        /// <param name="columnIndex"></param>
+        /// <param name="text"></param>
+        public void WriteToCell(int rowIndex, int columnIndex, string text)
+        {
+            while (_data.Count <= rowIndex)
+            {
+                _data.Add(new List<string>());
+            }
+
+            var row = _data[rowIndex];
+            while (row.Count <= columnIndex)
+            {
+                row.Add(null);
+            }
+
+            row[columnIndex] = text;
         }
 
         private string GetCellAddress(int rowIndex, int columnIndex)

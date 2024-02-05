@@ -126,7 +126,7 @@
                     <div class="aside-time">
                         <span>將於 <span id="countdown"></span> 後自動登出</span>
                         <button class="btn-reset" id="resetCountdown">重新計算</button>
-                    </div>                    
+                    </div>
 
                     <button class="btn-logout" onClick="window.location.href = '@Url.Action("Logout","Login")'">登出</button>
 
@@ -202,8 +202,12 @@
             // 當時間到達0時重置計時器或進行其他操作
             if (logoutTime <= 0) {
                 clearInterval(intervalId);
-                // 可以在這裡執行登出操作
-                window.location.href = '@Url.Action("LogOut", "Login")';
+                if ((@perm >= 0 && @perm < 3) || perm == 4) {
+                    window.location.href = '@Url.Action("Index_Manager", "Login")';
+                }
+                else {
+                    window.location.href = '@Url.Action("Index", "Login")';
+                }
             }
 
             logoutTime--; // 減少1秒

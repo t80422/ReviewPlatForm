@@ -2,7 +2,7 @@
     Layout = "~/Views/Shared/Layout.cshtml";
 }
 
-@model WebApplication1.Models.CaseQueryViewModel.Index
+@model WebApplication1.Models.CaseQueryViewModel.RequestPayment
 @using PagedList.Mvc;
 
 <main class="container-wrap">
@@ -11,15 +11,33 @@
             <div class="tool-item left">
                 <h3>首頁＞每月請款</h3>
             </div>
-            <form action="@Url.Action("RequestPaymentList")" method="get">
-                <div class="tool-btn">
-                    <label>申請日期</label>
-                    <input name="startDay" type="date" />
+
+            <div class="tool-btn">
+                <form action="@Url.Action("RequestPaymentList")" method="get">
+                    <label>撥款狀況</label>
+                    <select name="paied" style="margin-left:20px">
+                        <option value="">全部</option>
+                        <option value="True">已撥款</option>
+                        <option value="False">未撥款</option>
+                    </select>
+
+                    <label>撥款日期</label>
+                    <input name="payStartDay" type="date" />
                     <label>~</label>
-                    <input name="endDay" type="date" />
-                    <button type="submit">查詢</button>
-                </div>
-            </form>
+                    <input name="payEndDay" type="date" />
+
+                    <label>申請日期</label>
+                    <input name="applyStartDay" type="date" />
+                    <label>~</label>
+                    <input name="applyEndDay" type="date" />
+
+                    <button class="btn-add" type="submit" style="margin-bottom:10px;margin-right:5px;">查詢</button>
+                </form>
+
+                <form action="@Url.Action("ExportRequestPayment")" method="get">
+                    <button class="btn-add" type="submit">excel 下載</button>
+                </form>
+            </div>
         </div>
 
         <div class="list-wrap">
@@ -29,33 +47,59 @@
             <div class="list-overflow">
                 <div class="list-main">
                     <div class="list-title pr-2 pl-2">
-                        <div class="f-1">案號</div>
-                        <div class="f-1">旅宿名稱</div>
-                        <div class="f-1">本次申請人數</div>
-                        <div class="f-1">房間數</div>
+                        <div class="f-1">序號</div>
+                        <div class="f-2">撥款狀況</div>
+                        <div class="f-3">案號</div>
+                        <div class="f-3">旅宿業名稱</div>
                         <div class="f-1">可申請人數</div>
-                        <div class="f-1">審核通過人數</div>
-                        <div class="f-1">申請金額</div>
-                        <div class="f-1">銀行名稱</div>
-                        <div class="f-1">銀行代碼</div>
-                        <div class="f-1">銀行帳號</div>
-                        <div class="f-1">戶名</div>
+                        <div class="f-1">1個月</div>
+                        <div class="f-1">2個月</div>
+                        <div class="f-1">3個月</div>
+                        <div class="f-1">4個月</div>
+                        <div class="f-1">5個月</div>
+                        <div class="f-1">6個月</div>
+                        <div class="f-1">7個月</div>
+                        <div class="f-1">8個月</div>
+                        <div class="f-1">9個月</div>
+                        <div class="f-1">10個月</div>
+                        <div class="f-1">11個月</div>
+                        <div class="f-1">12個月</div>
+                        <div class="f-1">申請人數</div>
+                        <div class="f-3">申請金額</div>
+                        <div class="f-3">實撥金額</div>
+                        <div class="f-3">受款人戶名</div>
+                        <div class="f-3">銀行名稱</div>
+                        <div class="f-3">銀行代碼</div>
+                        <div class="f-3">銀行帳號</div>
                     </div>
 
-                    @foreach (var data in Model.caseQueryList)
+                    @foreach (var data in Model.RequestPaymentList)
                     {
                         <div class="list-row pr-2 pl-2">
-                            <div class="f-1">@data.Subsidy.s_no</div>
-                            <div class="f-1">@data.Industry.id_name</div>
-                            <div class="f-1">@data.CurrentApplicants</div>
-                            <div class="f-1">@data.Industry.id_room</div>
+                            <div class="f-1">@data.ID</div>
+                            <div class="f-2">@data.PayStatus</div>
+                            <div class="f-3">@data.SubsidyNo</div>
+                            <div class="f-3">@data.IndustryName</div>
                             <div class="f-1">@data.EligibleApplicants</div>
-                            <div class="f-1">@data.ApprovedApplicants</div>
-                            <div class="f-1">@data.Subsidy.s_money</div>
-                            <div class="f-1">@data.Industry.id_bank_name</div>
-                            <div class="f-1">@data.Industry.id_bank_code</div>
-                            <div class="f-1">@data.Industry.id_bank_acct</div>
-                            <div class="f-1">@data.Industry.id_bank_acct_name</div>
+                            <div class="f-1">@data.OneMonth</div>
+                            <div class="f-1">@data.TwoMonth</div>
+                            <div class="f-1">@data.ThreeMonth</div>
+                            <div class="f-1">@data.FourMonth</div>
+                            <div class="f-1">@data.FiveMonth</div>
+                            <div class="f-1">@data.SixMonth</div>
+                            <div class="f-1">@data.SevenMonth</div>
+                            <div class="f-1">@data.EightMonth</div>
+                            <div class="f-1">@data.NineMonth</div>
+                            <div class="f-1">@data.TenMonth</div>
+                            <div class="f-1">@data.ElevenMonth</div>
+                            <div class="f-1">@data.TwelveMonth</div>
+                            <div class="f-1">@data.CurrentApplicants</div>
+                            <div class="f-3">@data.ApplicationAmount</div>
+                            <div class="f-3">@data.GrantAmount</div>
+                            <div class="f-3">@data.BankAcctName</div>
+                            <div class="f-3">@data.BankName</div>
+                            <div class="f-3">@data.BankCode</div>
+                            <div class="f-3">@data.BankAcct</div>
                         </div>
                     }
                 </div>
@@ -63,13 +107,29 @@
         </div>
 
         <div class="pages-wrap">
-            @Html.PagedListPager(Model.caseQueryList, page => Url.Action("RequestPaymentList", new { page, startDay = Request.QueryString["startDay"], endDay = Request.QueryString["endDay"] }), new PagedListRenderOptions()
-            {
-               DisplayLinkToFirstPage = PagedListDisplayMode.Always,
-               DisplayLinkToLastPage = PagedListDisplayMode.Always,
-               DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-               DisplayLinkToNextPage = PagedListDisplayMode.Always
-            })
+            @Html.PagedListPager(
+                                 Model.RequestPaymentList,
+                                 page => Url.Action(
+                                                    "RequestPaymentList",
+                                                    new
+                                                    {
+                                                        page,
+                                                        payStartDay = Request.QueryString["payStartDay"],
+                                                        payEndDay = Request.QueryString["payEndDay"],
+                                                        applyStartDay = Request.QueryString["applyStartDay"],
+                                                        applyEndDay = Request.QueryString["applyEndDay"],
+                                                        review = Request.QueryString["review"],
+                                                        paied = Request.QueryString["paied"],
+                                                    }
+                                                    ),
+                                 new PagedListRenderOptions()
+                                 {
+                                     DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                                     DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                                     DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                                     DisplayLinkToNextPage = PagedListDisplayMode.Always
+                                 }
+                                )
         </div>
     </div>
 </main>

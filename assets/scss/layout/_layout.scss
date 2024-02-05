@@ -345,8 +345,10 @@ body {
 
 .tool-btn {
     display: flex;
-    flex: 0 0 auto;
+    flex-wrap: wrap;
+    /*flex: 0 0 auto;*/
     margin-left: 24px;
+
     button {
         flex: 0 1 128px;
         min-width: 128px;
@@ -359,23 +361,29 @@ body {
         border: 0;
         margin-left: 20px;
         transition: background .3s;
+
         &:disabled {
             background-color: #ccc;
             cursor: default;
         }
+
         &:hover {
             background-color: var(--c1-h);
+
             &:disabled {
                 background-color: #ccc;
             }
         }
+
         &:first-child {
             margin-left: 0;
         }
     }
+
     @include MQ(d1440) {
         .order & {
             margin-left: 0;
+
             button {
                 flex: 0 1 96px;
                 min-width: 96px;
@@ -383,22 +391,28 @@ body {
             }
         }
     }
+
     @include MQ(t768) {
         margin-left: 16px;
+
         .order & {
             flex: 1 1 100%;
+
             button {
                 flex: 1;
                 min-width: 0;
+
                 &:first-child {
                     margin-left: 0;
                 }
             }
         }
     }
+
     @include MQ(m480) {
         flex: 1 1 100%;
         margin-left: 0;
+
         button {
             flex: 1;
         }

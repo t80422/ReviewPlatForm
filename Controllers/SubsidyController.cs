@@ -21,26 +21,6 @@ namespace WebApplication1.Controllers
             ViewBag.Tip = false;
 
             //撈出所有資料
-            //var subsidies = db.subsidy.Join(
-            //    db.industry,
-            //    s => s.s_id_id,
-            //    i => i.id_id,
-            //    (s, i) => new SubsidyIndustry
-            //    {
-            //        s_no = s.s_no,
-            //        s_date_time = s.s_date_time,
-            //        id_owner = i.id_owner,
-            //        s_grant_date = s.s_grant_date,
-            //        s_money = s.s_money ?? 0,
-            //        s_review = s.s_review_fst,
-            //        id_name = i.id_name,
-            //        s_id = s.s_id,
-            //        id_id = i.id_id,
-            //        s_mg_id_fst = s.s_mg_id_fst,
-            //        id_review = i.id_review,
-            //        s_division_case = s.s_division_case,
-            //    });
-
             var subsidies = db.subsidy.Join(
                 db.industry,
                 s => s.s_id_id,
@@ -87,12 +67,10 @@ namespace WebApplication1.Controllers
             //計算可申請人數
             if (perm == 3)
             {
-                //ViewBag.Maxmember = Math.Max(1, Math.Ceiling(room / 8));
-                //ViewBag.MemberCount = db.subsidy_member.Where(x => x.sm_id_id == industry.id_id && x.sm_mb_id != 0).Select(x => x.sm_mb_id).Distinct().Count();
                 ViewBag.IndustryId = userID;
 
-                ViewBag.SubMemberCount = GetApplicationSuccessful(subsidies.First().Industry.id_id);
-                ViewBag.Remaining = Utility.GetEligibleApplicantCount(subsidies.First().Industry?.id_room ?? 0) - ViewBag.SubMemberCount;
+                ViewBag.SubMemberCount = GetApplicationSuccessful(userID);
+                ViewBag.Remaining = Utility.GetEligibleApplicantCount(industry?.id_room ?? 0) - ViewBag.SubMemberCount;
             }
 
             //審核人員

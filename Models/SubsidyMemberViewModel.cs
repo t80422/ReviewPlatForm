@@ -21,7 +21,6 @@ namespace WebApplication1.Models
         public HttpPostedFileBase IncomeCertificateFile { get; set; }
         public IPagedList<subsidy_member_review> ReviewList { get; set; }
         public string FullTimeOrNotString { get; set; }
-        //public bool ViewMode { get; set; }
         public string SystemQualifications { get; set; }
         public string OtherCompany { get; set; }
         public List<MemberApply> MemberApplyList { get; set; }
@@ -34,30 +33,14 @@ namespace WebApplication1.Models
                 new SelectListItem{Text="退保",Value="2"},
                 new SelectListItem{Text="薪調",Value="3"},
             };
-            //var reviewOptions = new List<SelectListItem>()
-            //{
-            //    new SelectListItem{Text="待審核",Value="待審核"},
-            //    new SelectListItem{Text="審核中",Value="審核中"},
-            //    new SelectListItem{Text="待補件",Value="待補件"},
-            //    new SelectListItem{Text="退件",Value="退件"},
-            //    new SelectListItem{Text="審核完成",Value="審核完成"},
-            //};
-            //var fileOptions = new List<SelectListItem>()
-            //{
-            //    new SelectListItem{Text="審核中",Value="審核中"},
-            //    new SelectListItem{Text="待補件",Value="待補件"},
-            //    new SelectListItem{Text="通過",Value="通過"},
-            //};
             var yesOrNo = new List<SelectListItem>
             {
-                new SelectListItem{Text="是",Value="1"},
-                new SelectListItem{Text="否",Value="0"},
+                new SelectListItem{Text="是",Value="true"},
+                new SelectListItem{Text="否",Value="false"},
             };
 
             InsuranceStatusOptions = new SelectList(insureOptions, "Value", "Text", string.Empty);
-            //ReviewOptions = new SelectList(reviewOptions, "Value", "Text", string.Empty);
             YesOrNo = new SelectList(yesOrNo, "Value", "Text", string.Empty);
-            //FileReviewOptions = new SelectList(fileOptions, "Value", "Text", string.Empty);
         }
 
         public class MemberApply : SubMemberList

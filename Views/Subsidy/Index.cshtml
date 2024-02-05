@@ -153,7 +153,7 @@
                                 </div>
 
                                 <div class="f-1">
-                                    @if (data.Subsidy.s_review_fst== "退件" || data.Subsidy.s_review_fst == "待補件" || data.Subsidy.s_review_fst == "待審核")
+                                    @if (data.Subsidy.s_review_fst== "退件" || data.Subsidy.s_review_fst == "待補件" || data.Subsidy.s_review_fst == "待審核" || data.Subsidy.s_review_fst== null)
                                     {
                                         <button class="btn-edit" onClick="location.href='@Url.Action("Edit", "Subsidy", new {subsidyID=data.Subsidy.s_id})';event.stopPropagation();"></button>
                                     }
@@ -182,7 +182,7 @@
                             @if (perm != 2)
                             {
                                 <div class="f-1">
-                                    @if ((perm == 3 && (data.Subsidy.s_review_fst == "待補件" || data.Subsidy.s_review_fst == "待審核")) || (perm == 0 || perm == 1))
+                                    @if ((perm == 3 && (data.Subsidy.s_review_fst== null || data.Subsidy.s_review_fst == "待補件" || data.Subsidy.s_review_fst == "待審核")) || (perm == 0 || perm == 1))
                                     {
                                         <button class="btn-del" onClick="openPopup(@data.Subsidy.s_id,'delete')"></button>
                                     }

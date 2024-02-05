@@ -397,37 +397,7 @@ namespace WebApplication1.Controllers
                       Subsidy_Member = joined.SubMember
                   })
                   .ToList();
-
-            //modify by 2次修改=====
-
-            ////計算在職月份
-            //var lastData = db.employment_insurance
-            //    .Where(x => x.ei_id_card == data.Member.mb_id_card && x.ei_id_id == data.Subsidy_Member.sm_id_id)
-            //    .OrderByDescending(x => x.ei_year)
-            //    .ThenByDescending(x => x.ei_month)
-            //    .FirstOrDefault();
-
-            ////系統試算資格
-            //if (lastData != null)
-            //{
-            //    var lastChangeDate = lastData.ei_last_change_date;
-
-            //    ROCDateToACDate(lastChangeDate, out DateTime acChangeDate);
-
-            //    var diffDate = acChangeDate.AddMonths(6);
-
-            //    data.SystemQualifications = diffDate < DateTime.Today ? "是" : "否";
-            //}
-            //else
-            //{
-            //    data.SystemQualifications = "否";
-            //}
-
-            //======================
-
             data.SystemQualifications = EvaluateQualification(data);
-
-            //======================
 
             //系統試算
             data.Subsidy_Member.sm_calculation = data.Subsidy_Member.sm_review == "審核完成" ? data.Subsidy_Member.sm_advance_money : 0;
